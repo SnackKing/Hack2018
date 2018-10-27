@@ -3,6 +3,7 @@ package com.example.alleg.hack2018;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -87,6 +88,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+        Button goSignInButton = findViewById(R.id.email_sign_up_button);
+        goSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goSignUpIntent = new Intent(LoginActivity.this,SignUpActivity.class);
+                startActivity(goSignUpIntent);
             }
         });
 

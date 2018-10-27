@@ -3,6 +3,7 @@ package com.example.alleg.hack2018;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -67,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -82,14 +83,15 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+
+        Button goSignUp = findViewById(R.id.email_sign_up_button);
+        goSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                Intent goSignUpIntent = new Intent(SignUpActivity.this,LoginActivity.class);
+                startActivity(goSignUpIntent);
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
     }
 
