@@ -4,17 +4,19 @@ import android.content.ContentValues;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class Message {
-    private long senderid; // id of sender
-    private long recipid; // id of intended recipient
-    private String msg; // message
+public class Message implements Serializable {
+    public long id; // id of this record
+    public long senderId; // id of sender
+    public long recipId; // id of intended recipient
+    public String msg; // message
 
     public Message(long id, ContentValues values){
-        this.senderid = id;
+        this.id = id;
 
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
@@ -30,7 +32,10 @@ public class Message {
                     this.msg = value.toString();
                     break;
                 case MessageContract.Message.COLUMN_NAME_DESTINATION_ID:
-                    this.recipid = (int) value;
+                    this.recipId = (long) value;
+                    break;
+                case MessageContract.Message.COLUMN_NAME_USER_ID:
+                    this.senderId = (long) value;
                     break;
             }
         }

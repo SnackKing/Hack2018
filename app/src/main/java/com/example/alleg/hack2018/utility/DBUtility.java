@@ -12,6 +12,9 @@ import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
+import com.example.alleg.hack2018.models.Inventory;
+import com.example.alleg.hack2018.models.Item;
+import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,17 +38,21 @@ public class DBUtility extends AppCompatActivity {
             case UserContract.User.TABLE_NAME:
                 // now to insert this value to the database
 
-                User x = new User(newId, content);
-
-                tableRef.child(String.valueOf(newId)).setValue(x);
+                tableRef.child(String.valueOf(newId)).setValue(new User(newId, content));
                 break;
             case MessageContract.Message.TABLE_NAME:
+
+                tableRef.child(String.valueOf(newId)).setValue(new Message(newId, content));
 
                 break;
             case InventoryContract.Inventory.TABLE_NAME:
 
+                tableRef.child(String.valueOf(newId)).setValue(new Inventory(newId, content));
+
                 break;
             case ItemContract.Item.TABLE_NAME:
+
+                tableRef.child(String.valueOf(newId)).setValue(new Item(newId, content));
 
                 break;
         }
