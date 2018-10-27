@@ -114,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity  {
 
         signUp(name,phone,password);
     }
-    //TODO: Implement
+
     private void signUp(String name, String phone, String password){
         DBHelper mDBHelp = new DBHelper(this);
 
@@ -122,8 +122,11 @@ public class SignUpActivity extends AppCompatActivity  {
 
         ContentValues values = new ContentValues();
 
+        byte[] salt = Passwords.getNextSalt();
+        byte[] salted = Passwords.hash(password.toCharArray(), salt);
+
         values.put(User.COLUMN_NAME_NAME, name);
-        byte[] salted = Passwords.hash(password.toCharArray(), Passwords.getNextSalt());
+        values.put(User.COLUMN_NAME_SALT, salt);
         values.put(User.COLUMN_NAME_PASSWORD, salted);
         values.put(User.COLUMN_NAME_PHONE_NUMBER, phone);
         values.put(User.COLUMN_NAME_RESIDENT, 1);
