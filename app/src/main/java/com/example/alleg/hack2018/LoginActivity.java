@@ -30,6 +30,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alleg.hack2018.utility.DBUtility;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         phoneSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                login(mPhoneView.getText().toString(),mPasswordView.getText().toString());
+                DBUtility.login(mPhoneView.getText().toString(),mPasswordView.getText().toString());
             }
         });
 
@@ -96,12 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-    }
-
-
-    private void login(String phone, String password){
-
-        return;
     }
 
 

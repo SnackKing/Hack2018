@@ -25,4 +25,9 @@ public class DBUtility {
 
     // TODO
     public static void syncDatabase(SQLiteDatabase db) {}
+
+    public static void login(String phone, String password){
+
+        return;
+    }
 }
