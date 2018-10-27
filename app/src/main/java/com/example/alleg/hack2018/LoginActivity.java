@@ -89,6 +89,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 DBUtility util = new DBUtility();
                 int result = util.login(mDbHelp.getReadableDatabase(), mPhoneView.getText().toString(),mPasswordView.getText().toString());
+                if(result == -1){
+                    mPhoneView.setError("There are no accounts with that number");
+
+                }
+                else if(result == -2){
+                    mPasswordView.setError("Incorrect Password");
+                }
             }
         });
 

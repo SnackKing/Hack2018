@@ -121,7 +121,7 @@ public class DBUtility extends AppCompatActivity {
     public int login(SQLiteDatabase db, String phone, String password){
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME + " WHERE "
                 + UserContract.User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
-        Cursor cursor = db.rawQuery(selectQuery, new String[] { null });
+        Cursor cursor = db.rawQuery(selectQuery, new String[] { });
         if (cursor.getCount() == 0) {
             return -1;
         }
