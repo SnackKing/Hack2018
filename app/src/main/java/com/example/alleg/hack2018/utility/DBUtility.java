@@ -38,7 +38,7 @@ public class DBUtility extends AppCompatActivity {
 
     public static final String USER_KEY = "currUser";
 
-    public static long insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
+    public long insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
         DBUtility util = new DBUtility();
 
         long newId = db.insert(table, nullColumnHack, content);
@@ -90,7 +90,7 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // TODO : save changes and deletions
-    public static void syncDatabase(SQLiteDatabase db) {
+    public void syncDatabase(SQLiteDatabase db) {
         // empty each of the not sent arrays
 
         while (notSentMessages.size() > 0 ) {

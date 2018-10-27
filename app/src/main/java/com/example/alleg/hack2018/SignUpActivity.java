@@ -146,6 +146,8 @@ public class SignUpActivity extends AppCompatActivity  {
 
     private void signUp(String name, String phone, String password){
 
+        DBUtility util = new DBUtility();
+
         SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -159,17 +161,10 @@ public class SignUpActivity extends AppCompatActivity  {
         values.put(User.COLUMN_NAME_PHONE_NUMBER, phone);
         values.put(User.COLUMN_NAME_RESIDENT, 1);
 
-        DBUtility.insertToDb(db, User.TABLE_NAME, null, values);
+        util.insertToDb(db, User.TABLE_NAME, null, values);
 
-        DBUtility util = new DBUtility();
+        // log the newly created user in
         util.login(mDbHelp.getReadableDatabase(), phone, password);
-
-//        SQLiteDatabase dbw = mDBHelp.getReadableDatabase();
-//
-//        String selectQuery = "SELECT * FROM " + User.TABLE_NAME;
-//        Cursor cursor = dbw.rawQuery(selectQuery, new String[]{ null });
-//        Log.d("DATA HERE",cursor.getString(0);
-//        cursor.close();
     }
 }
 
