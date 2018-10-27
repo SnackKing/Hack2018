@@ -27,7 +27,7 @@ class Queries {
             Message._ID + " INTEGER PRIMARY KEY," +
             Message.COLUMN_NAME_USER_ID + " INTEGER," +
             Message.COLUMN_NAME_MESSAGE + " TEXT," +
-            Message.COLUMN_NAME_DESTINATION + " TEXT);";
+            Message.COLUMN_NAME_DESTINATION_ID + " INTEGER);";
 
     static final String SQL_DELETE_MESSAGE =
             "DROP TABLE IF EXISTS " + Message.TABLE_NAME + ";";
