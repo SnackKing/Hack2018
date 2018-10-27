@@ -24,3 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 }
+
+/*
+https://developer.android.com/training/data-storage/sqlite#java
+ */

@@ -12,4 +12,6 @@ public class DBUtility {
         // insert to firebase
     }
 
+    // TODO
+    public static void syncDatabase(SQLiteDatabase db) {}
 }
