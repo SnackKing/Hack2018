@@ -13,8 +13,9 @@ class Queries {
     static final String SQL_CREATE_USER =
             "CREATE TABLE " + User.TABLE_NAME + " (" +
             User._ID + " INTEGER PRIMARY KEY," +
-            User.COLUMN_NAME_PASSWORD + "BLOB," +
             User.COLUMN_NAME_NAME + "TEXT," +
+            User.COLUMN_NAME_PHONE_NUMBER + "INTEGER," +
+            User.COLUMN_NAME_PASSWORD + "BLOB," +
             User.COLUMN_NAME_RESIDENT + "INTEGER)";
 
     static final String SQL_DELETE_USER =
