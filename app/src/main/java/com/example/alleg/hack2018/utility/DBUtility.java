@@ -91,20 +91,29 @@ public class DBUtility extends AppCompatActivity {
     // TODO : save changes and deletions
     public static void syncDatabase(SQLiteDatabase db) {
         // empty each of the not sent arrays
-        for (User u : notSentUsers) {
-            myRef.child(UserContract.User.TABLE_NAME).child(String.valueOf(u.id)).setValue(u);
+
+        while (notSentMessages.size() > 0 ) {
+            Message msg = notSentMessages.remove(notSentMessages.size() - 1);
+
+            myRef.child(MessageContract.Message.TABLE_NAME).child(String.valueOf(msg.id)).setValue(msg);
         }
 
-        for (Inventory i : notSentInventories) {
+        while (notSentUsers.size() > 0) {
+            User usr = notSentUsers.remove(notSentUsers.size() - 1);
+
+            myRef.child(UserContract.User.TABLE_NAME).child(String.valueOf(usr.id)).setValue(usr);
+        }
+
+        while (notSentInventories.size() > 0) {
+            Inventory i = notSentInventories.remove(notSentInventories.size() - 1);
+
             myRef.child(InventoryContract.Inventory.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
         }
 
-        for (Item i : notSentItems) {
-            myRef.child(ItemContract.Item.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
-        }
+        while (notSentItems.size() > 0) {
+            Item i = notSentItems.remove(notSentItems.size() - 1);
 
-        for (Message m : notSentMessages) {
-            myRef.child(MessageContract.Message.TABLE_NAME).child(String.valueOf(m.id)).setValue(m);
+            myRef.child(ItemContract.Item.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
         }
     }
 
