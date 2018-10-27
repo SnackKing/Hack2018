@@ -121,8 +121,9 @@ public class DBUtility extends AppCompatActivity {
     public int login(SQLiteDatabase db, String phone, String password){
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME + " WHERE "
                 + UserContract.User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
-        Cursor cursor = db.rawQuery(selectQuery, new String[] { null });
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         if (cursor.getCount() == 0) {
+            //Incorrect phone number
             return -1;
         }
 
@@ -131,14 +132,20 @@ public class DBUtility extends AppCompatActivity {
                 cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
 
         if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
+            //Incorrect password
             return -2;
         }
+
+        User x = new User(cursor.getLong(cursor.getColumnIndex(UserContract.User._ID)),
+                cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)),
+                cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
+                salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = gson.toJson("Object goes here"); // myObject - instance of MyObject
+        String json = gson.toJson(x); // myObject - instance of MyObject
         prefsEditor.putString(DBUtility.USER_KEY, json);
         prefsEditor.commit();
 
