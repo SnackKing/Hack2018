@@ -38,9 +38,13 @@ public class DBUtility extends AppCompatActivity {
 
     public static final String USER_KEY = "currUser";
 
-    public static long insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
-        DBUtility util = new DBUtility();
+    private Context context;
 
+    public DBUtility(Context con) {
+        this.context = con;
+    }
+
+    public long insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
         long newId = db.insert(table, nullColumnHack, content);
 
         // now for firebase
@@ -50,7 +54,7 @@ public class DBUtility extends AppCompatActivity {
             case UserContract.User.TABLE_NAME:
                 // now to insert this value to the database
 
-                if (util.isConnected()) {
+                if (this.isConnected()) {
                     tableRef.child(String.valueOf(newId)).setValue(new User(newId, content));
                 } else {
                     notSentUsers.add(new User(newId, content));
@@ -59,7 +63,7 @@ public class DBUtility extends AppCompatActivity {
                 break;
             case MessageContract.Message.TABLE_NAME:
 
-                if (util.isConnected()) {
+                if (this.isConnected()) {
                     tableRef.child(String.valueOf(newId)).setValue(new Message(newId, content));
                 } else {
                     notSentMessages.add(new Message(newId, content));
@@ -68,7 +72,7 @@ public class DBUtility extends AppCompatActivity {
                 break;
             case InventoryContract.Inventory.TABLE_NAME:
 
-                if (util.isConnected()) {
+                if (this.isConnected()) {
                     tableRef.child(String.valueOf(newId)).setValue(new Inventory(newId, content));
                 } else {
                     notSentInventories.add(new Inventory(newId, content));
@@ -77,7 +81,7 @@ public class DBUtility extends AppCompatActivity {
                 break;
             case ItemContract.Item.TABLE_NAME:
 
-                if (util.isConnected()) {
+                if (this.isConnected()) {
                     tableRef.child(String.valueOf(newId)).setValue(new Item(newId, content));
                 } else {
                     notSentItems.add(new Item(newId, content));
@@ -90,7 +94,7 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // TODO : save changes and deletions
-    public static void syncDatabase(SQLiteDatabase db) {
+    public void syncDatabase(SQLiteDatabase db) {
         // empty each of the not sent arrays
 
         while (notSentMessages.size() > 0 ) {
@@ -121,8 +125,9 @@ public class DBUtility extends AppCompatActivity {
     public int login(SQLiteDatabase db, String phone, String password){
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME + " WHERE "
                 + UserContract.User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
-        Cursor cursor = db.rawQuery(selectQuery, new String[] { });
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         if (cursor.getCount() == 0) {
+            //Incorrect phone number
             return -1;
         }
 
@@ -131,14 +136,20 @@ public class DBUtility extends AppCompatActivity {
                 cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
 
         if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
+            //Incorrect password
             return -2;
         }
+
+        User x = new User(cursor.getLong(cursor.getColumnIndex(UserContract.User._ID)),
+                cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)),
+                cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
+                salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = gson.toJson("Object goes here"); // myObject - instance of MyObject
+        String json = gson.toJson(x); // myObject - instance of MyObject
         prefsEditor.putString(DBUtility.USER_KEY, json);
         prefsEditor.commit();
 
@@ -156,9 +167,7 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public boolean isConnected() {
-        Context context = getApplicationContext();
-
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager)this.context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
