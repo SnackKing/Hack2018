@@ -131,6 +131,12 @@ public class DBUtility extends AppCompatActivity {
             return -1;
         }
 
+        String out = "";
+        for (String val : cursor.getColumnNames()) {
+            out += val + " ";
+        }
+        
+        Log.d("COLUMN NAMES", out);
         byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
         byte[] saltedPsd =
                 cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
