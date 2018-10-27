@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract.User;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
@@ -164,7 +165,9 @@ public class SignUpActivity extends AppCompatActivity  {
         util.insertToDb(db, User.TABLE_NAME, null, values);
 
         // log the newly created user in
-        util.login(mDbHelp.getReadableDatabase(), phone, password);
+        int result = util.login(mDbHelp.getReadableDatabase(), phone, password);
+        Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
+        startActivity(intent);
     }
 }
 

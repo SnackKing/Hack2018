@@ -82,6 +82,10 @@ public class LoginActivity extends AppCompatActivity {
                 else if(result == -2){
                     mPasswordView.setError("Incorrect Password");
                 }
+                else if(result == 1){
+                    Intent intent = new Intent(LoginActivity.this,MessagesActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
