@@ -1,6 +1,10 @@
 package com.example.alleg.hack2018;
 
 class Queries {
+
+    // private utility class
+    private Queries() {}
+
     static final String SQL_CREATE_ENTRIES = ""; /*
         "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
                 FeedEntry._ID + " INTEGER PRIMARY KEY," +
