@@ -61,7 +61,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/phone_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/colorPrimary"
@@ -81,7 +81,7 @@
                 android:layout_marginTop="20dp"
                 android:text="Don't have an account? "/>
             <Button
-                android:id="@+id/email_sign_up_button"
+                android:id="@+id/phone_go_sign_up_button"
                 style="?android:textAppearanceSmall"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/colorPrimary"
@@ -91,7 +91,7 @@
                 android:paddingRight="50dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/action_sign_up"
+                android:text="@string/action_go_sign_up"
                 android:textStyle="bold" />
 
         </LinearLayout>

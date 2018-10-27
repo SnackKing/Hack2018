@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mPhoneView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
+        mPhoneView = (AutoCompleteTextView) findViewById(R.id.phone);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -83,14 +83,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button phoneSignInButton = (Button) findViewById(R.id.phone_sign_in_button);
+        phoneSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                login(mPhoneView.getText().toString(),mPasswordView.getText().toString());
             }
         });
-        Button goSignInButton = findViewById(R.id.email_sign_up_button);
+
+        Button goSignInButton = findViewById(R.id.phone_go_sign_up_button);
         goSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,6 +101,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         mLoginFormView = findViewById(R.id.login_form);
+    }
+
+
+    private void login(String phone, String password){
+
+        return;
     }
 
     private void populateAutoComplete() {
