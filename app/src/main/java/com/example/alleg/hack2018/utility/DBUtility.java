@@ -3,6 +3,7 @@ package com.example.alleg.hack2018.utility;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.alleg.hack2018.models.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -17,8 +18,12 @@ public class DBUtility {
         // now for firebase
         DatabaseReference tableRef = myRef.child(table);
 
-        // now to insert this value to the database
-        tableRef.child(String.valueOf(newId)).setValue(content);
+        switch (table) {
+            case "Users":
+                // now to insert this value to the database
+                tableRef.child(String.valueOf(newId)).setValue(new User(newId, content));
+                break;
+        }
 
         return newId;
     }
