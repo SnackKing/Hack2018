@@ -1,4 +1,4 @@
-package com.example.alleg.hack2018;
+package com.example.alleg.hack2018.utility;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
