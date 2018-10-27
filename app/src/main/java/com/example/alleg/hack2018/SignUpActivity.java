@@ -61,11 +61,22 @@ public class SignUpActivity extends AppCompatActivity  {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    TextView nameField;
+    TextView phoneField;
+    TextView passwordField;
+    TextView confirmPasswordField;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+         nameField = findViewById(R.id.name);
+         phoneField = findViewById(R.id.phone);
+         passwordField = findViewById(R.id.password);
+         confirmPasswordField = findViewById(R.id.password);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
 
@@ -81,13 +92,14 @@ public class SignUpActivity extends AppCompatActivity  {
         });
 
 
-        Button goSignUp = findViewById(R.id.email_sign_up_button);
-        goSignUp.setOnClickListener(new OnClickListener() {
+        Button signUp = findViewById(R.id.sign_up_button);
+        signUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                onPush();
             }
         });
+        Button goSignUp = findViewById(R.id.email_sign_up_button);
         goSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,14 +110,34 @@ public class SignUpActivity extends AppCompatActivity  {
         mLoginFormView = findViewById(R.id.login_form);
     }
     private void onPush(){
-        TextView nameField = findViewById(R.id.name);
         String name = nameField.getText().toString();
-        TextView phoneField = findViewById(R.id.phone);
         String phone = phoneField.getText().toString();
-        TextView passwordField = findViewById(R.id.password);
         String password = passwordField.getText().toString();
-
-        signUp(name,phone,password);
+        String confirmPassword = confirmPasswordField.getText().toString();
+        boolean isValid = validate(name, phone, password, confirmPassword);
+        if(isValid) {
+            signUp(name, phone, password);
+        }
+    }
+    private boolean validate(String name,String phone, String password, String confirmPassword){
+        boolean isValid = true;
+        if(name.length() == 0){
+            isValid = false;
+            nameField.setError("Name can't be blank");
+        }
+        if(phone.length() != 10){
+            isValid = false;
+            phoneField.setError("Invalid Phone");
+        }
+        if(password.length() == 0){
+            isValid = false;
+            passwordField.setError("Password can't be blank");
+        }
+        if(!password.equals(confirmPassword)){
+            isValid = false;
+            confirmPasswordField.setError("Passwords don't match");
+        }
+        return isValid;
     }
     //TODO: Implement
     private void signUp(String name, String phone, String password){
