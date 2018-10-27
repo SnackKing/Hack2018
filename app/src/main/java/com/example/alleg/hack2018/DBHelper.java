@@ -13,12 +13,18 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(Queries.SQL_CREATE_ENTRIES);
+        db.execSQL(Queries.SQL_CREATE_USER);
+        db.execSQL(Queries.SQL_CREATE_INVENTORY);
+        db.execSQL(Queries.SQL_CREATE_ITEM);
+        db.execSQL(Queries.SQL_CREATE_MESSAGE);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(Queries.SQL_DELETE_ENTRIES);
+        db.execSQL(Queries.SQL_DELETE_USER);
+        db.execSQL(Queries.SQL_DELETE_INVENTORY);
+        db.execSQL(Queries.SQL_DELETE_ITEM);
+        db.execSQL(Queries.SQL_DELETE_MESSAGE);
         onCreate(db);
     }
 }

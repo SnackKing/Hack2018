@@ -8,12 +8,10 @@ public final class UserContract {
     private UserContract() { }
 
     public static class User implements BaseColumns {
-        //public static final String TABLE_NAME = "entry";
-        //public static final String COLUMN_NAME_TITLE = "title";
-        public static final String TABLE_NAME = "users";
-        public static final String COLUMN_NAME_ID = "id";
-        public static final String COLUMN_NAME_PASSWORD = "password";
-
+        public static final String TABLE_NAME = "Users";
+        public static final String COLUMN_NAME_PASSWORD = "Password";
+        public static final String COLUMN_NAME_NAME = "Name";
+        public static final String COLUMN_NAME_RESIDENT = "Resident";
     }
 
 }

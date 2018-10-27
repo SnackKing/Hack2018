@@ -1,12 +1,48 @@
 package com.example.alleg.hack2018;
 
-class Queries {
-    static final String SQL_CREATE_ENTRIES = ""; /*
-        "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
-                FeedEntry._ID + " INTEGER PRIMARY KEY," +
-                FeedEntry.COLUMN_NAME_TITLE + " TEXT," +
-                FeedEntry.COLUMN_NAME_SUBTITLE + " TEXT)";*/
+import com.example.alleg.hack2018.UserContract.User;
+import com.example.alleg.hack2018.MessageContract.Message;
+import com.example.alleg.hack2018.ItemContract.Item;
+import com.example.alleg.hack2018.InventoryContract.Inventory;
 
-    static final String SQL_DELETE_ENTRIES = ""; /*
-            "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME; */
+class Queries {
+    static final String SQL_CREATE_USER =
+            "CREATE TABLE " + User.TABLE_NAME + " (" +
+            User._ID + " INTEGER PRIMARY KEY," +
+            User.COLUMN_NAME_PASSWORD + "BLOB," +
+            User.COLUMN_NAME_NAME + "TEXT," +
+            User.COLUMN_NAME_RESIDENT + "INTEGER)";
+
+    static final String SQL_DELETE_USER =
+            "DROP TABLE IF EXISTS " + User.TABLE_NAME;
+
+    static final String SQL_CREATE_MESSAGE =
+            "CREATE TABLE " + User.TABLE_NAME + " (" +
+            Message._ID + "INTEGER PRIMARY KEY," +
+            Message.COLUMN_NAME_USER_ID + "INTEGER," +
+            Message.COLUMN_NAME_MESSAGE + "TEXT," +
+            Message.COLUMN_NAME_DESTINATION + "TEXT)";
+
+    static final String SQL_DELETE_MESSAGE =
+            "DROP TABLE IF EXISTS " + User.TABLE_NAME;
+
+    static final String SQL_CREATE_ITEM =
+            "CREATE TABLE " + Item.TABLE_NAME + " (" +
+            Item._ID + "INTEGER PRIMARY KEY," +
+            Item.COLUMN_NAME_NAME + "TEXT," +
+            Item.COLUMN_NAME_PERISHABLE + "INTEGER," +
+            Item.COLUMN_NAME_IMPORTANCE + "INTEGER)";
+
+    static final String SQL_DELETE_ITEM =
+            "DROP TABLE IF EXISTS " + Item.TABLE_NAME;
+
+    static final String SQL_CREATE_INVENTORY =
+            "CREATE TABLE " + Inventory.TABLE_NAME + " (" +
+            Inventory._ID + "INTEGER PRIMARY KEY," +
+            Inventory.COLUMN_NAME_USER_ID + "INTEGER," +
+            Inventory.COLUMN_NAME_ITEM + "TEXT," +
+            Inventory.COLUMN_NAME_COUNT + "INTEGER)";
+
+    static final String SQL_DELETE_INVENTORY =
+            "DROP TABLE IF EXISTS " + Inventory.TABLE_NAME;
 }
