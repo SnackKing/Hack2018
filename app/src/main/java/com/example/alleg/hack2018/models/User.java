@@ -3,6 +3,7 @@ package com.example.alleg.hack2018.models;
 import android.content.ContentValues;
 
 import com.example.alleg.hack2018.contracts.UserContract;
+import com.example.alleg.hack2018.utility.DBUtility;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -10,12 +11,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class User implements Serializable {
-    private String name;
-    private int phoneNumber;
-    private byte[] salt;
-    private byte[] password;
-    private boolean resident;
-    private long id;
+    public String name;
+    public int phoneNumber;
+    public int salt;
+    public int password;
+    public boolean resident;
+    public long id;
 
     // from content values
     public User(long id, ContentValues values) {
@@ -32,16 +33,16 @@ public class User implements Serializable {
 
             switch (key) {
                 case UserContract.User.COLUMN_NAME_PHONE_NUMBER:
-                    this.phoneNumber = (int) value;
+                    this.phoneNumber = Integer.parseInt(value.toString());
                     break;
                 case UserContract.User.COLUMN_NAME_SALT:
-                    this.salt = (byte[]) value;
+                    this.salt = DBUtility.fromByteArray((byte[]) value);
                     break;
                 case UserContract.User.COLUMN_NAME_NAME:
                     this.name = value.toString();
                     break;
                 case UserContract.User.COLUMN_NAME_PASSWORD:
-                    this.password = (byte[]) value;
+                    this.password = DBUtility.fromByteArray((byte[]) value);
                     break;
                 case UserContract.User.COLUMN_NAME_RESIDENT:
                     this.resident = (int) value == 1;
