@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+
+    private DBHelper mDbHelp;
 
     // UI references.
     private AutoCompleteTextView mPhoneView;
@@ -85,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DBUtility util = new DBUtility();
-                util.login(mPhoneView.getText().toString(),mPasswordView.getText().toString());
+                int result = util.login(mDbHelp.getReadableDatabase(), mPhoneView.getText().toString(),mPasswordView.getText().toString());
             }
         });
 
@@ -99,8 +102,16 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mLoginFormView = findViewById(R.id.login_form);
+
+        this.mDbHelp = new DBHelper(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        mDbHelp.close();
+
+        super.onDestroy();
+    }
 
     private boolean isPhoneValid(String phone) {
         //TODO: Replace this with your own logic
