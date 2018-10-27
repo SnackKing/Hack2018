@@ -65,14 +65,14 @@ public class SignUpActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-         nameField = findViewById(R.id.name);
-         phoneField = findViewById(R.id.phone);
-         passwordField = findViewById(R.id.password);
-         confirmPasswordField = findViewById(R.id.confirm_password);
+        nameField = findViewById(R.id.name);
+        phoneField = findViewById(R.id.phone);
+        passwordField = findViewById(R.id.password);
+        confirmPasswordField = findViewById(R.id.confirm_password);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
+        mEmailView = (AutoCompleteTextView) phoneField;
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) passwordField;
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -146,7 +146,7 @@ public class SignUpActivity extends AppCompatActivity  {
 
     private void signUp(String name, String phone, String password){
 
-        DBUtility util = new DBUtility();
+        DBUtility util = new DBUtility(getApplicationContext());
 
         SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
 

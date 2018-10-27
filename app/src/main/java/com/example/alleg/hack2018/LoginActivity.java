@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         phoneSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                DBUtility util = new DBUtility();
+                DBUtility util = new DBUtility(getApplicationContext());
                 int result = util.login(mDbHelp.getReadableDatabase(), mPhoneView.getText().toString(),mPasswordView.getText().toString());
             }
         });
