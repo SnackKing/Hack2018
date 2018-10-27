@@ -85,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity  {
          nameField = findViewById(R.id.name);
          phoneField = findViewById(R.id.phone);
          passwordField = findViewById(R.id.password);
-         confirmPasswordField = findViewById(R.id.password);
+         confirmPasswordField = findViewById(R.id.confirm_password);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.phone);
 
