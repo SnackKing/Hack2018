@@ -29,4 +29,5 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
+    <string name="title_activity_messages">MessagesActivity</string>
 </resources>
