@@ -73,6 +73,8 @@ public class SignUpActivity extends AppCompatActivity  {
     TextView passwordField;
     TextView confirmPasswordField;
 
+    // to access db
+    DBHelper mDbHelp;
 
 
     @Override
@@ -115,7 +117,18 @@ public class SignUpActivity extends AppCompatActivity  {
             }
         });
         mLoginFormView = findViewById(R.id.login_form);
+
+        // get a db helper
+        this.mDbHelp = new DBHelper(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        this.mDbHelp.close();
+
+        super.onDestroy();
+    }
+
     private void onPush(){
         String name = nameField.getText().toString();
         String phone = phoneField.getText().toString();
@@ -126,6 +139,7 @@ public class SignUpActivity extends AppCompatActivity  {
             signUp(name, phone, password);
         }
     }
+
     private boolean validate(String name,String phone, String password, String confirmPassword){
         boolean isValid = true;
         if(name.length() == 0){
@@ -148,9 +162,8 @@ public class SignUpActivity extends AppCompatActivity  {
     }
 
     private void signUp(String name, String phone, String password){
-        DBHelper mDBHelp = new DBHelper(this);
 
-        SQLiteDatabase db = mDBHelp.getWritableDatabase();
+        SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
