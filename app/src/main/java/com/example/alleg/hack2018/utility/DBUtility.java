@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -131,7 +132,8 @@ public class DBUtility extends AppCompatActivity {
             return -1;
         }
 
-        byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
+        cursor.moveToFirst();
+        byte[] salt = cursor.getBlob(cursor.getColumnIndex("Salt"));
         byte[] saltedPsd =
                 cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
 
@@ -146,15 +148,13 @@ public class DBUtility extends AppCompatActivity {
                 salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
-        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(x); // myObject - instance of MyObject
         prefsEditor.putString(DBUtility.USER_KEY, json);
         prefsEditor.commit();
 
-        Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
-        startActivity(intent);
         return 1;
     }
 
