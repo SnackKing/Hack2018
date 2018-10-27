@@ -1,4 +1,4 @@
-package com.example.alleg.hack2018;
+package com.example.alleg.hack2018.utility;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
