@@ -12,32 +12,32 @@ class Queries {
 
     static final String SQL_CREATE_USER =
             "CREATE TABLE " + User.TABLE_NAME + " (" +
-            User._ID + " INTEGER PRIMARY KEY," +
+            User._ID + " INT PRIMARY KEY," +
             User.COLUMN_NAME_NAME + " TEXT," +
-            User.COLUMN_NAME_PHONE_NUMBER + " INTEGER NOT NULL UNIQUE," +
+            User.COLUMN_NAME_PHONE_NUMBER + " INT NOT NULL UNIQUE," +
             User.COLUMN_NAME_PASSWORD + " BLOB," +
             User.COLUMN_NAME_SALT + " BLOB," +
-            User.COLUMN_NAME_RESIDENT + " INTEGER);";
+            User.COLUMN_NAME_RESIDENT + " INT);";
 
     static final String SQL_DELETE_USER =
             "DROP TABLE IF EXISTS " + User.TABLE_NAME + ";";
 
     static final String SQL_CREATE_MESSAGE =
             "CREATE TABLE " + Message.TABLE_NAME + " (" +
-            Message._ID + " INTEGER PRIMARY KEY," +
-            Message.COLUMN_NAME_USER_ID + " INTEGER UNIQUE," +
+            Message._ID + " INT PRIMARY KEY," +
+            Message.COLUMN_NAME_USER_ID + " INT UNIQUE," +
             Message.COLUMN_NAME_MESSAGE + " TEXT," +
-            Message.COLUMN_NAME_DESTINATION_ID + " INTEGER);";
+            Message.COLUMN_NAME_DESTINATION_ID + " INT);";
 
     static final String SQL_DELETE_MESSAGE =
             "DROP TABLE IF EXISTS " + Message.TABLE_NAME + ";";
 
     static final String SQL_CREATE_ITEM =
             "CREATE TABLE " + Item.TABLE_NAME + " (" +
-            Item._ID + " INTEGER PRIMARY KEY," +
+            Item._ID + " INT PRIMARY KEY," +
             Item.COLUMN_NAME_NAME + " TEXT UNIQUE," +
-            Item.COLUMN_NAME_PERISHABLE + " INTEGER," +
-            Item.COLUMN_NAME_IMPORTANCE + " INTEGER);";
+            Item.COLUMN_NAME_PERISHABLE + " INT," +
+            Item.COLUMN_NAME_IMPORTANCE + " INT);";
 
     static final String SQL_DELETE_ITEM =
             "DROP TABLE IF EXISTS " + Item.TABLE_NAME + ";";
@@ -45,9 +45,9 @@ class Queries {
     static final String SQL_CREATE_INVENTORY =
             "CREATE TABLE " + Inventory.TABLE_NAME + " (" +
             Inventory._ID + " INTEGER PRIMARY KEY," +
-            Inventory.COLUMN_NAME_USER_ID + " INTEGER," +
+            Inventory.COLUMN_NAME_USER_ID + " INT," +
             Inventory.COLUMN_NAME_ITEM + " TEXT," +
-            Inventory.COLUMN_NAME_COUNT + " INTEGER);";
+            Inventory.COLUMN_NAME_COUNT + " INT);";
 
     static final String SQL_DELETE_INVENTORY =
             "DROP TABLE IF EXISTS " + Inventory.TABLE_NAME + ";";
