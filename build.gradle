@@ -24,7 +24,18 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'https://dl.bintray.com/underdark/android/'
+            url "http://maven.bridgefy.com/artifactory/libs-release-local"
+            artifactUrls=["http://jcenter.bintray.com/"]
+        }
+
+    }
+
+    apply plugin: 'idea'
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
         }
     }
 }

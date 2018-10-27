@@ -1,12 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'idea'
 
-
-idea {
-    module {
-        downloadJavadoc = true
-    }
-}
 
 android {
     compileSdkVersion 27
@@ -39,7 +32,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile 'com.google.code.gson:gson:2.6.2'
-    compile 'io.underdark:underdark:1.+'
+    implementation 'com.bridgefy:android-sdk:1.1.+'
 }
 
 apply plugin: 'com.google.gms.google-services'
