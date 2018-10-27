@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "337064765680",
+    "firebase_url": "https://hackohio2018.firebaseio.com",
+    "project_id": "hackohio2018",
+    "storage_bucket": "hackohio2018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337064765680:android:03a1fb452ae7e51e",
+        "android_client_info": {
+          "package_name": "com.example.alleg.hack2018"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337064765680-nf8ghtd58eivgs8gd7r0b727lb6dp8lg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alleg.hack2018",
+            "certificate_hash": "555877bdd82236b76e88a4191609ca49ffa41de9"
+          }
+        },
+        {
+          "client_id": "337064765680-lsehiqhod10dd9thcn1b0cvh4p7ktnbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLtPuMEUxDOIODuOeR2k7nITimt39C834"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337064765680-lsehiqhod10dd9thcn1b0cvh4p7ktnbp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
