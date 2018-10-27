@@ -3,6 +3,7 @@ package com.example.alleg.hack2018.utility;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -56,7 +57,21 @@ public class DBUtility extends AppCompatActivity {
     // TODO
     public static void syncDatabase(SQLiteDatabase db) {}
 
-    public void login(String phone, String password){
+    public int login(SQLiteDatabase db, String phone, String password){
+        String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME + " WHERE "
+                + UserContract.User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] { null });
+        if (cursor.getCount() == 0) {
+            return -1;
+        }
+
+        byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
+        byte[] saltedPsd =
+                cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
+
+        if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
+            return -2;
+        }
 
         // attach user to prefs
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
@@ -68,6 +83,7 @@ public class DBUtility extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
         startActivity(intent);
+        return 1;
     }
 
     public static byte[] toByteArray(int value) {
