@@ -11,12 +11,16 @@ public class DBUtility {
    static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
 
-    public static void insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
-        db.insert(table, nullColumnHack, content);
+    public static long insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
+        long newId = db.insert(table, nullColumnHack, content);
 
-        // TODO
-        // insert to firebase
-        myRef.child(table).child("1").setValue("object");
+        // now for firebase
+        DatabaseReference tableRef = myRef.child(table);
+
+        // now to insert this value to the database
+        tableRef.child(String.valueOf(newId)).setValue(content);
+
+        return newId;
     }
 
     // TODO

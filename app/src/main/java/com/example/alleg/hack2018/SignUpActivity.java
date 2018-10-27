@@ -3,8 +3,10 @@ package com.example.alleg.hack2018;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +31,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.alleg.hack2018.models.UserContract.User;
+import com.example.alleg.hack2018.utility.DBHelper;
+import com.example.alleg.hack2018.utility.DBUtility;
+import com.example.alleg.hack2018.utility.Passwords;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,10 +148,19 @@ public class SignUpActivity extends AppCompatActivity  {
     }
     //TODO: Implement
     private void signUp(String name, String phone, String password){
+        DBHelper mDBHelp = new DBHelper(this);
 
+        SQLiteDatabase db = mDBHelp.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(User.COLUMN_NAME_NAME, name);
+        byte[] salted = Passwords.hash(password.toCharArray(), Passwords.getNextSalt());
+        values.put(User.COLUMN_NAME_PASSWORD, salted);
+        values.put(User.COLUMN_NAME_PHONE_NUMBER, phone);
+        values.put(User.COLUMN_NAME_RESIDENT, 1);
+
+        DBUtility.insertToDb(db, User.TABLE_NAME, null, values);
     }
-
-
-
 }
 

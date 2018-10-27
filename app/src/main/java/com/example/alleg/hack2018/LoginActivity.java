@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     private void login(String phone, String password){
 
         return;
