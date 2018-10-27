@@ -18,6 +18,15 @@ public class User implements Serializable {
     public boolean resident;
     public long id;
 
+    public User(long id, String name, int phone, byte[] salt, byte[] password, int resident) {
+        this.id = id;
+        this.name = name;
+        this.phoneNumber = phone;
+        this.salt = DBUtility.fromByteArray(salt);
+        this.password = DBUtility.fromByteArray(password);
+        this.resident = resident == 1;
+    }
+
     // from content values
     public User(long id, ContentValues values) {
         this.id = id;
