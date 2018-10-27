@@ -1,9 +1,9 @@
 package com.example.alleg.hack2018.utility;
 
-import com.example.alleg.hack2018.models.UserContract.User;
-import com.example.alleg.hack2018.models.MessageContract.Message;
-import com.example.alleg.hack2018.models.ItemContract.Item;
-import com.example.alleg.hack2018.models.InventoryContract.Inventory;
+import com.example.alleg.hack2018.contracts.UserContract.User;
+import com.example.alleg.hack2018.contracts.MessageContract.Message;
+import com.example.alleg.hack2018.contracts.ItemContract.Item;
+import com.example.alleg.hack2018.contracts.InventoryContract.Inventory;
 
 class Queries {
 

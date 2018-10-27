@@ -1,4 +1,4 @@
-package com.example.alleg.hack2018.models;
+package com.example.alleg.hack2018.contracts;
 
 import android.provider.BaseColumns;
 
