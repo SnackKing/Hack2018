@@ -16,6 +16,11 @@ public class Message implements Serializable {
     public long recipId; // id of intended recipient
     public String msg; // message
 
+    // pull from db
+    public Message(String id) {
+        // TODO
+    }
+
     public Message(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();

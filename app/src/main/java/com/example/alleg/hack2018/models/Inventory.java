@@ -16,6 +16,11 @@ public class Inventory implements Serializable {
     public String item;
     public int count;
 
+    // get from database
+    public Inventory(String id) {
+        // TODO
+    }
+
     public Inventory(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
