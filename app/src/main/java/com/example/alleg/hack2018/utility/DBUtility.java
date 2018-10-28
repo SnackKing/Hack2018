@@ -256,8 +256,13 @@ public class DBUtility extends AppCompatActivity {
             for (String id : keysToAdd.get(table)) {
                 HashMap<String, Object> dataToAdd = input.get(table).get(id);
 
-                // insert this!!!!
-                // TODO
+                ContentValues values = new ContentValues();
+
+                for (String label : dataToAdd.keySet()) {
+                    values.put(label, dataToAdd.get(label).toString());
+                }
+
+                this.insertToDb(table, null, values);
             }
         }
     }
