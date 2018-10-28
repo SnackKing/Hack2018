@@ -23,16 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DBUtility extends AppCompatActivity {
-
-    static ArrayList<User> notSentUsers = new ArrayList<>();
-    static ArrayList<Message> notSentMessages = new ArrayList<>();
-    static ArrayList<Item> notSentItems = new ArrayList<>();
-    static ArrayList<Inventory> notSentInventories = new ArrayList<>();
 
     static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
@@ -46,6 +40,7 @@ public class DBUtility extends AppCompatActivity {
         this.context = con;
         this.db = new DBHelper(this.context).getWritableDatabase();
         this.sync = new SyncThread(this, db);
+        this.sync.start();
     }
 
     public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
@@ -61,9 +56,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new User(content));
-                } else {
-                    notSentUsers.add(new User(content));
-                    sync.start();
                 }
 
                 break;
@@ -71,9 +63,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new Message(content));
-                } else {
-                    notSentMessages.add(new Message(content));
-                    sync.start();
                 }
 
                 break;
@@ -81,9 +70,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new Inventory(content));
-                } else {
-                    notSentInventories.add(new Inventory(content));
-                    sync.start();
                 }
 
                 break;
@@ -91,9 +77,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new Item(content));
-                } else {
-                    notSentItems.add(new Item(content));
-                    sync.start();
                 }
 
                 break;
@@ -127,11 +110,13 @@ public class DBUtility extends AppCompatActivity {
                 salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+        SharedPreferences mPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(x); // myObject - instance of MyObject
         prefsEditor.putString(DBUtility.USER_KEY, json);
+        prefsEditor.apply();
         prefsEditor.commit();
 
         cursor.close();
@@ -150,10 +135,8 @@ public class DBUtility extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager)this.context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
 
-        return isConnected;
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     public static int getCurrentTime() {
@@ -196,7 +179,7 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public Set<String> getIDSetCloud(String tableName) {
+    public static Set<String> getIDSetCloud(String tableName) {
         Set<String> toReturn = new HashSet<>();
 
         // TODO

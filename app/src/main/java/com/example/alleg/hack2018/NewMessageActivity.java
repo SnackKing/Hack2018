@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +40,9 @@ public class NewMessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                addToDatabase(phone.getText().toString(), message.getText().toString());
+               Log.d("FLOAT", "starting Activity");
+                Intent intent = new Intent(NewMessageActivity.this, MessagesActivity.class);
+                startActivity(intent);
             }
         });
         this.mDbHelp = new DBHelper(this);
@@ -51,7 +56,8 @@ public class NewMessageActivity extends AppCompatActivity {
     }
 
     private void addToDatabase(String phone, String message){
-        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences mPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
         Gson gson = new Gson();
         String json = mPrefs.getString(DBUtility.USER_KEY, null);
         User user = gson.fromJson(json, User.class);
@@ -67,6 +73,10 @@ public class NewMessageActivity extends AppCompatActivity {
         values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, message);
         values.put(MessageContract.Message._ID, key);
         values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
+
+        util.insertToDb(db, MessageContract.Message.TABLE_NAME, key, null, values);
+
+        db.close();
 
         util.insertToDb(MessageContract.Message.TABLE_NAME, key, null, values);
     }

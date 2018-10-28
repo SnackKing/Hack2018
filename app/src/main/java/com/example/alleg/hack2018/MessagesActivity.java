@@ -15,7 +15,6 @@ import android.support.v4.view.ViewPager;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.models.Message;
-import com.example.alleg.hack2018.models.User;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.MessageListAdapter;
@@ -81,8 +80,6 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         this.mDbHelp = new DBHelper(this);
         ArrayList<Message> messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
         mMessageAdapter = new MessageListAdapter(this, messageList);
-
-        // new User(messageList.get(0).senderId).name;
 
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
