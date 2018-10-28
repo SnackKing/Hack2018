@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DBUtility extends AppCompatActivity {
 
@@ -38,13 +40,15 @@ public class DBUtility extends AppCompatActivity {
 
     private Context context;
     private SyncThread sync;
+    private SQLiteDatabase db;
 
     public DBUtility(Context con) {
         this.context = con;
-        this.sync = new SyncThread(this);
+        this.db = new DBHelper(this.context).getWritableDatabase();
+        this.sync = new SyncThread(this, db);
     }
 
-    public void insertToDb(SQLiteDatabase db, String table, String key, String nullColumnHack, ContentValues content) {
+    public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
 
         db.insert(table, nullColumnHack, content);
 
@@ -154,5 +158,14 @@ public class DBUtility extends AppCompatActivity {
 
     public static int getCurrentTime() {
         return (int) (System.currentTimeMillis() / 1000L);
+    }
+
+    // return the full set of all UUID's present in tableName
+    public Set<String> getIDSet(String tableName) {
+        Set<String> toReturn = new HashSet<>();
+
+
+
+        return toReturn;
     }
 }
