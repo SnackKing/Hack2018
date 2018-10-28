@@ -71,6 +71,11 @@ public class SyncThread extends Thread {
             this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME, temp.id, null, values);
         }
 
+        for (String id : notInCloud) {
+
+        }
+
+
 
         cloud = DBUtility.getIDSetCloud(ItemContract.Item.TABLE_NAME);
         local = parent.getIDSet(ItemContract.Item.TABLE_NAME);
@@ -81,7 +86,7 @@ public class SyncThread extends Thread {
         notInCloud.remove(cloud);
         notInLocal.remove(local);
 
-        for (String id: notInLocal) {
+        for (String id : notInLocal) {
             Item temp = (Item) DBUtility.getRecord(ItemContract.Item.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
@@ -92,6 +97,10 @@ public class SyncThread extends Thread {
             values.put(ItemContract.Item.COLUMN_NAME_PERISHABLE, temp.perishable);
 
             this.parent.insertToDb(ItemContract.Item.TABLE_NAME, temp.id, null, values);
+        }
+
+        for (String id : notInCloud) {
+
         }
 
 
@@ -105,7 +114,7 @@ public class SyncThread extends Thread {
         notInCloud.remove(cloud);
         notInLocal.remove(local);
 
-        for (String id: notInLocal) {
+        for (String id : notInLocal) {
             Message temp = (Message) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
@@ -114,6 +123,42 @@ public class SyncThread extends Thread {
             values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
             values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
             values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
+
+            this.parent.insertToDb(MessageContract.Message.TABLE_NAME, temp.id, null, values);
+        }
+
+        for (String id : notInCloud) {
+
+        }
+
+
+
+        cloud = DBUtility.getIDSetCloud(UserContract.User.TABLE_NAME);
+        local = parent.getIDSet(UserContract.User.TABLE_NAME);
+
+        notInCloud = new HashSet<>(local);
+        notInLocal = new HashSet<>(cloud);
+
+        notInCloud.remove(cloud);
+        notInLocal.remove(local);
+
+        for (String id : notInLocal) {
+            User temp = (User) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
+
+            ContentValues values = new ContentValues();
+
+            values.put(UserContract.User._ID, temp.id);
+            values.put(UserContract.User.COLUMN_NAME_NAME, temp.name);
+            values.put(UserContract.User.COLUMN_NAME_PASSWORD, temp.password);
+            values.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER, temp.phoneNumber);
+            values.put(UserContract.User.COLUMN_NAME_RESIDENT, temp.resident);
+            values.put(UserContract.User.COLUMN_NAME_SALT, temp.salt);
+
+            this.parent.insertToDb(UserContract.User.TABLE_NAME, temp.id, null, values);
+        }
+
+        for (String id : notInCloud) {
+
         }
     }
 }
