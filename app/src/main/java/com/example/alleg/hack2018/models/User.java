@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
+import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 
 import java.io.Serializable;
@@ -37,8 +38,12 @@ public class User implements Serializable {
         this.id = id;
         this.name = cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME));
         this.phoneNumber = cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER));
-        this.salt = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
-        this.password = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
+        byte[] s = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
+        byte[] p = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
+
+        this.salt = DBUtility.fromByteArray(s);
+        this.password = DBUtility.fromByteArray(p);
+
         int res = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT));
         this.resident = res == 1;
         cursor.close();
