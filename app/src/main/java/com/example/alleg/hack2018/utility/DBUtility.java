@@ -27,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,12 +53,7 @@ public class DBUtility extends AppCompatActivity {
         this.sync = new SyncThread(this, db);
         this.sync.start();
     }
-
-    @Deprecated
-    public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
-        insertToDb(table, nullColumnHack, content);
-    }
-
+    
     public void insertToDb(String table, String nullColumnHack, ContentValues content) {
 
         db.insert(table, nullColumnHack, content);

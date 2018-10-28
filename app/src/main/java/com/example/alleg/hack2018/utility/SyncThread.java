@@ -68,7 +68,7 @@ public class SyncThread extends Thread {
             values.put(InventoryContract.Inventory.COLUMN_NAME_ITEM, temp.item);
             values.put(InventoryContract.Inventory.COLUMN_NAME_USER_ID, temp.userId);
 
-            this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME, temp.id, null, values);
+            this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME, null, values);
         }
 
 
@@ -91,7 +91,7 @@ public class SyncThread extends Thread {
             values.put(ItemContract.Item.COLUMN_NAME_NAME, temp.name);
             values.put(ItemContract.Item.COLUMN_NAME_PERISHABLE, temp.perishable);
 
-            this.parent.insertToDb(ItemContract.Item.TABLE_NAME, temp.id, null, values);
+            this.parent.insertToDb(ItemContract.Item.TABLE_NAME, null, values);
         }
 
 

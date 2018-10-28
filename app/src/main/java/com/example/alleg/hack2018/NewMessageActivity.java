@@ -64,17 +64,15 @@ public class NewMessageActivity extends AppCompatActivity {
 
         DBUtility util = new DBUtility(getApplicationContext());
 
-        String key = String.valueOf(UUID.randomUUID());
-
         ContentValues values = new ContentValues();
 
         values.put(MessageContract.Message.COLUMN_NAME_USER_ID, user.id);
         values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, phone);
         values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, message);
-        values.put(MessageContract.Message._ID, key);
+        values.put(MessageContract.Message._ID, String.valueOf(UUID.randomUUID()));
         values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
 
-        util.insertToDb(MessageContract.Message.TABLE_NAME, key, null, values);
+        util.insertToDb(MessageContract.Message.TABLE_NAME, null, values);
     }
 
 }
