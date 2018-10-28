@@ -78,7 +78,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     public void onDeviceConnected(Device device, Session session) {
                         super.onDeviceConnected(device, session);
                         //TODO make getData function for sending data to nearby devices
-                        //com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(getData()).setReceiverId(device.getUserId()).build();
+                        //com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(DBUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
                     }
                 };
                 Bridgefy.start(messageListener, stateListener);
