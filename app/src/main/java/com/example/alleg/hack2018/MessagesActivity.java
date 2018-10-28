@@ -1,17 +1,12 @@
 package com.example.alleg.hack2018;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.widget.Toast;
 
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
@@ -29,21 +23,16 @@ import com.bridgefy.sdk.client.RegistrationListener;
 import com.bridgefy.sdk.client.Session;
 import com.bridgefy.sdk.client.StateListener;
 
-import com.example.alleg.hack2018.contracts.MessageContract;
-import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
-import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
-import com.example.alleg.hack2018.utility.MessageListAdapter;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
      private DBUtility dbUtility;
-     private String API_KEY;
+     private final String API_KEY = "b1109f22-fb9e-4e07-a2d2-6197ca1ee2eb";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +40,6 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         setContentView(R.layout.activity_messages);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        API_KEY = "b1109f22-fb9e-4e07-a2d2-6197ca1ee2eb";
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
