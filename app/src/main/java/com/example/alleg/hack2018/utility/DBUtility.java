@@ -63,10 +63,10 @@ public class DBUtility extends AppCompatActivity {
         this.db = temp.getWritableDatabase();
         this.dbr = temp.getReadableDatabase();
 
-        if (syncThreads < SYNC_THREAD_LIMIT) {
+        if (DBUtility.syncThreads < SYNC_THREAD_LIMIT) {
             this.sync = new SyncThread(this, db, dbr);
             this.sync.start();
-            this.syncThreads += 1;
+            DBUtility.syncThreads += 1;
         }
     }
 
