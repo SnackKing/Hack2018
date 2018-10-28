@@ -12,6 +12,7 @@ import com.example.alleg.hack2018.models.Item;
 import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,10 +20,12 @@ public class SyncThread extends Thread {
 
     DBUtility parent;
     SQLiteDatabase db;
+    SQLiteDatabase dbr;
 
-    public SyncThread(DBUtility par, SQLiteDatabase db) {
+    public SyncThread(DBUtility par, SQLiteDatabase db, SQLiteDatabase dbr) {
         parent = par;
         this.db = db;
+        this.dbr = dbr;
     }
 
     @Override
@@ -68,8 +71,14 @@ public class SyncThread extends Thread {
             values.put(InventoryContract.Inventory.COLUMN_NAME_ITEM, temp.item);
             values.put(InventoryContract.Inventory.COLUMN_NAME_USER_ID, temp.userId);
 
-            this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME, temp.id, null, values);
+            this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME,null, values);
         }
+
+        for (String id : notInCloud) {
+            Inventory temp = new Inventory(id, dbr);
+            DBUtility.addToFirebase(InventoryContract.Inventory.TABLE_NAME, temp);
+        }
+
 
 
         cloud = DBUtility.getIDSetCloud(ItemContract.Item.TABLE_NAME);
@@ -81,7 +90,7 @@ public class SyncThread extends Thread {
         notInCloud.remove(cloud);
         notInLocal.remove(local);
 
-        for (String id: notInLocal) {
+        for (String id : notInLocal) {
             Item temp = (Item) DBUtility.getRecord(ItemContract.Item.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
@@ -91,7 +100,12 @@ public class SyncThread extends Thread {
             values.put(ItemContract.Item.COLUMN_NAME_NAME, temp.name);
             values.put(ItemContract.Item.COLUMN_NAME_PERISHABLE, temp.perishable);
 
-            this.parent.insertToDb(ItemContract.Item.TABLE_NAME, temp.id, null, values);
+            this.parent.insertToDb(ItemContract.Item.TABLE_NAME,null, values);
+        }
+
+        for (String id : notInCloud) {
+            Item temp = new Item(id, dbr);
+            DBUtility.addToFirebase(ItemContract.Item.TABLE_NAME, temp);
         }
 
 
@@ -105,7 +119,7 @@ public class SyncThread extends Thread {
         notInCloud.remove(cloud);
         notInLocal.remove(local);
 
-        for (String id: notInLocal) {
+        for (String id : notInLocal) {
             Message temp = (Message) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
@@ -114,6 +128,44 @@ public class SyncThread extends Thread {
             values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
             values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
             values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
+
+            this.parent.insertToDb(MessageContract.Message.TABLE_NAME,null, values);
+        }
+
+        for (String id : notInCloud) {
+            Message temp = new Message(id, dbr);
+            DBUtility.addToFirebase(MessageContract.Message.TABLE_NAME, temp);
+        }
+
+
+
+        cloud = DBUtility.getIDSetCloud(UserContract.User.TABLE_NAME);
+        local = parent.getIDSet(UserContract.User.TABLE_NAME);
+
+        notInCloud = new HashSet<>(local);
+        notInLocal = new HashSet<>(cloud);
+
+        notInCloud.remove(cloud);
+        notInLocal.remove(local);
+
+        for (String id : notInLocal) {
+            User temp = (User) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
+
+            ContentValues values = new ContentValues();
+
+            values.put(UserContract.User._ID, temp.id);
+            values.put(UserContract.User.COLUMN_NAME_NAME, temp.name);
+            values.put(UserContract.User.COLUMN_NAME_PASSWORD, temp.password);
+            values.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER, temp.phoneNumber);
+            values.put(UserContract.User.COLUMN_NAME_RESIDENT, temp.resident);
+            values.put(UserContract.User.COLUMN_NAME_SALT, temp.salt);
+
+            this.parent.insertToDb(UserContract.User.TABLE_NAME,null, values);
+        }
+
+        for (String id : notInCloud) {
+            User temp = new User(id, dbr);
+            DBUtility.addToFirebase(UserContract.User.TABLE_NAME, temp);
         }
     }
 }
