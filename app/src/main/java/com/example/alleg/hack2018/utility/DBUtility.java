@@ -286,7 +286,7 @@ public class DBUtility extends AppCompatActivity {
 
                 for (String label : dataToAdd.keySet()) {
                     if (label.equals(UserContract.User.COLUMN_NAME_SALT) || label.equals(UserContract.User.COLUMN_NAME_PASSWORD)) {
-                        byte[] val = DBUtility.toByteArray((int) dataToAdd.get(label));
+                        byte[] val = DBUtility.toByteArray(Integer.valueOf((String) dataToAdd.get(label)));
 
                         values.put(label, val);
                     } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
