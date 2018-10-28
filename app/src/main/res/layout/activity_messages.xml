@@ -48,6 +48,21 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/tab_layout"/>
+    <fragment
+        android:id="@+id/publicFrag"
+        class="com.example.alleg.hack2018.PublicTab"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_public_tab"/>
+
+    <fragment
+        android:id="@+id/inboxFrag"
+        class="com.example.alleg.hack2018.InboxTab"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        tools:layout="@layout/fragment_inbox_tab" />
 
 
 

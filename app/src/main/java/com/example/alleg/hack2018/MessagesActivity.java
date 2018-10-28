@@ -1,11 +1,14 @@
 package com.example.alleg.hack2018;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +40,7 @@ import java.util.ArrayList;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
-     private DBUtility dbUtility;
+    private DBUtility dbUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         Gson gson = new Gson();
         String json = mPrefs.getString(DBUtility.USER_KEY, null);
         User user = gson.fromJson(json, User.class);
-        getSupportActionBar().setTitle(user.name + "'s Messages");
 
         dbUtility = new DBUtility(this);
 
@@ -68,7 +70,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
                         //TODO update database here using received message
-                        
+
                     }
                 };
                 StateListener stateListener = new StateListener() {
@@ -142,23 +144,27 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.refresh_toolbar, menu);
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        tb.inflateMenu(R.menu.refresh_toolbar);
+        tb.setOnMenuItemClickListener(
+                new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        return onOptionsItemSelected(item);
+                    }
+                });
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                PublicTab pubFragment = (PublicTab) getSupportFragmentManager().findFragmentById(R.id.publicFrag);
+                pubFragment.updateAdapter();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            Toast.makeText(this, "Action clicked", Toast.LENGTH_LONG).show();
-            return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
+
 }
