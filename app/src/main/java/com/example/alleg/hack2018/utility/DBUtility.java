@@ -33,6 +33,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
@@ -232,8 +233,8 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
-        HashMap<String, HashSet<String>> out = new HashMap<>();
+    public Map<String, Set<String>> getTableIdSets(Map<String, Map<String, Map<String, Object>>> input) {
+        Map<String, Set<String>> out = new HashMap<>();
 
         // for all keys in  each table, return tablename to set of keys
         for (String t : input.keySet()) {
@@ -250,17 +251,17 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+    public Map<String, Set<String>> getIdsToAdd(Map<String, Map<String, Map<String, Object>>> input) {
 
-        HashMap<String, HashSet<String>> out = new HashMap<>();
+        Map<String, Set<String>> out = new HashMap<>();
 
-        HashMap<String, HashSet<String>> in = getTableIdSets(input);
+        Map<String, Set<String>> in = getTableIdSets(input);
 
         for (String key : in.keySet()) {
             // key is table
             Set<String> existingKeys = this.getIDSet(key);
 
-            HashSet<String> newKeys = in.get(key);
+            Set<String> newKeys = in.get(key);
 
             newKeys.removeAll(existingKeys);
 
@@ -270,12 +271,12 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public void updateLocal(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
-        HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
+    public void updateLocal(Map<String, Map<String, Map<String, Object>>> input) {
+        Map<String, Set<String>> keysToAdd = getIdsToAdd(input);
 
         for (String table : keysToAdd.keySet()) {
             for (String id : keysToAdd.get(table)) {
-                HashMap<String, Object> dataToAdd = input.get(table).get(id);
+                Map<String, Object> dataToAdd = input.get(table).get(id);
 
                 ContentValues values = new ContentValues();
 
