@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DBUtility extends AppCompatActivity {
 
@@ -38,13 +40,15 @@ public class DBUtility extends AppCompatActivity {
 
     private Context context;
     private SyncThread sync;
+    private SQLiteDatabase db;
 
     public DBUtility(Context con) {
         this.context = con;
-        this.sync = new SyncThread(this);
+        this.db = new DBHelper(this.context).getWritableDatabase();
+        this.sync = new SyncThread(this, db);
     }
 
-    public void insertToDb(SQLiteDatabase db, String table, String key, String nullColumnHack, ContentValues content) {
+    public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
 
         db.insert(table, nullColumnHack, content);
 
@@ -156,5 +160,49 @@ public class DBUtility extends AppCompatActivity {
 
     public static int getCurrentTime() {
         return (int) (System.currentTimeMillis() / 1000L);
+    }
+
+    // return the full set of all UUID's present in tableName
+    public Set<String> getIDSet(String tableName) {
+        Set<String> toReturn = new HashSet<>();
+
+        String colName = null;
+
+        switch(tableName) {
+            case InventoryContract.Inventory.TABLE_NAME:
+                colName = InventoryContract.Inventory._ID;
+                break;
+            case UserContract.User.TABLE_NAME:
+                colName = UserContract.User._ID;
+                break;
+            case ItemContract.Item.TABLE_NAME:
+                colName = ItemContract.Item._ID;
+                break;
+            case MessageContract.Message.TABLE_NAME:
+                colName = MessageContract.Message._ID;
+                break;
+        }
+
+        DBHelper help = new DBHelper(this.context);
+        SQLiteDatabase db = help.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + tableName;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            toReturn.add(cursor.getString(cursor.getColumnIndex(colName)));
+        }
+
+        cursor.close();
+        help.close();
+        return toReturn;
+    }
+
+    public Set<String> getIDSetCloud(String tableName) {
+        Set<String> toReturn = new HashSet<>();
+
+        // TODO
+
+        return toReturn;
     }
 }

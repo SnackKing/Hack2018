@@ -12,5 +12,6 @@ public final class MessageContract {
         public static final String COLUMN_NAME_USER_ID = "User" + UserContract.User._ID;
         public static final String COLUMN_NAME_MESSAGE = "Message";
         public static final String COLUMN_NAME_DESTINATION_ID = "Destination" + UserContract.User._ID;
+        public static final String COLUMN_NAME_TIME = "Time";
     }
 }
