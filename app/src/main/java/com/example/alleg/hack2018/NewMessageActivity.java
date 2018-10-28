@@ -30,7 +30,6 @@ public class NewMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
-        final TextView phone = findViewById(R.id.recipient_phone);
         final TextView message = findViewById(R.id.message);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,7 +38,7 @@ public class NewMessageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               addToDatabase(phone.getText().toString(), message.getText().toString());
+               addToDatabase("-1", message.getText().toString());
                Log.d("FLOAT", "starting Activity");
                 Intent intent = new Intent(NewMessageActivity.this, MessagesActivity.class);
                 startActivity(intent);
@@ -64,17 +63,15 @@ public class NewMessageActivity extends AppCompatActivity {
 
         DBUtility util = new DBUtility(getApplicationContext());
 
-        String key = String.valueOf(UUID.randomUUID());
-
         ContentValues values = new ContentValues();
 
         values.put(MessageContract.Message.COLUMN_NAME_USER_ID, user.id);
         values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, phone);
         values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, message);
-        values.put(MessageContract.Message._ID, key);
+        values.put(MessageContract.Message._ID, String.valueOf(UUID.randomUUID()));
         values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
 
-        util.insertToDb(MessageContract.Message.TABLE_NAME, key, null, values);
+        util.insertToDb(MessageContract.Message.TABLE_NAME, null, values);
     }
 
 }

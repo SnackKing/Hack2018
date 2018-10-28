@@ -27,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,19 +46,17 @@ public class DBUtility extends AppCompatActivity {
     private Context context;
     private SyncThread sync;
     private SQLiteDatabase db;
+    private SQLiteDatabase dbr;
 
     public DBUtility(Context con) {
         this.context = con;
-        this.db = new DBHelper(this.context).getWritableDatabase();
-        this.sync = new SyncThread(this, db);
+        DBHelper temp = new DBHelper(con);
+        this.db = temp.getWritableDatabase();
+        this.dbr = temp.getReadableDatabase();
+        this.sync = new SyncThread(this, db, dbr);
         this.sync.start();
     }
-
-    @Deprecated
-    public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
-        insertToDb(table, nullColumnHack, content);
-    }
-
+    
     public void insertToDb(String table, String nullColumnHack, ContentValues content) {
 
         db.insert(table, nullColumnHack, content);
@@ -167,18 +164,14 @@ public class DBUtility extends AppCompatActivity {
                 break;
         }
 
-        DBHelper help = new DBHelper(this.context);
-        SQLiteDatabase db = help.getReadableDatabase();
-
         String selectQuery = "SELECT * FROM " + tableName;
-        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
 
         for (int i = 0; i < cursor.getCount(); i++) {
             toReturn.add(cursor.getString(cursor.getColumnIndex(colName)));
         }
 
         cursor.close();
-        help.close();
         return toReturn;
     }
 

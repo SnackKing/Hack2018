@@ -12,7 +12,6 @@ import com.example.alleg.hack2018.models.Item;
 import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -78,8 +77,6 @@ public class SyncThread extends Thread {
             Inventory temp = new Inventory(id, dbr);
             DBUtility.addToFirebase(InventoryContract.Inventory.TABLE_NAME, temp);
         }
-
-
 
         cloud = DBUtility.getIDSetCloud(ItemContract.Item.TABLE_NAME);
         local = parent.getIDSet(ItemContract.Item.TABLE_NAME);

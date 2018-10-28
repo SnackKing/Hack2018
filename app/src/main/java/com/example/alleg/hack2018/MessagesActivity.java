@@ -37,6 +37,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
     private RecyclerView mMessageRecycler;
     private MessageListAdapter mMessageAdapter;
     private DBHelper mDbHelp;
+    ArrayList<Message> messageList = new ArrayList<>();
+
 
 
     @Override
@@ -122,9 +124,18 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
         this.mDbHelp = new DBHelper(this);
         ArrayList<com.example.alleg.hack2018.models.Message> messageList = com.example.alleg.hack2018.models.Message.getPublicMessages(mDbHelp.getReadableDatabase());
+        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
         mMessageAdapter = new MessageListAdapter(this, messageList);
-
+        mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
+        mMessageAdapter = new MessageListAdapter(this, messageList);
+        mMessageAdapter.notifyDataSetChanged();
+
     }
 
     @Override

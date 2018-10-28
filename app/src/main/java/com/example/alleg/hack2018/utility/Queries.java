@@ -27,7 +27,7 @@ class Queries {
             Message._ID + " TEXT PRIMARY KEY," +
             Message.COLUMN_NAME_USER_ID + " TEXT," +
             Message.COLUMN_NAME_MESSAGE + " TEXT," +
-            Message.COLUMN_NAME_DESTINATION_ID + " INT" +
+            Message.COLUMN_NAME_DESTINATION_ID + " INT, " +
             Message.COLUMN_NAME_TIME +" INT);";
 
     static final String SQL_DELETE_MESSAGE =

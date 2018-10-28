@@ -181,16 +181,14 @@ public class SignUpActivity extends AppCompatActivity  {
         byte[] salt = Passwords.getNextSalt();
         byte[] salted = Passwords.hash(password.toCharArray(), salt);
 
-        String key = String.valueOf(UUID.randomUUID());
-
         values.put(User.COLUMN_NAME_NAME, name);
         values.put(User.COLUMN_NAME_SALT, salt);
         values.put(User.COLUMN_NAME_PASSWORD, salted);
         values.put(User.COLUMN_NAME_PHONE_NUMBER, phone);
         values.put(User.COLUMN_NAME_RESIDENT, 1);
-        values.put(User._ID, key);
+        values.put(User._ID, String.valueOf(UUID.randomUUID()));
 
-        util.insertToDb(User.TABLE_NAME, key,null, values);
+        util.insertToDb(User.TABLE_NAME,null, values);
 
         // log the newly created user in
         return util.login(mDbHelp.getReadableDatabase(), phone, password);
