@@ -1,5 +1,6 @@
 package com.example.alleg.hack2018;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -74,6 +76,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DBUtility util = new DBUtility(getApplicationContext());
+
+                if (ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    return;
+                }else{// Write you code here if permission already given.
                 int result = util.login(mDbHelp.getReadableDatabase(), mPhoneView.getText().toString(),mPasswordView.getText().toString());
                 if(result == -1){
                     mPhoneView.setError("There are no accounts with that number");
@@ -86,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this,MessagesActivity.class);
                     startActivity(intent);
                 }
-            }
+            }}
         });
 
         Button goSignInButton = findViewById(R.id.phone_go_sign_up_button);
