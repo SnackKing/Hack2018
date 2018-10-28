@@ -3,6 +3,7 @@ package com.example.alleg.hack2018;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -65,8 +66,25 @@ public class NewMessageActivity extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 
+        String newId = null;
+
+        if (phone.equals(DBUtility.PUBLIC_MESSAGE_DEST)) {
+            newId = DBUtility.PUBLIC_MESSAGE_DEST;
+        } else {
+            String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME
+                + " WHERE " + UserContract.User.COLUMN_NAME_PHONE_NUMBER + " = \"" + phone + "\"";
+            Cursor cursor = mDbHelp.getReadableDatabase().rawQuery(selectQuery, new String[] {});
+
+            if(cursor.getCount() == 0) {
+                //No destination phone found
+                //TODO
+            } else {
+                newId = cursor.getString(cursor.getColumnIndex(UserContract.User._ID));
+            }
+        }
+
         values.put(MessageContract.Message.COLUMN_NAME_USER_ID, user.id);
-        values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, phone);
+        values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, newId);
         values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, message);
         values.put(MessageContract.Message._ID, String.valueOf(UUID.randomUUID()));
         values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
