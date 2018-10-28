@@ -231,7 +231,9 @@ public class DBUtility extends AppCompatActivity {
         // for all keys in  each table, return tablename to set of keys
         for (String t : input.keySet()) {
             // this is table
-            out.put(t, new HashSet<>(input.get(t).keySet()));
+            HashSet<String> keys = new HashSet<>();
+            keys.addAll(input.get(t).keySet());
+            out.put(t, keys);
         }
 
         return out;
