@@ -281,7 +281,13 @@ public class DBUtility extends AppCompatActivity {
                 ContentValues values = new ContentValues();
 
                 for (String label : dataToAdd.keySet()) {
-                    values.put(label, dataToAdd.get(label).toString());
+                    if (label.equals(UserContract.User.COLUMN_NAME_SALT) || label.equals(UserContract.User.COLUMN_NAME_PASSWORD)) {
+                        values.put(label, (byte[]) dataToAdd.get(label));
+                    } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
+                        values.put(label, (int) dataToAdd.get(label));
+                    } else {
+                        values.put(label, dataToAdd.get(label).toString());
+                    }
                 }
 
                 this.insertToDb(table, null, values);
