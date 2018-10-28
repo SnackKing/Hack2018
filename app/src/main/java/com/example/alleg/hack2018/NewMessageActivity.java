@@ -65,8 +65,22 @@ public class NewMessageActivity extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 
+        /*
+         * TODO
+         * Phone here must be id, not phone
+         */
+
+        String newId = null;
+
+        if (phone.equals(DBUtility.PUBLIC_MESSAGE_DEST)) {
+            newId = DBUtility.PUBLIC_MESSAGE_DEST;
+        } else {
+            // TODO HERE
+            // new id = get from db where phone == phone
+        }
+
         values.put(MessageContract.Message.COLUMN_NAME_USER_ID, user.id);
-        values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, phone);
+        values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, newId);
         values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, message);
         values.put(MessageContract.Message._ID, String.valueOf(UUID.randomUUID()));
         values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
