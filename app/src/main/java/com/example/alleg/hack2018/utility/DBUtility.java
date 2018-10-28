@@ -91,7 +91,7 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // TODO : save changes and deletions
-    public void syncDatabase(SQLiteDatabase db) {
+    public void syncDatabaseToCloud(SQLiteDatabase db) {
         // empty each of the not sent arrays
 
         while (notSentMessages.size() > 0 ) {

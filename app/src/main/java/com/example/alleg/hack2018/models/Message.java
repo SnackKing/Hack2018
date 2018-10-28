@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import com.example.alleg.hack2018.contracts.MessageContract;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -40,8 +41,14 @@ public class Message implements Serializable {
                     break;
             }
         }
+    }
 
+    static ArrayList<Message> getPublicMessages() {
+        ArrayList<Message> arr = new ArrayList<>();
 
+        // TODO
+
+        return arr;
     }
 
 }

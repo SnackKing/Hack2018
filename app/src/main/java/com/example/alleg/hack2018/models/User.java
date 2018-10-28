@@ -6,6 +6,7 @@ import com.example.alleg.hack2018.contracts.UserContract;
 import com.example.alleg.hack2018.utility.DBUtility;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -59,5 +60,13 @@ public class User implements Serializable {
                     break;
             }
         }
+    }
+
+    ArrayList<Message> getPrivateMessages() {
+        ArrayList<Message> arr = new ArrayList<>();
+
+        //TODO
+
+        return arr;
     }
 }
