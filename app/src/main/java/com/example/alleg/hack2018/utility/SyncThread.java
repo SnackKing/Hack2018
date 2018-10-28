@@ -27,13 +27,19 @@ public class SyncThread extends Thread {
 
     @Override
     public void run() {
+        int nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
+
         while (true) {
             // only check for internet every minute
             try {
-                this.sleep(60000);
+                this.sleep(nextSleep);
 
                 if (parent.isConnected()) {
+                    nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
                     this.fullSyncToCloud();
+                } else {
+                    // not connected - look for internet desperately
+                    nextSleep = DBUtility.MS_WAIT_THREAD_CHECK / 4;
                 }
             } catch (java.lang.InterruptedException e) {
                 e.printStackTrace();
