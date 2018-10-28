@@ -50,7 +50,6 @@ public class NewMessageActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    //TODO Implement
     private void addToDatabase(String phone, String message){
         SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
         Gson gson = new Gson();
