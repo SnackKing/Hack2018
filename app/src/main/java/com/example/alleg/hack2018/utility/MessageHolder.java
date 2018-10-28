@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class MessageHolder extends RecyclerView.ViewHolder {
         User user = gson.fromJson(json, User.class);
         DBHelper helper = new DBHelper(context);
         User sender = new User(message.senderId, helper.getReadableDatabase());
+
         messageText.setText(message.msg);
         if(sender.id.equals(user.id)){
             messageText.setBackgroundResource(R.color.colorAccent);

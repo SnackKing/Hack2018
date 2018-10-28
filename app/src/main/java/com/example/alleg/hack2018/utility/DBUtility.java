@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
@@ -258,6 +259,7 @@ public class DBUtility extends AppCompatActivity {
                 switch(table) {
                     case UserContract.User.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(User.class));
+                        Log.d("user", ((User) hack.get(0)).id);
                         break;
                     case ItemContract.Item.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(Item.class));
@@ -266,7 +268,15 @@ public class DBUtility extends AppCompatActivity {
                         hack.add(dataSnapshot.child(table).child(id).getValue(Inventory.class));
                         break;
                     case MessageContract.Message.TABLE_NAME:
-                        hack.add(dataSnapshot.child(table).child(id).getValue(Message.class));
+                        Message temp = null;
+
+                        Log.d("table", table);
+                        Log.d("id", id);
+
+                        temp = dataSnapshot.child(table).child(id).getValue(Message.class);
+                        Log.d("message", temp.id);
+
+                        hack.add(temp);
                         break;
                 }
 

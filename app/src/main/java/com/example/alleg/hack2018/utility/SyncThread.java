@@ -116,15 +116,20 @@ public class SyncThread extends Thread {
         notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
-            User temp = (User) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
+            User temp = (User) DBUtility.getRecord(UserContract.User.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
+
+            int res = 0;
+            if (temp.resident) {
+                res = 1;
+            }
 
             values.put(UserContract.User._ID, temp.id);
             values.put(UserContract.User.COLUMN_NAME_NAME, temp.name);
             values.put(UserContract.User.COLUMN_NAME_PASSWORD, temp.password);
             values.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER, temp.phoneNumber);
-            values.put(UserContract.User.COLUMN_NAME_RESIDENT, temp.resident);
+            values.put(UserContract.User.COLUMN_NAME_RESIDENT, res);
             values.put(UserContract.User.COLUMN_NAME_SALT, temp.salt);
 
             this.parent.insertToDb(UserContract.User.TABLE_NAME,null, values);
