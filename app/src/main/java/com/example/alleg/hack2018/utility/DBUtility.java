@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.bridgefy.sdk.client.Bridgefy;
 import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
@@ -118,6 +119,8 @@ public class DBUtility extends AppCompatActivity {
         if (this.isConnected()) {
             DBUtility.addToFirebase(table, obj);
         }
+
+        //Bridgefy.sendBroadcastMessage(dataToHashmap());
     }
 
     public int login(SQLiteDatabase db, String phone, String password){

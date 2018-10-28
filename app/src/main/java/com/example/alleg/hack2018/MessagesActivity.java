@@ -34,8 +34,7 @@ import java.util.ArrayList;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
-
-
+     private DBUtility dbUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         User user = gson.fromJson(json, User.class);
         getSupportActionBar().setTitle(user.name + "'s Messages");
 
-
+        dbUtility = new DBUtility(this);
 
         //Always use the Application context to avoid leaks
         Bridgefy.initialize(getApplicationContext(), "7c2890f4-a44a-4999-abe2-042e5e3acd21", new RegistrationListener() {
@@ -66,16 +65,17 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
                         //TODO update database here using received message
-
+                        
                     }
                 };
                 StateListener stateListener = new StateListener() {
                     @Override
                     public void onDeviceConnected(Device device, Session session) {
                         super.onDeviceConnected(device, session);
-                        //TODO make getData function for sending data to nearby devices
-                        //com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(DBUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
+                        //com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(dbUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
+                        //Bridgefy.sendMessage(message);
                     }
+
                 };
                 Bridgefy.start(messageListener, stateListener);
             }
