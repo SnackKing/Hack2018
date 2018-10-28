@@ -74,8 +74,6 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         ArrayList<Message> messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
         mMessageAdapter = new MessageListAdapter(this, messageList);
 
-        // new User(messageList.get(0).senderId).name;
-
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
