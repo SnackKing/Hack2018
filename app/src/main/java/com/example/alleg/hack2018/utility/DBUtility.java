@@ -33,6 +33,9 @@ public class DBUtility extends AppCompatActivity {
 
     public static final String USER_KEY = "currUser";
 
+    // how long the thread syncs
+    public static final int MS_WAIT_THREAD_CHECK = 60000;
+
     private Context context;
     private SyncThread sync;
     private SQLiteDatabase db;
@@ -95,7 +98,7 @@ public class DBUtility extends AppCompatActivity {
         }
 
         cursor.moveToFirst();
-        byte[] salt = cursor.getBlob(cursor.getColumnIndex("Salt"));
+        byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
         byte[] saltedPsd =
                 cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
 
