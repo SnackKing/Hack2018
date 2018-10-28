@@ -1,8 +1,11 @@
 package com.example.alleg.hack2018.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.ItemContract;
+import com.example.alleg.hack2018.contracts.UserContract;
 
 import java.io.SequenceInputStream;
 import java.io.Serializable;
@@ -15,11 +18,25 @@ public class Item implements Serializable {
     public String id;
     public String name;
     public boolean perishable;
-    public long importance;
+    public int importance;
 
     // get from db
-    public Item(String id) {
-        // TODO
+    public Item(String id, SQLiteDatabase db) {
+        String selectQuery = "SELECT * FROM " + ItemContract.Item.TABLE_NAME
+                + " WHERE " + ItemContract.Item._ID + " = " + id;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
+
+        if (cursor.getCount() == 0) {
+            //Can't find id
+            //TODO
+        }
+
+        this.id = id;
+        this.name = cursor.getString(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_NAME));
+        this.importance = cursor.getInt(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_IMPORTANCE));
+        int perish = cursor.getInt(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_PERISHABLE));
+        this.perishable = perish == 1;
     }
 
     public Item(ContentValues values){
