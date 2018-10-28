@@ -17,6 +17,11 @@ public class Item implements Serializable {
     public boolean perishable;
     public long importance;
 
+    // get from db
+    public Item(String id) {
+        // TODO
+    }
+
     public Item(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
