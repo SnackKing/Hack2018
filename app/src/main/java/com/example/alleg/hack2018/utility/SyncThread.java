@@ -127,10 +127,10 @@ public class SyncThread extends Thread {
 
             values.put(UserContract.User._ID, temp.id);
             values.put(UserContract.User.COLUMN_NAME_NAME, temp.name);
-            values.put(UserContract.User.COLUMN_NAME_PASSWORD, temp.password);
+            values.put(UserContract.User.COLUMN_NAME_PASSWORD, DBUtility.toByteArray(temp.password));
             values.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER, temp.phoneNumber);
             values.put(UserContract.User.COLUMN_NAME_RESIDENT, res);
-            values.put(UserContract.User.COLUMN_NAME_SALT, temp.salt);
+            values.put(UserContract.User.COLUMN_NAME_SALT, DBUtility.toByteArray(temp.salt));
 
             this.parent.insertToDb(UserContract.User.TABLE_NAME,null, values);
         }
