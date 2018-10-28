@@ -70,7 +70,7 @@ public class Message implements Serializable {
         }
     }
 
-    static ArrayList<Message> getPublicMessages(SQLiteDatabase db) {
+    public static ArrayList<Message> getPublicMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
