@@ -271,15 +271,7 @@ public class DBUtility extends AppCompatActivity {
                         hack.add(dataSnapshot.child(table).child(id).getValue(Inventory.class));
                         break;
                     case MessageContract.Message.TABLE_NAME:
-                        Message temp = null;
-
-                        Log.d("table", table);
-                        Log.d("id", id);
-
-                        temp = dataSnapshot.child(table).child(id).getValue(Message.class);
-                        Log.d("message", temp.id);
-
-                        hack.add(temp);
+                        hack.add(dataSnapshot.child(table).child(id).getValue(Message.class));
                         break;
                 }
 
