@@ -68,7 +68,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     @Override
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
-                        HashMap hmap = message.getContent();
+                        /*HashMap hmap = message.getContent();
 
                         HashMap<String,Map<String, Map<String, String>>> temp = hmap;
 
@@ -83,7 +83,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                             }
                         }
 
-                        dbUtility.updateLocal(hmap);
+                        dbUtility.updateLocal(hmap);*/
                         Log.d("Bridgefy","Message Received");
                     }
                 };
