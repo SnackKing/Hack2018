@@ -59,13 +59,15 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         Bridgefy.initialize(getApplicationContext(), API_KEY, new RegistrationListener() {
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
+                Log.d("Bridgefy","onRegistrationSuccessful: device evaluation "+bridgefyClient.getDeviceProfile().getDeviceEvaluation());
+
                 // Bridgefy is ready to start
                 messageListener = new MessageListener() {
                     @Override
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
                         HashMap hmap = message.getContent();
-                        //dbUtility.updateLocal(hmap);
+                        dbUtility.updateLocal(hmap);
                         Log.d("Bridgefy","Message Received");
                     }
                 };
