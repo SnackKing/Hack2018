@@ -6,6 +6,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical">
     <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="30dp"
         android:id="@+id/reyclerview_message_list"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
