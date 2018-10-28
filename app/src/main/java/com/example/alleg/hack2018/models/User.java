@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
 import com.example.alleg.hack2018.utility.DBUtility;
 
@@ -88,19 +89,48 @@ public class User implements Serializable {
 
     // get any incoming messages
     // where dest = this user object's id
-    ArrayList<Message> getPrivateMessages() {
+    ArrayList<Message> getPrivateMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        //TODO
+        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
+                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = " + this.id;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
 
+        for(int i = 0; i < cursor.getCount(); i++) {
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            arr.add(temp);
+        }
+
+        cursor.close();
         return arr;
     }
 
     // get any messages where this user's id is the sender
-    ArrayList<Message> getOutgoingMessages() {
+    ArrayList<Message> getOutgoingMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        // TODO
+        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
+                + " WHERE " + MessageContract.Message.COLUMN_NAME_USER_ID + " = " + this.id;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
+
+        for(int i = 0; i < cursor.getCount(); i++) {
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            arr.add(temp);
+        }
+
+        cursor.close();
+        return arr;
+    }
+
+    // return a list of inventory
+    // this means, return a list of objects with this's id, and then an item id, and a count
+    // then, use the item id to grab Item objects using constructor
+    ArrayList<Inventory> getItemsInInventory() {
+        ArrayList<Inventory> arr = new ArrayList<>();
+
+        // TODO low priority
 
         return arr;
     }

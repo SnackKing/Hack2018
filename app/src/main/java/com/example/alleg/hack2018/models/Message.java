@@ -1,7 +1,10 @@
 package com.example.alleg.hack2018.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
 
 import java.io.Serializable;
@@ -12,13 +15,27 @@ import java.util.Set;
 
 public class Message implements Serializable {
     public String id; // id of this record
-    public long senderId; // id of sender
-    public long recipId; // id of intended recipient
+    public String senderId; // id of sender
+    public String recipId; // id of intended recipient
     public String msg; // message
 
     // pull from db
-    public Message(String id) {
-        // TODO
+    public Message(String id, SQLiteDatabase db) {
+        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
+                + " WHERE " + MessageContract.Message._ID + " = " + id;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
+
+        if (cursor.getCount() == 0) {
+            //Can't find id
+            //TODO
+        }
+
+        this.id = id;
+        this.senderId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID));
+        this.recipId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID));
+        this.msg = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE));
+        cursor.close();
     }
 
     public Message(ContentValues values){
@@ -36,10 +53,10 @@ public class Message implements Serializable {
                     this.msg = value.toString();
                     break;
                 case MessageContract.Message.COLUMN_NAME_DESTINATION_ID:
-                    this.recipId = (long) value;
+                    this.recipId = value.toString();
                     break;
                 case MessageContract.Message.COLUMN_NAME_USER_ID:
-                    this.senderId = (long) value;
+                    this.senderId = value.toString();
                     break;
                 case MessageContract.Message._ID:
                     this.id = value.toString();
@@ -48,11 +65,20 @@ public class Message implements Serializable {
         }
     }
 
-    static ArrayList<Message> getPublicMessages() {
+    static ArrayList<Message> getPublicMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        // TODO
+        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
+                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = -1";
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
 
+        for(int i = 0; i < cursor.getCount(); i++) {
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            arr.add(temp);
+        }
+
+        cursor.close();
         return arr;
     }
 
