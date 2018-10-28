@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
 import java.util.Set;
@@ -185,5 +186,9 @@ public class DBUtility extends AppCompatActivity {
         // TODO
 
         return toReturn;
+    }
+
+    public static Serializable getRecord(String table, String id) {
+        return null;
     }
 }
