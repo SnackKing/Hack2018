@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -35,7 +36,6 @@ import java.util.concurrent.CountDownLatch;
 import static java.lang.Thread.sleep;
 
 public class DBUtility extends AppCompatActivity {
-
     static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
     public static final String USER_KEY = "currUser";
@@ -224,6 +224,48 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public static Serializable getRecord(String table, String id) {
-        return null;
+        CountDownLatch done = new CountDownLatch(1);
+
+        ArrayList<Serializable> hack = new ArrayList<>();
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                switch(table) {
+                    case UserContract.User.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(User.class));
+                        break;
+                    case ItemContract.Item.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(Item.class));
+                        break;
+                    case InventoryContract.Inventory.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(Inventory.class));
+                        break;
+                    case MessageContract.Message.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(Message.class));
+                        break;
+                }
+
+                done.countDown();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        try {
+            done.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return hack.get(0);
+    }
+
+    public static void addToFirebase(String tableName, Serializable obj) {
+        
     }
 }
