@@ -16,9 +16,9 @@ public class User implements Serializable {
     public int salt;
     public int password;
     public boolean resident;
-    public long id;
+    public String id;
 
-    public User(long id, String name, int phone, byte[] salt, byte[] password, int resident) {
+    public User(String id, String name, int phone, byte[] salt, byte[] password, int resident) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phone;
@@ -28,9 +28,7 @@ public class User implements Serializable {
     }
 
     // from content values
-    public User(long id, ContentValues values) {
-        this.id = id;
-
+    public User(ContentValues values) {
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 
@@ -52,6 +50,9 @@ public class User implements Serializable {
                     break;
                 case UserContract.User.COLUMN_NAME_PASSWORD:
                     this.password = DBUtility.fromByteArray((byte[]) value);
+                    break;
+                case UserContract.User._ID:
+                    this.id = value.toString();
                     break;
                 case UserContract.User.COLUMN_NAME_RESIDENT:
                     this.resident = (int) value == 1;

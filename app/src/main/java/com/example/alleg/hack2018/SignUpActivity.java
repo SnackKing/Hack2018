@@ -40,6 +40,7 @@ import com.example.alleg.hack2018.utility.Passwords;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -156,13 +157,16 @@ public class SignUpActivity extends AppCompatActivity  {
         byte[] salt = Passwords.getNextSalt();
         byte[] salted = Passwords.hash(password.toCharArray(), salt);
 
+        String key = String.valueOf(UUID.randomUUID());
+
         values.put(User.COLUMN_NAME_NAME, name);
         values.put(User.COLUMN_NAME_SALT, salt);
         values.put(User.COLUMN_NAME_PASSWORD, salted);
         values.put(User.COLUMN_NAME_PHONE_NUMBER, phone);
         values.put(User.COLUMN_NAME_RESIDENT, 1);
+        values.put(User._ID, key);
 
-        util.insertToDb(db, User.TABLE_NAME, null, values);
+        util.insertToDb(db, User.TABLE_NAME, key,null, values);
 
         // log the newly created user in
         int result = util.login(mDbHelp.getReadableDatabase(), phone, password);
