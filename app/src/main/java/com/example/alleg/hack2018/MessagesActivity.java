@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.models.Message;
-import com.example.alleg.hack2018.models.User;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.MessageListAdapter;
 

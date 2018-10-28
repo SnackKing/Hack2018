@@ -110,11 +110,13 @@ public class DBUtility extends AppCompatActivity {
                 salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
-        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+        SharedPreferences mPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(x); // myObject - instance of MyObject
         prefsEditor.putString(DBUtility.USER_KEY, json);
+        prefsEditor.apply();
         prefsEditor.commit();
 
         cursor.close();
