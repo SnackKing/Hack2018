@@ -23,6 +23,9 @@ public class User implements Serializable {
     public boolean resident;
     public String id;
 
+    // for firebase
+    public User() {}
+
     // get this from the database
     public User(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME

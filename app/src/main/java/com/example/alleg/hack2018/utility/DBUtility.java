@@ -41,7 +41,7 @@ public class DBUtility extends AppCompatActivity {
     public static final String USER_KEY = "currUser";
 
     // how long the thread syncs
-    public static final int MS_WAIT_THREAD_CHECK = 60000;
+    public static final int MS_WAIT_THREAD_CHECK = 8000;
 
     public static final String PUBLIC_MESSAGE_DEST = "-1";
 
@@ -174,6 +174,7 @@ public class DBUtility extends AppCompatActivity {
         }
 
         cursor.close();
+
         return toReturn;
     }
 
@@ -221,16 +222,16 @@ public class DBUtility extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 switch(table) {
                     case UserContract.User.TABLE_NAME:
-                        hack.add(dataSnapshot.child(id).getValue(User.class));
+                        hack.add(dataSnapshot.child(table).child(id).getValue(User.class));
                         break;
                     case ItemContract.Item.TABLE_NAME:
-                        hack.add(dataSnapshot.child(id).getValue(Item.class));
+                        hack.add(dataSnapshot.child(table).child(id).getValue(Item.class));
                         break;
                     case InventoryContract.Inventory.TABLE_NAME:
-                        hack.add(dataSnapshot.child(id).getValue(Inventory.class));
+                        hack.add(dataSnapshot.child(table).child(id).getValue(Inventory.class));
                         break;
                     case MessageContract.Message.TABLE_NAME:
-                        hack.add(dataSnapshot.child(id).getValue(Message.class));
+                        hack.add(dataSnapshot.child(table).child(id).getValue(Message.class));
                         break;
                 }
 

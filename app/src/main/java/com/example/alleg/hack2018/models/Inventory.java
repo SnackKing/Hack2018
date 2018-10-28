@@ -19,6 +19,9 @@ public class Inventory implements Serializable {
     public String item;
     public int count;
 
+    // for firebase
+    public Inventory() {}
+
     // get from database
     public Inventory(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + InventoryContract.Inventory.TABLE_NAME
