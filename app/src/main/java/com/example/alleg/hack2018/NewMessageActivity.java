@@ -57,7 +57,6 @@ public class NewMessageActivity extends AppCompatActivity {
         User user = gson.fromJson(json, User.class);
 
         DBUtility util = new DBUtility(getApplicationContext());
-        SQLiteDatabase db = mDbHelp.getWritableDatabase();
 
         String key = String.valueOf(UUID.randomUUID());
 
@@ -67,10 +66,9 @@ public class NewMessageActivity extends AppCompatActivity {
         values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, phone);
         values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, message);
         values.put(MessageContract.Message._ID, key);
+        values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
 
-        util.insertToDb(db, MessageContract.Message.TABLE_NAME, key, null, values);
-
-        db.close();
+        util.insertToDb(MessageContract.Message.TABLE_NAME, key, null, values);
     }
 
 }

@@ -179,8 +179,6 @@ public class SignUpActivity extends AppCompatActivity  {
 
         DBUtility util = new DBUtility(getApplicationContext());
 
-        SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
-
         ContentValues values = new ContentValues();
 
         byte[] salt = Passwords.getNextSalt();
@@ -195,9 +193,7 @@ public class SignUpActivity extends AppCompatActivity  {
         values.put(User.COLUMN_NAME_RESIDENT, 1);
         values.put(User._ID, key);
 
-        util.insertToDb(db, User.TABLE_NAME, key,null, values);
-
-        db.close();
+        util.insertToDb(User.TABLE_NAME, key,null, values);
 
         // log the newly created user in
         return util.login(mDbHelp.getReadableDatabase(), phone, password);
