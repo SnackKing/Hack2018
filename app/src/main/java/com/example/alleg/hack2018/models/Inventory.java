@@ -35,6 +35,7 @@ public class Inventory implements Serializable {
         this.userId = cursor.getString(cursor.getColumnIndex(InventoryContract.Inventory.COLUMN_NAME_USER_ID));
         this.item = cursor.getString(cursor.getColumnIndex(InventoryContract.Inventory.COLUMN_NAME_ITEM));
         this.count = cursor.getInt(cursor.getColumnIndex(InventoryContract.Inventory.COLUMN_NAME_COUNT));
+        cursor.close();
     }
 
     public Inventory(ContentValues values){
