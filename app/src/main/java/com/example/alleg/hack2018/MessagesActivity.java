@@ -40,7 +40,8 @@ import java.util.ArrayList;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
-    private DBUtility dbUtility;
+     private DBUtility dbUtility;
+     private String API_KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         setContentView(R.layout.activity_messages);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        API_KEY = "b1109f22-fb9e-4e07-a2d2-6197ca1ee2eb";
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -57,11 +60,12 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         Gson gson = new Gson();
         String json = mPrefs.getString(DBUtility.USER_KEY, null);
         User user = gson.fromJson(json, User.class);
+        getSupportActionBar().setTitle(user.name + "'s Messages");
 
         dbUtility = new DBUtility(this);
 
         //Always use the Application context to avoid leaks
-        Bridgefy.initialize(getApplicationContext(), "7c2890f4-a44a-4999-abe2-042e5e3acd21", new RegistrationListener() {
+        Bridgefy.initialize(getApplicationContext(), API_KEY, new RegistrationListener() {
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
                 // Bridgefy is ready to start
@@ -77,8 +81,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     @Override
                     public void onDeviceConnected(Device device, Session session) {
                         super.onDeviceConnected(device, session);
-                        //com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(dbUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
-                        //Bridgefy.sendMessage(message);
+                        com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(dbUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
+                        Bridgefy.sendMessage(message);
                     }
 
                 };

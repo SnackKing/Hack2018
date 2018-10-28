@@ -71,12 +71,12 @@ public class DBUtility extends AppCompatActivity {
         HashMap<String, HashMap> usermap = new HashMap<String, HashMap>();
         while(cursor.moveToNext()) {
             HashMap<String, Object> usercurrent = new HashMap<String, Object>();
-            usercurrent.put("ID",cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
-            usercurrent.put("NAME",cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
-            usercurrent.put("PASSWORD",cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD)));
-            usercurrent.put("PHONE",cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)));
-            usercurrent.put("RESIDENT",cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
-            usercurrent.put("SALT",cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT)));
+            usercurrent.put(UserContract.User._ID,cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_PASSWORD,cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_RESIDENT,cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_SALT,cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT)));
             usermap.put(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),usercurrent);
         }
         hmap.put(UserContract.User.TABLE_NAME,usermap);
@@ -84,11 +84,11 @@ public class DBUtility extends AppCompatActivity {
         HashMap<String, HashMap> messagemap = new HashMap<String, HashMap>();
         while(cursor.moveToNext()) {
             HashMap<String, Object> messagecurrent = new HashMap<String, Object>();
-            messagecurrent.put("ID",cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)));
-            messagecurrent.put("MESSAGE",cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE)));
-            messagecurrent.put("RECIPIENT",cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID)));
-            messagecurrent.put("SENDER",cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID)));
-            messagecurrent.put("TIME",cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_TIME)));
+            messagecurrent.put(MessageContract.Message._ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)));
+            messagecurrent.put(MessageContract.Message.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE)));
+            messagecurrent.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID)));
+            messagecurrent.put(MessageContract.Message.COLUMN_NAME_USER_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID)));
+            messagecurrent.put(MessageContract.Message.COLUMN_NAME_TIME,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_TIME)));
             messagemap.put(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),messagecurrent);
         }
         hmap.put(MessageContract.Message.TABLE_NAME,messagemap);
@@ -215,6 +215,56 @@ public class DBUtility extends AppCompatActivity {
         cursor.close();
 
         return toReturn;
+    }
+
+    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+        HashMap<String, HashSet<String>> out = new HashMap<>();
+
+        // for all keys in  each table, return tablename to set of keys
+        for (String t : input.keySet()) {
+            // this is table
+            out.put(t, new HashSet<>(input.get(t).keySet()));
+        }
+
+        return out;
+    }
+
+    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+
+        HashMap<String, HashSet<String>> out = new HashMap<>();
+
+        HashMap<String, HashSet<String>> in = getTableIdSets(input);
+
+        for (String key : in.keySet()) {
+            // key is table
+            Set<String> existingKeys = this.getIDSet(key);
+
+            HashSet<String> newKeys = in.get(key);
+
+            newKeys.removeAll(existingKeys);
+
+            out.put(key, newKeys);
+        }
+
+        return out;
+    }
+
+    public void updateLocal(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+        HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
+
+        for (String table : keysToAdd.keySet()) {
+            for (String id : keysToAdd.get(table)) {
+                HashMap<String, Object> dataToAdd = input.get(table).get(id);
+
+                ContentValues values = new ContentValues();
+
+                for (String label : dataToAdd.keySet()) {
+                    values.put(label, dataToAdd.get(label).toString());
+                }
+
+                this.insertToDb(table, null, values);
+            }
+        }
     }
 
     public static Set<String> getIDSetCloud(String tableName) {
