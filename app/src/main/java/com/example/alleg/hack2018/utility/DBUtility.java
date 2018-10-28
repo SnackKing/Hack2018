@@ -37,9 +37,11 @@ public class DBUtility extends AppCompatActivity {
     public static final String USER_KEY = "currUser";
 
     private Context context;
+    private SyncThread sync;
 
     public DBUtility(Context con) {
         this.context = con;
+        this.sync = new SyncThread(this);
     }
 
     public void insertToDb(SQLiteDatabase db, String table, String key, String nullColumnHack, ContentValues content) {
@@ -57,6 +59,7 @@ public class DBUtility extends AppCompatActivity {
                     tableRef.child(String.valueOf(key)).setValue(new User(content));
                 } else {
                     notSentUsers.add(new User(content));
+                    sync.start();
                 }
 
                 break;
@@ -66,6 +69,7 @@ public class DBUtility extends AppCompatActivity {
                     tableRef.child(String.valueOf(key)).setValue(new Message(content));
                 } else {
                     notSentMessages.add(new Message(content));
+                    sync.start();
                 }
 
                 break;
@@ -75,6 +79,7 @@ public class DBUtility extends AppCompatActivity {
                     tableRef.child(String.valueOf(key)).setValue(new Inventory(content));
                 } else {
                     notSentInventories.add(new Inventory(content));
+                    sync.start();
                 }
 
                 break;
@@ -84,38 +89,10 @@ public class DBUtility extends AppCompatActivity {
                     tableRef.child(String.valueOf(key)).setValue(new Item(content));
                 } else {
                     notSentItems.add(new Item(content));
+                    sync.start();
                 }
 
                 break;
-        }
-    }
-
-    // TODO : save changes and deletions
-    public void syncDatabaseToCloud(SQLiteDatabase db) {
-        // empty each of the not sent arrays
-
-        while (notSentMessages.size() > 0 ) {
-            Message msg = notSentMessages.remove(notSentMessages.size() - 1);
-
-            myRef.child(MessageContract.Message.TABLE_NAME).child(String.valueOf(msg.id)).setValue(msg);
-        }
-
-        while (notSentUsers.size() > 0) {
-            User usr = notSentUsers.remove(notSentUsers.size() - 1);
-
-            myRef.child(UserContract.User.TABLE_NAME).child(String.valueOf(usr.id)).setValue(usr);
-        }
-
-        while (notSentInventories.size() > 0) {
-            Inventory i = notSentInventories.remove(notSentInventories.size() - 1);
-
-            myRef.child(InventoryContract.Inventory.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
-        }
-
-        while (notSentItems.size() > 0) {
-            Item i = notSentItems.remove(notSentItems.size() - 1);
-
-            myRef.child(ItemContract.Item.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
         }
     }
 

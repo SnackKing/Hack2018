@@ -121,4 +121,15 @@ public class User implements Serializable {
 
         return arr;
     }
+
+    // return a list of inventory
+    // this means, return a list of objects with this's id, and then an item id, and a count
+    // then, use the item id to grab Item objects using constructor
+    ArrayList<Inventory> getItemsInInventory() {
+        ArrayList<Inventory> arr = new ArrayList<>();
+
+        // TODO low priority
+
+        return arr;
+    }
 }
