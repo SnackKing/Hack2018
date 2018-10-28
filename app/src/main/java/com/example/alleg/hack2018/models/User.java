@@ -19,6 +19,12 @@ public class User implements Serializable {
     public boolean resident;
     public String id;
 
+    // get this from the database
+    public User(String id) {
+        this.id = id;
+        // TODO
+    }
+
     public User(String id, String name, String phone, byte[] salt, byte[] password, int resident) {
         this.id = id;
         this.name = name;
@@ -62,10 +68,21 @@ public class User implements Serializable {
         }
     }
 
+    // get any incoming messages
+    // where dest = this user object's id
     ArrayList<Message> getPrivateMessages() {
         ArrayList<Message> arr = new ArrayList<>();
 
         //TODO
+
+        return arr;
+    }
+
+    // get any messages where this user's id is the sender
+    ArrayList<Message> getOutgoingMessages() {
+        ArrayList<Message> arr = new ArrayList<>();
+
+        // TODO
 
         return arr;
     }
