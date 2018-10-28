@@ -72,31 +72,31 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public HashMap dataToHashmap(){
-        HashMap<String, HashMap<String, HashMap<String, Object>>> hmap = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
+        HashMap<String, HashMap<String, HashMap<String, String>>> hmap = new HashMap<String, HashMap<String, HashMap<String, String>>>();
 
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME;
         Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
-        HashMap<String, HashMap<String, Object>> usermap = new HashMap<>();
+        HashMap<String, HashMap<String, String>> usermap = new HashMap<>();
         while(cursor.moveToNext()) {
-            HashMap<String, Object> usercurrent = new HashMap<String, Object>();
+            HashMap<String, String> usercurrent = new HashMap<String, String>();
             usercurrent.put(UserContract.User._ID,cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
             usercurrent.put(UserContract.User.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
 
             int pword = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD)));
             int salt = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_PASSWORD,pword);
+            usercurrent.put(UserContract.User.COLUMN_NAME_PASSWORD, Integer.toString(pword));
 
             usercurrent.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_RESIDENT,cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_SALT,salt);
+            usercurrent.put(UserContract.User.COLUMN_NAME_RESIDENT,Integer.toString(cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT))));
+            usercurrent.put(UserContract.User.COLUMN_NAME_SALT,Integer.toString(salt));
             usermap.put(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),usercurrent);
         }
         hmap.put(UserContract.User.TABLE_NAME,usermap);
 
-        HashMap<String, HashMap<String, Object>> messagemap = new HashMap<String, HashMap<String, Object>>();
+        HashMap<String, HashMap<String, String>> messagemap = new HashMap<String, HashMap<String, String>>();
         while(cursor.moveToNext()) {
-            HashMap<String, Object> messagecurrent = new HashMap<String, Object>();
+            HashMap<String, String> messagecurrent = new HashMap<String, String>();
             messagecurrent.put(MessageContract.Message._ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)));
             messagecurrent.put(MessageContract.Message.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE)));
             messagecurrent.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID)));
@@ -237,7 +237,7 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, Map<String, Map<String, Object>>> input) {
+    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, Map<String, Map<String, String>>> input) {
         HashMap<String, HashSet<String>> out = new HashMap<>();
 
         // for all keys in  each table, return tablename to set of keys
@@ -255,7 +255,7 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, Map<String, Map<String, Object>>> input) {
+    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, Map<String, Map<String, String>>> input) {
 
         HashMap<String, HashSet<String>> out = new HashMap<>();
 
@@ -275,22 +275,22 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public void updateLocal(HashMap<String, Map<String, Map<String, Object>>> input) {
+    public void updateLocal(HashMap<String, Map<String, Map<String, String>>> input) {
         HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
 
         for (String table : keysToAdd.keySet()) {
             for (String id : keysToAdd.get(table)) {
-                Map<String, Object> dataToAdd = input.get(table).get(id);
+                Map<String, String> dataToAdd = input.get(table).get(id);
 
                 ContentValues values = new ContentValues();
 
                 for (String label : dataToAdd.keySet()) {
                     if (label.equals(UserContract.User.COLUMN_NAME_SALT) || label.equals(UserContract.User.COLUMN_NAME_PASSWORD)) {
-                        byte[] val = DBUtility.toByteArray( (int) dataToAdd.get(label));
+                        byte[] val = DBUtility.toByteArray( Integer.valueOf(dataToAdd.get(label)));
 
                         values.put(label, val);
                     } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
-                        values.put(label, (int) dataToAdd.get(label));
+                        values.put(label, Integer.valueOf(dataToAdd.get(label)));
                     } else {
                         values.put(label, dataToAdd.get(label).toString());
                     }
