@@ -150,10 +150,8 @@ public class DBUtility extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager)this.context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
 
-        return isConnected;
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     public static int getCurrentTime() {
@@ -169,7 +167,7 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public Set<String> getIDSetCloud(String tableName) {
+    public static Set<String> getIDSetCloud(String tableName) {
         Set<String> toReturn = new HashSet<>();
 
         // TODO
