@@ -3,10 +3,19 @@ package com.example.alleg.hack2018;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.alleg.hack2018.models.Message;
+import com.example.alleg.hack2018.utility.DBHelper;
+import com.example.alleg.hack2018.utility.MessageListAdapter;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +30,12 @@ public class PublicTab extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private RecyclerView mMessageRecycler;
+    private MessageListAdapter mMessageAdapter;
+    ArrayList<Message> messageList = new ArrayList<>();
+    private DBHelper mDbHelp;
+
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -57,13 +72,31 @@ public class PublicTab extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
+        mMessageAdapter = new MessageListAdapter(getContext(), messageList);
+        mMessageAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_public_tab, container, false);
+    }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mMessageRecycler = (RecyclerView) getView().findViewById(R.id.reyclerview_message_list);
+        this.mDbHelp = new DBHelper(getContext());
+        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
+        mMessageAdapter = new MessageListAdapter(getContext(), messageList);
+        mMessageRecycler.setAdapter(mMessageAdapter);
+        mMessageRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
