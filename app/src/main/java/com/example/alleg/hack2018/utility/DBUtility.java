@@ -162,8 +162,35 @@ public class DBUtility extends AppCompatActivity {
     public Set<String> getIDSet(String tableName) {
         Set<String> toReturn = new HashSet<>();
 
-        // TODO
+        String colName = null;
 
+        switch(tableName) {
+            case InventoryContract.Inventory.TABLE_NAME:
+                colName = InventoryContract.Inventory._ID;
+                break;
+            case UserContract.User.TABLE_NAME:
+                colName = UserContract.User._ID;
+                break;
+            case ItemContract.Item.TABLE_NAME:
+                colName = ItemContract.Item._ID;
+                break;
+            case MessageContract.Message.TABLE_NAME:
+                colName = MessageContract.Message._ID;
+                break;
+        }
+
+        DBHelper help = new DBHelper(this.context);
+        SQLiteDatabase db = help.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + tableName;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            toReturn.add(cursor.getString(cursor.getColumnIndex(colName)));
+        }
+
+        cursor.close();
+        help.close();
         return toReturn;
     }
 
