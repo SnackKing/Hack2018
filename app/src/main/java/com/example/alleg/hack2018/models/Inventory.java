@@ -22,7 +22,7 @@ public class Inventory implements Serializable {
     // get from database
     public Inventory(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + InventoryContract.Inventory.TABLE_NAME
-                + " WHERE " + InventoryContract.Inventory._ID + " = " + id;
+                + " WHERE " + InventoryContract.Inventory._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
