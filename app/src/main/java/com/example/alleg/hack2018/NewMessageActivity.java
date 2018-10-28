@@ -30,7 +30,6 @@ public class NewMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
-        final TextView phone = findViewById(R.id.recipient_phone);
         final TextView message = findViewById(R.id.message);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,7 +38,7 @@ public class NewMessageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               addToDatabase(phone.getText().toString(), message.getText().toString());
+               addToDatabase("-1", message.getText().toString());
                Log.d("FLOAT", "starting Activity");
                 Intent intent = new Intent(NewMessageActivity.this, MessagesActivity.class);
                 startActivity(intent);
