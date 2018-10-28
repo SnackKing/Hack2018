@@ -20,7 +20,7 @@ public class MessageHolder extends RecyclerView.ViewHolder {
         messageText.setText(message.msg);
 
         // Format the stored timestamp into a readable String using method.
-        nameText.setText(Long.toString(message.senderId));
+        nameText.setText(message.senderId);
 
     }
 }
