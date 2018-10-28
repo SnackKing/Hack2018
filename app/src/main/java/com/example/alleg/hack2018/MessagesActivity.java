@@ -85,6 +85,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         this.mDbHelp = new DBHelper(this);
         messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
         mMessageAdapter = new MessageListAdapter(this, messageList);
+        mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
     @Override

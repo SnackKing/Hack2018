@@ -51,7 +51,7 @@ public class DBUtility extends AppCompatActivity {
         this.context = con;
         this.db = new DBHelper(this.context).getWritableDatabase();
         this.sync = new SyncThread(this, db);
-        this.sync.start();
+       // this.sync.start();
     }
 
     public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
