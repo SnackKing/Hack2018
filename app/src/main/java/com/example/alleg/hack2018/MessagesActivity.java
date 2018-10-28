@@ -1,19 +1,25 @@
 package com.example.alleg.hack2018;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
@@ -145,4 +151,29 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
     public void onFragmentInteraction(Uri uri) {
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        tb.inflateMenu(R.menu.refresh_toolbar);
+        tb.setOnMenuItemClickListener(
+                new Toolbar.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        return onOptionsItemSelected(item);
+                    }
+                });
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                PublicTab pubFragment = (PublicTab) getSupportFragmentManager().findFragmentById(R.id.publicFrag);
+                pubFragment.updateAdapter();
+                return true;
+
+        }
+        return true;
+    }
+
 }
