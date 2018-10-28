@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
@@ -18,17 +19,23 @@ import com.example.alleg.hack2018.models.Inventory;
 import com.example.alleg.hack2018.models.Item;
 import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+
+import static java.lang.Thread.sleep;
 
 public class DBUtility extends AppCompatActivity {
-
     static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
     public static final String USER_KEY = "currUser";
@@ -186,12 +193,79 @@ public class DBUtility extends AppCompatActivity {
     public static Set<String> getIDSetCloud(String tableName) {
         Set<String> toReturn = new HashSet<>();
 
-        // TODO
+        CountDownLatch done = new CountDownLatch(1);
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> children = dataSnapshot.child(tableName).getChildren();
+                
+                for (DataSnapshot child : children) {
+                    toReturn.add(child.getKey());
+                }
+
+                done.countDown();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        try {
+            done.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return toReturn;
     }
 
     public static Serializable getRecord(String table, String id) {
-        return null;
+        CountDownLatch done = new CountDownLatch(1);
+
+        ArrayList<Serializable> hack = new ArrayList<>();
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                switch(table) {
+                    case UserContract.User.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(User.class));
+                        break;
+                    case ItemContract.Item.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(Item.class));
+                        break;
+                    case InventoryContract.Inventory.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(Inventory.class));
+                        break;
+                    case MessageContract.Message.TABLE_NAME:
+                        hack.add(dataSnapshot.child(id).getValue(Message.class));
+                        break;
+                }
+
+                done.countDown();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        try {
+            done.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return hack.get(0);
+    }
+
+    public static void addToFirebase(String tableName, Serializable obj) {
+        
     }
 }
