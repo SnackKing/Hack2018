@@ -63,7 +63,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
                         HashMap hmap = message.getContent();
-                        //dbUtility.updateLocal(hmap);
+                        dbUtility.updateLocal(hmap);
                         Log.d("Bridgefy","Message Received");
                     }
                 };
@@ -84,7 +84,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
             @Override
             public void onRegistrationFailed(int errorCode, String message) {
                 // Something went wrong: handle error code, maybe print the message
-
+                Log.d("Bridgefy",message);
             }});
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
