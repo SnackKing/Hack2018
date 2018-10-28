@@ -151,4 +151,8 @@ public class DBUtility extends AppCompatActivity {
 
         return isConnected;
     }
+
+    public static int getCurrentTime() {
+        return (int) (System.currentTimeMillis() / 1000L);
+    }
 }

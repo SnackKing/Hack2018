@@ -121,16 +121,11 @@ public class SignUpActivity extends AppCompatActivity  {
         String password = passwordField.getText().toString();
         String confirmPassword = confirmPasswordField.getText().toString();
         boolean isValid = validate(name, phone, password, confirmPassword);
-        if(isValid) {
-            int code = signUp(name, phone, password);
+        if(isValid && !checkIfPhoneExists(phone)) {
+            signUp(name, phone, password);
 
-            if (code == -1) {
-                phoneField.setError("Phone Already Taken");
-            } else {
-                // success
-                Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -160,25 +155,31 @@ public class SignUpActivity extends AppCompatActivity  {
         return isValid;
     }
 
+    private boolean checkIfPhoneExists(String phone) {
+        SQLiteDatabase dbr = this.mDbHelp.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + User.TABLE_NAME + " WHERE "
+                + User.COLUMN_NAME_PHONE_NUMBER + " = " + phone + ";";
+        Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
+
+        // false if getCount is 0
+        boolean toReturn = cursor.getCount() != 0;
+
+        if (toReturn) {
+            phoneField.setError("Phone taken.");
+        }
+
+        cursor.close();
+        dbr.close();
+
+        return toReturn;
+    }
+
     private int signUp(String name, String phone, String password){
 
         DBUtility util = new DBUtility(getApplicationContext());
 
         SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
-        SQLiteDatabase dbr = this.mDbHelp.getReadableDatabase();
-
-        String selectQuery = "SELECT * FROM " + User.TABLE_NAME + " WHERE "
-                + User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
-        Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
-
-        if (cursor.getCount() != 0) {
-            //phone number is a duplicate
-
-            db.close();
-            dbr.close();
-
-            return -1;
-        }
 
         ContentValues values = new ContentValues();
 
@@ -197,7 +198,6 @@ public class SignUpActivity extends AppCompatActivity  {
         util.insertToDb(db, User.TABLE_NAME, key,null, values);
 
         db.close();
-        dbr.close();
 
         // log the newly created user in
         return util.login(mDbHelp.getReadableDatabase(), phone, password);
