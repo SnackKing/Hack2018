@@ -290,7 +290,7 @@ public class DBUtility extends AppCompatActivity {
 
                         values.put(label, val);
                     } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
-                        values.put(label, (int) dataToAdd.get(label));
+                        values.put(label, (int)(double)dataToAdd.get(label));
                     } else {
                         values.put(label, dataToAdd.get(label).toString());
                     }
