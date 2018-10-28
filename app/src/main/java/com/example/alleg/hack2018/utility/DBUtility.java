@@ -48,6 +48,10 @@ public class DBUtility extends AppCompatActivity {
 
     public static final String PUBLIC_MESSAGE_DEST = "-1";
 
+    public static final int SYNC_THREAD_LIMIT = 1;
+
+    private static int syncThreads = 0;
+
     private Context context;
     private SyncThread sync;
     private SQLiteDatabase db;
@@ -58,8 +62,12 @@ public class DBUtility extends AppCompatActivity {
         DBHelper temp = new DBHelper(con);
         this.db = temp.getWritableDatabase();
         this.dbr = temp.getReadableDatabase();
-        this.sync = new SyncThread(this, db, dbr);
-        //this.sync.start();
+
+        if (DBUtility.syncThreads < SYNC_THREAD_LIMIT) {
+            this.sync = new SyncThread(this, db, dbr);
+            this.sync.start();
+            DBUtility.syncThreads += 1;
+        }
     }
 
     public HashMap dataToHashmap(){
