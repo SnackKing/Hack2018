@@ -32,6 +32,7 @@ public class MessageHolder extends RecyclerView.ViewHolder {
         User sender = new User(message.senderId, helper.getReadableDatabase());
 
         messageText.setText(message.msg);
+        nameText.setText(sender.name);
         if(sender.id.equals(user.id)){
             messageText.setBackgroundResource(R.color.colorAccent);
             nameText.setText("You");
