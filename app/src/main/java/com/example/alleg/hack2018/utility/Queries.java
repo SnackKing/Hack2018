@@ -12,7 +12,7 @@ class Queries {
 
     static final String SQL_CREATE_USER =
             "CREATE TABLE " + User.TABLE_NAME + " (" +
-            User._ID + " INT PRIMARY KEY," +
+            User._ID + " TEXT PRIMARY KEY," +
             User.COLUMN_NAME_NAME + " TEXT," +
             User.COLUMN_NAME_PHONE_NUMBER + " INT NOT NULL UNIQUE," +
             User.COLUMN_NAME_PASSWORD + " BLOB," +
@@ -24,8 +24,8 @@ class Queries {
 
     static final String SQL_CREATE_MESSAGE =
             "CREATE TABLE " + Message.TABLE_NAME + " (" +
-            Message._ID + " INT PRIMARY KEY," +
-            Message.COLUMN_NAME_USER_ID + " INT UNIQUE," +
+            Message._ID + " TEXT PRIMARY KEY," +
+            Message.COLUMN_NAME_USER_ID + " TEXT," +
             Message.COLUMN_NAME_MESSAGE + " TEXT," +
             Message.COLUMN_NAME_DESTINATION_ID + " INT);";
 
@@ -34,7 +34,7 @@ class Queries {
 
     static final String SQL_CREATE_ITEM =
             "CREATE TABLE " + Item.TABLE_NAME + " (" +
-            Item._ID + " INT PRIMARY KEY," +
+            Item._ID + " TEXT PRIMARY KEY," +
             Item.COLUMN_NAME_NAME + " TEXT UNIQUE," +
             Item.COLUMN_NAME_PERISHABLE + " INT," +
             Item.COLUMN_NAME_IMPORTANCE + " INT);";
@@ -44,7 +44,7 @@ class Queries {
 
     static final String SQL_CREATE_INVENTORY =
             "CREATE TABLE " + Inventory.TABLE_NAME + " (" +
-            Inventory._ID + " INTEGER PRIMARY KEY," +
+            Inventory._ID + " TEXT PRIMARY KEY," +
             Inventory.COLUMN_NAME_USER_ID + " INT," +
             Inventory.COLUMN_NAME_ITEM + " TEXT," +
             Inventory.COLUMN_NAME_COUNT + " INT);";
