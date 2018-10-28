@@ -27,7 +27,9 @@ import com.example.alleg.hack2018.models.User;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.google.gson.Gson;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
@@ -67,6 +69,20 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
                         HashMap hmap = message.getContent();
+
+                        HashMap<String,Map<String, Map<String, Object>>> temp = hmap;
+
+                        for (String top : temp.keySet()) {
+                            for (String next : temp.get(top).keySet()) {
+                                Map<String, Object> x = temp.get(top).get(next);
+
+                                Map<String, Object> new1 = Collections.checkedMap(x, String.class, Object.class);
+
+                                temp.get(top).remove(next);
+                                temp.get(top).put(next, new1);
+                            }
+                        }
+
                         dbUtility.updateLocal(hmap);
                         Log.d("Bridgefy","Message Received");
                     }
