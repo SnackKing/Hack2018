@@ -1,6 +1,8 @@
 package com.example.alleg.hack2018.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.UserContract;
 import com.example.alleg.hack2018.utility.DBUtility;
@@ -20,9 +22,25 @@ public class User implements Serializable {
     public String id;
 
     // get this from the database
-    public User(String id) {
+    public User(String id, SQLiteDatabase db) {
+        String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME
+                + " WHERE " + UserContract.User._ID + " = " + id;
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
+
+        if (cursor.getCount() == 0) {
+            //Can't find id
+            //TODO
+        }
+
         this.id = id;
-        // TODO
+        this.name = cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME));
+        this.phoneNumber = cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER));
+        this.salt = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
+        this.password = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
+        int res = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT));
+        this.resident = res == 1;
+        cursor.close();
     }
 
     public User(String id, String name, String phone, byte[] salt, byte[] password, int resident) {
