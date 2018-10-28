@@ -14,6 +14,14 @@ import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
+import com.bridgefy.sdk.client.Bridgefy;
+import com.bridgefy.sdk.client.BridgefyClient;
+import com.bridgefy.sdk.client.Device;
+import com.bridgefy.sdk.client.MessageListener;
+import com.bridgefy.sdk.client.RegistrationListener;
+import com.bridgefy.sdk.client.Session;
+import com.bridgefy.sdk.client.StateListener;
+
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
@@ -26,10 +34,6 @@ import java.util.ArrayList;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
-    private RecyclerView mMessageRecycler;
-    private MessageListAdapter mMessageAdapter;
-    private DBHelper mDbHelp;
-    ArrayList<Message> messageList = new ArrayList<>();
 
 
 
@@ -49,6 +53,38 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         String json = mPrefs.getString(DBUtility.USER_KEY, null);
         User user = gson.fromJson(json, User.class);
         getSupportActionBar().setTitle(user.name + "'s Messages");
+
+
+
+        //Always use the Application context to avoid leaks
+        Bridgefy.initialize(getApplicationContext(), "7c2890f4-a44a-4999-abe2-042e5e3acd21", new RegistrationListener() {
+            @Override
+            public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
+                // Bridgefy is ready to start
+                MessageListener messageListener = new MessageListener() {
+                    @Override
+                    public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
+                        super.onMessageReceived(message);
+                        //TODO update database here using received message
+
+                    }
+                };
+                StateListener stateListener = new StateListener() {
+                    @Override
+                    public void onDeviceConnected(Device device, Session session) {
+                        super.onDeviceConnected(device, session);
+                        //TODO make getData function for sending data to nearby devices
+                        //com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(DBUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
+                    }
+                };
+                Bridgefy.start(messageListener, stateListener);
+            }
+
+            @Override
+            public void onRegistrationFailed(int errorCode, String message) {
+                // Something went wrong: handle error code, maybe print the message
+
+            }});
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
@@ -81,19 +117,19 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
             }
         });
 
-        mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        this.mDbHelp = new DBHelper(this);
-        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
-        mMessageAdapter = new MessageListAdapter(this, messageList);
-        mMessageRecycler.setAdapter(mMessageAdapter);
-        mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
+//        mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
+//        this.mDbHelp = new DBHelper(this);
+//        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
+//        mMessageAdapter = new MessageListAdapter(this, messageList);
+//        mMessageRecycler.setAdapter(mMessageAdapter);
+//        mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
     @Override
     public void onResume(){
         super.onResume();
-        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
-        mMessageAdapter = new MessageListAdapter(this, messageList);
-        mMessageAdapter.notifyDataSetChanged();
+//        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
+//        mMessageAdapter = new MessageListAdapter(this, messageList);
+//        mMessageAdapter.notifyDataSetChanged();
 
     }
 

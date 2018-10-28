@@ -103,11 +103,9 @@ public class User implements Serializable {
         String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
                 + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = " + this.id;
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
-        cursor.moveToFirst();
 
-        for(int i = 0; i < cursor.getCount(); i++) {
+        while(cursor.moveToNext()) {
             Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
-            cursor.moveToNext();
             arr.add(temp);
         }
 
@@ -122,11 +120,9 @@ public class User implements Serializable {
         String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
                 + " WHERE " + MessageContract.Message.COLUMN_NAME_USER_ID + " = " + this.id;
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
-        cursor.moveToFirst();
 
-        for(int i = 0; i < cursor.getCount(); i++) {
+        while(cursor.moveToNext()) {
             Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
-            cursor.moveToNext();
             arr.add(temp);
         }
 
