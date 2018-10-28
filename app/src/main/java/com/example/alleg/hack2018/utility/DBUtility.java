@@ -217,6 +217,51 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
+    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+        HashMap<String, HashSet<String>> out = new HashMap<>();
+
+        // for all keys in  each table, return tablename to set of keys
+        for (String t : input.keySet()) {
+            // this is table
+            out.put(t, new HashSet<>(input.get(t).keySet()));
+        }
+
+        return out;
+    }
+
+    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+
+        HashMap<String, HashSet<String>> out = new HashMap<>();
+
+        HashMap<String, HashSet<String>> in = getTableIdSets(input);
+
+        for (String key : in.keySet()) {
+            // key is table
+            Set<String> existingKeys = this.getIDSet(key);
+
+            HashSet<String> newKeys = in.get(key);
+
+            newKeys.removeAll(existingKeys);
+
+            out.put(key, newKeys);
+        }
+
+        return out;
+    }
+
+    public void updateLocal(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+        HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
+
+        for (String table : keysToAdd.keySet()) {
+            for (String id : keysToAdd.get(table)) {
+                HashMap<String, Object> dataToAdd = input.get(table).get(id);
+
+                // insert this!!!!
+                // TODO
+            }
+        }
+    }
+
     public static Set<String> getIDSetCloud(String tableName) {
         Set<String> toReturn = new HashSet<>();
 
