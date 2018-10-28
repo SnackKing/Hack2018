@@ -237,7 +237,7 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, Map<String, Map<String, Object>>> input) {
         HashMap<String, HashSet<String>> out = new HashMap<>();
 
         // for all keys in  each table, return tablename to set of keys
@@ -255,7 +255,7 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, Map<String, Map<String, Object>>> input) {
 
         HashMap<String, HashSet<String>> out = new HashMap<>();
 
@@ -275,7 +275,7 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public void updateLocal(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+    public void updateLocal(HashMap<String, Map<String, Map<String, Object>>> input) {
         HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
 
         for (String table : keysToAdd.keySet()) {
