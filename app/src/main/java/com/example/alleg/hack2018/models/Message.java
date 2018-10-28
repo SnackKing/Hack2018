@@ -18,6 +18,7 @@ public class Message implements Serializable {
     public String senderId; // id of sender
     public String recipId; // id of intended recipient
     public String msg; // message
+    public int time; //time of message
 
     // pull from db
     public Message(String id, SQLiteDatabase db) {
@@ -35,6 +36,7 @@ public class Message implements Serializable {
         this.senderId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID));
         this.recipId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID));
         this.msg = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE));
+        this.time = cursor.getInt(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_TIME));
         cursor.close();
     }
 
@@ -60,6 +62,9 @@ public class Message implements Serializable {
                     break;
                 case MessageContract.Message._ID:
                     this.id = value.toString();
+                    break;
+                case MessageContract.Message.COLUMN_NAME_TIME:
+                    this.time = (int) value;
                     break;
             }
         }
