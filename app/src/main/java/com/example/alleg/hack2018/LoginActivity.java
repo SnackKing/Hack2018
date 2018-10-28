@@ -109,14 +109,4 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
-
-    private boolean isPhoneValid(String phone) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
 }
