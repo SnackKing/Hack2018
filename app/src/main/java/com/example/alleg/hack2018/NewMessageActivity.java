@@ -74,10 +74,6 @@ public class NewMessageActivity extends AppCompatActivity {
         values.put(MessageContract.Message._ID, key);
         values.put(MessageContract.Message.COLUMN_NAME_TIME, DBUtility.getCurrentTime());
 
-        util.insertToDb(db, MessageContract.Message.TABLE_NAME, key, null, values);
-
-        db.close();
-
         util.insertToDb(MessageContract.Message.TABLE_NAME, key, null, values);
     }
 
