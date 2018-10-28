@@ -33,6 +33,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
 
      private DBUtility dbUtility;
      private final String API_KEY = "b1109f22-fb9e-4e07-a2d2-6197ca1ee2eb";
+     private MessageListener messageListener;
+     private StateListener stateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
                 // Bridgefy is ready to start
-                MessageListener messageListener = new MessageListener() {
+                messageListener = new MessageListener() {
                     @Override
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
@@ -67,7 +69,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                         Log.d("Bridgefy","Message Received");
                     }
                 };
-                StateListener stateListener = new StateListener() {
+                stateListener = new StateListener() {
                     @Override
                     public void onDeviceConnected(Device device, Session session) {
                         super.onDeviceConnected(device, session);
@@ -80,6 +82,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                 };
                 Bridgefy.start(messageListener, stateListener);
             }
+
 
             @Override
             public void onRegistrationFailed(int errorCode, String message) {
