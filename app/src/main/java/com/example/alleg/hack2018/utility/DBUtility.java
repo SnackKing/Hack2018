@@ -239,7 +239,11 @@ public class DBUtility extends AppCompatActivity {
         for (String t : input.keySet()) {
             // this is table
             HashSet<String> keys = new HashSet<>();
-            keys.addAll(input.get(t).keySet());
+
+            for (String id : input.get(t).keySet()) {
+                keys.add(id);
+            }
+
             out.put(t, keys);
         }
 
