@@ -82,10 +82,14 @@ public class DBUtility extends AppCompatActivity {
             HashMap<String, Object> usercurrent = new HashMap<String, Object>();
             usercurrent.put(UserContract.User._ID,cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
             usercurrent.put(UserContract.User.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_PASSWORD,cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD)));
+
+            int pword = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD)));
+            int salt = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_PASSWORD,pword);
+
             usercurrent.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)));
             usercurrent.put(UserContract.User.COLUMN_NAME_RESIDENT,cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_SALT,cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT)));
+            usercurrent.put(UserContract.User.COLUMN_NAME_SALT,salt);
             usermap.put(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),usercurrent);
         }
         hmap.put(UserContract.User.TABLE_NAME,usermap);
@@ -282,7 +286,9 @@ public class DBUtility extends AppCompatActivity {
 
                 for (String label : dataToAdd.keySet()) {
                     if (label.equals(UserContract.User.COLUMN_NAME_SALT) || label.equals(UserContract.User.COLUMN_NAME_PASSWORD)) {
-                        values.put(label, (byte[]) dataToAdd.get(label));
+                        byte[] val = DBUtility.toByteArray((int) dataToAdd.get(label));
+
+                        values.put(label, val);
                     } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
                         values.put(label, (int) dataToAdd.get(label));
                     } else {
