@@ -169,7 +169,7 @@ public class DBUtility extends AppCompatActivity {
         String selectQuery = "SELECT * FROM " + tableName;
         Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
 
-        for (int i = 0; i < cursor.getCount(); i++) {
+        while (cursor.moveToNext()) {
             toReturn.add(cursor.getString(cursor.getColumnIndex(colName)));
         }
 
