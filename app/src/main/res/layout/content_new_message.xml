@@ -21,22 +21,29 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
 
-            <android.support.design.widget.TextInputLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom= "15dp">
+                android:layout_height="match_parent"
+                android:text="This message will be public"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/recipient_phone"
-                    android:focusedByDefault="false"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_recipient"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom= "15dp">-->
 
-            </android.support.design.widget.TextInputLayout>
+                <!--<AutoCompleteTextView-->
+                    <!--android:id="@+id/recipient_phone"-->
+                    <!--android:focusedByDefault="false"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:hint="@string/prompt_recipient"-->
+                    <!--android:inputType="phone"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:singleLine="true" />-->
+
+            <!--</android.support.design.widget.TextInputLayout>-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
