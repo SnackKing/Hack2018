@@ -43,6 +43,8 @@ public class DBUtility extends AppCompatActivity {
     // how long the thread syncs
     public static final int MS_WAIT_THREAD_CHECK = 60000;
 
+    public static final String PUBLIC_MESSAGE_DEST = "-1";
+
     private Context context;
     private SyncThread sync;
     private SQLiteDatabase db;
@@ -167,7 +169,7 @@ public class DBUtility extends AppCompatActivity {
         String selectQuery = "SELECT * FROM " + tableName;
         Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
 
-        for (int i = 0; i < cursor.getCount(); i++) {
+        while (cursor.moveToNext()) {
             toReturn.add(cursor.getString(cursor.getColumnIndex(colName)));
         }
 
