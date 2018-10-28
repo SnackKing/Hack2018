@@ -169,7 +169,7 @@ public class SignUpActivity extends AppCompatActivity  {
         util.insertToDb(db, User.TABLE_NAME, key,null, values);
 
         // log the newly created user in
-        int result = util.login(mDbHelp.getReadableDatabase(), phone, password);
+        util.login(mDbHelp.getReadableDatabase(), phone, password);
         Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
         startActivity(intent);
     }

@@ -13,13 +13,13 @@ import java.util.Set;
 
 public class User implements Serializable {
     public String name;
-    public int phoneNumber;
+    public String phoneNumber;
     public int salt;
     public int password;
     public boolean resident;
     public String id;
 
-    public User(String id, String name, int phone, byte[] salt, byte[] password, int resident) {
+    public User(String id, String name, String phone, byte[] salt, byte[] password, int resident) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phone;
@@ -41,7 +41,7 @@ public class User implements Serializable {
 
             switch (key) {
                 case UserContract.User.COLUMN_NAME_PHONE_NUMBER:
-                    this.phoneNumber = Integer.parseInt(value.toString());
+                    this.phoneNumber = value.toString();
                     break;
                 case UserContract.User.COLUMN_NAME_SALT:
                     this.salt = DBUtility.fromByteArray((byte[]) value);
