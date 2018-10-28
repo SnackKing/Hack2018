@@ -2,6 +2,7 @@ package com.example.alleg.hack2018.utility;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
@@ -57,8 +58,8 @@ public class SyncThread extends Thread {
         Set<String> notInCloud = new HashSet<>(local);
         Set<String> notInLocal = new HashSet<>(cloud);
 
-        notInCloud.remove(cloud);
-        notInLocal.remove(local);
+        notInCloud.removeAll(cloud);
+        notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
             Inventory temp = (Inventory) DBUtility.getRecord(InventoryContract.Inventory.TABLE_NAME, id);
@@ -84,8 +85,8 @@ public class SyncThread extends Thread {
         notInCloud = new HashSet<>(local);
         notInLocal = new HashSet<>(cloud);
 
-        notInCloud.remove(cloud);
-        notInLocal.remove(local);
+        notInCloud.removeAll(cloud);
+        notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
             Item temp = (Item) DBUtility.getRecord(ItemContract.Item.TABLE_NAME, id);
@@ -105,45 +106,14 @@ public class SyncThread extends Thread {
             DBUtility.addToFirebase(ItemContract.Item.TABLE_NAME, temp);
         }
 
-
-
-        cloud = DBUtility.getIDSetCloud(MessageContract.Message.TABLE_NAME);
-        local = parent.getIDSet(MessageContract.Message.TABLE_NAME);
-
-        notInCloud = new HashSet<>(local);
-        notInLocal = new HashSet<>(cloud);
-
-        notInCloud.remove(cloud);
-        notInLocal.remove(local);
-
-        for (String id : notInLocal) {
-            Message temp = (Message) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
-
-            ContentValues values = new ContentValues();
-
-            values.put(MessageContract.Message._ID, temp.id);
-            values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
-            values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
-            values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
-
-            this.parent.insertToDb(MessageContract.Message.TABLE_NAME,null, values);
-        }
-
-        for (String id : notInCloud) {
-            Message temp = new Message(id, dbr);
-            DBUtility.addToFirebase(MessageContract.Message.TABLE_NAME, temp);
-        }
-
-
-
         cloud = DBUtility.getIDSetCloud(UserContract.User.TABLE_NAME);
         local = parent.getIDSet(UserContract.User.TABLE_NAME);
 
         notInCloud = new HashSet<>(local);
         notInLocal = new HashSet<>(cloud);
 
-        notInCloud.remove(cloud);
-        notInLocal.remove(local);
+        notInCloud.removeAll(cloud);
+        notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
             User temp = (User) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
@@ -163,6 +133,34 @@ public class SyncThread extends Thread {
         for (String id : notInCloud) {
             User temp = new User(id, dbr);
             DBUtility.addToFirebase(UserContract.User.TABLE_NAME, temp);
+        }
+
+        cloud = DBUtility.getIDSetCloud(MessageContract.Message.TABLE_NAME);
+        local = parent.getIDSet(MessageContract.Message.TABLE_NAME);
+
+        notInCloud = new HashSet<>(local);
+        notInLocal = new HashSet<>(cloud);
+
+        notInCloud.removeAll(cloud);
+        notInLocal.removeAll(local);
+
+        for (String id : notInLocal) {
+            Message temp = (Message) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
+
+            ContentValues values = new ContentValues();
+
+            values.put(MessageContract.Message._ID, temp.id);
+            values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
+            values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
+            values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
+            values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
+
+            this.parent.insertToDb(MessageContract.Message.TABLE_NAME,null, values);
+        }
+
+        for (String id : notInCloud) {
+            Message temp = new Message(id, dbr);
+            DBUtility.addToFirebase(MessageContract.Message.TABLE_NAME, temp);
         }
     }
 }

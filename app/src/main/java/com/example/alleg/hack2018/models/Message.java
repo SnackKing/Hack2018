@@ -20,6 +20,9 @@ public class Message implements Serializable {
     public String msg; // message
     public int time; //time of message
 
+    // for firebase
+    public Message() {}
+
     // pull from db
     public Message(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME

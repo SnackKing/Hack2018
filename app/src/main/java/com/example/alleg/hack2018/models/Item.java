@@ -20,6 +20,9 @@ public class Item implements Serializable {
     public boolean perishable;
     public int importance;
 
+    // for firebase
+    public Item() {}
+
     // get from db
     public Item(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + ItemContract.Item.TABLE_NAME
