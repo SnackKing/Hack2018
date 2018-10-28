@@ -102,6 +102,7 @@ public class User implements Serializable {
             arr.add(temp);
         }
 
+        cursor.close();
         return arr;
     }
 
@@ -119,6 +120,7 @@ public class User implements Serializable {
             arr.add(temp);
         }
 
+        cursor.close();
         return arr;
     }
 

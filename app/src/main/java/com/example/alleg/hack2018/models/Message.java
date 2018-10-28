@@ -35,6 +35,7 @@ public class Message implements Serializable {
         this.senderId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID));
         this.recipId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID));
         this.msg = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE));
+        cursor.close();
     }
 
     public Message(ContentValues values){
@@ -64,11 +65,20 @@ public class Message implements Serializable {
         }
     }
 
-    static ArrayList<Message> getPublicMessages() {
+    static ArrayList<Message> getPublicMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        // TODO
+        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
+                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = -1";
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+        cursor.moveToFirst();
 
+        for(int i = 0; i < cursor.getCount(); i++) {
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            arr.add(temp);
+        }
+
+        cursor.close();
         return arr;
     }
 

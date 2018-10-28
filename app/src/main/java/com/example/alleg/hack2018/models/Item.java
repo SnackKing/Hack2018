@@ -37,6 +37,7 @@ public class Item implements Serializable {
         this.importance = cursor.getInt(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_IMPORTANCE));
         int perish = cursor.getInt(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_PERISHABLE));
         this.perishable = perish == 1;
+        cursor.close();
     }
 
     public Item(ContentValues values){
