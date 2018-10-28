@@ -70,5 +70,50 @@ public class SyncThread extends Thread {
 
             this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME, temp.id, null, values);
         }
+
+
+        cloud = DBUtility.getIDSetCloud(ItemContract.Item.TABLE_NAME);
+        local = parent.getIDSet(ItemContract.Item.TABLE_NAME);
+
+        notInCloud = new HashSet<>(local);
+        notInLocal = new HashSet<>(cloud);
+
+        notInCloud.remove(cloud);
+        notInLocal.remove(local);
+
+        for (String id: notInLocal) {
+            Item temp = (Item) DBUtility.getRecord(ItemContract.Item.TABLE_NAME, id);
+
+            ContentValues values = new ContentValues();
+
+            values.put(ItemContract.Item._ID, temp.id);
+            values.put(ItemContract.Item.COLUMN_NAME_IMPORTANCE, temp.importance);
+            values.put(ItemContract.Item.COLUMN_NAME_NAME, temp.name);
+            values.put(ItemContract.Item.COLUMN_NAME_PERISHABLE, temp.perishable);
+
+            this.parent.insertToDb(ItemContract.Item.TABLE_NAME, temp.id, null, values);
+        }
+
+
+
+        cloud = DBUtility.getIDSetCloud(MessageContract.Message.TABLE_NAME);
+        local = parent.getIDSet(MessageContract.Message.TABLE_NAME);
+
+        notInCloud = new HashSet<>(local);
+        notInLocal = new HashSet<>(cloud);
+
+        notInCloud.remove(cloud);
+        notInLocal.remove(local);
+
+        for (String id: notInLocal) {
+            Message temp = (Message) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
+
+            ContentValues values = new ContentValues();
+
+            values.put(MessageContract.Message._ID, temp.id);
+            values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
+            values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
+            values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
+        }
     }
 }
