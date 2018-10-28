@@ -146,11 +146,20 @@ public class SignUpActivity extends AppCompatActivity  {
         return isValid;
     }
 
-    private void signUp(String name, String phone, String password){
+    private int signUp(String name, String phone, String password){
 
         DBUtility util = new DBUtility(getApplicationContext());
 
         SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
+        SQLiteDatabase dbr = this.mDbHelp.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + User.TABLE_NAME + " WHERE "
+                + User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
+        Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
+        if (cursor.getCount() != 0) {
+            //phone number is a duplicate
+            return -1;
+        }
 
         ContentValues values = new ContentValues();
 
@@ -172,6 +181,7 @@ public class SignUpActivity extends AppCompatActivity  {
         util.login(mDbHelp.getReadableDatabase(), phone, password);
         Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
         startActivity(intent);
+        return 1;
     }
 }
 
