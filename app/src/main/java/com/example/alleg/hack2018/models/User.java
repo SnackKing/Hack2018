@@ -25,7 +25,7 @@ public class User implements Serializable {
     // get this from the database
     public User(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME
-                + " WHERE " + UserContract.User._ID + " = " + id;
+                + " WHERE " + UserContract.User._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
