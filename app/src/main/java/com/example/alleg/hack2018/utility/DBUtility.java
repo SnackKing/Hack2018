@@ -59,7 +59,7 @@ public class DBUtility extends AppCompatActivity {
         this.db = temp.getWritableDatabase();
         this.dbr = temp.getReadableDatabase();
         this.sync = new SyncThread(this, db, dbr);
-        //this.sync.start();
+        this.sync.start();
     }
 
     public HashMap dataToHashmap(){
