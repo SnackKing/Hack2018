@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
+import com.example.alleg.hack2018.utility.DBUtility;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class Message implements Serializable {
         ArrayList<Message> arr = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
-                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = -1";
+                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = \"" + DBUtility.PUBLIC_MESSAGE_DEST + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
 
         while(cursor.moveToNext()) {

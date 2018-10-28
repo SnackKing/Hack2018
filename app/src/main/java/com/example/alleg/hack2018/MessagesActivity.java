@@ -84,7 +84,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
             @Override
             public void onRegistrationFailed(int errorCode, String message) {
                 // Something went wrong: handle error code, maybe print the message
-
+                Log.d("bridge FAIL", message);
             }});
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
