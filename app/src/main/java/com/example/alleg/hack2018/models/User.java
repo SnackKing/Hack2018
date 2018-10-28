@@ -3,6 +3,7 @@ package com.example.alleg.hack2018.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
@@ -32,6 +33,8 @@ public class User implements Serializable {
                 + " WHERE " + UserContract.User._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
+
+        Log.d("searching for user", id);
 
         if (cursor.getCount() == 0) {
             //Can't find id

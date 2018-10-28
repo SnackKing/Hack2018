@@ -160,6 +160,7 @@ public class SyncThread extends Thread {
             values.put(MessageContract.Message._ID, temp.id);
             values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
             values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
+            values.put(MessageContract.Message.COLUMN_NAME_USER_ID, temp.senderId);
             values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
             values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
 
