@@ -12,15 +12,17 @@ import java.util.Set;
 
 public class Item implements Serializable {
 
-    public long id;
+    public String id;
     public String name;
     public boolean perishable;
     public long importance;
 
-    public Item(long id, ContentValues values){
+    // get from db
+    public Item(String id) {
+        // TODO
+    }
 
-        this.id = id;
-
+    public Item(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 
@@ -39,6 +41,9 @@ public class Item implements Serializable {
                     break;
                 case ItemContract.Item.COLUMN_NAME_IMPORTANCE:
                     this.importance = (int) value;
+                    break;
+                case ItemContract.Item._ID:
+                    this.id = value.toString();
                     break;
             }
         }

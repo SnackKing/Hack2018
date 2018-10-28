@@ -2,7 +2,6 @@ package com.example.alleg.hack2018.utility;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,9 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.example.alleg.hack2018.MessagesActivity;
 import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
@@ -45,8 +42,9 @@ public class DBUtility extends AppCompatActivity {
         this.context = con;
     }
 
-    public long insertToDb(SQLiteDatabase db, String table, String nullColumnHack, ContentValues content) {
-        long newId = db.insert(table, nullColumnHack, content);
+    public void insertToDb(SQLiteDatabase db, String table, String key, String nullColumnHack, ContentValues content) {
+
+        db.insert(table, nullColumnHack, content);
 
         // now for firebase
         DatabaseReference tableRef = myRef.child(table);
@@ -56,46 +54,44 @@ public class DBUtility extends AppCompatActivity {
                 // now to insert this value to the database
 
                 if (this.isConnected()) {
-                    tableRef.child(String.valueOf(newId)).setValue(new User(newId, content));
+                    tableRef.child(String.valueOf(key)).setValue(new User(content));
                 } else {
-                    notSentUsers.add(new User(newId, content));
+                    notSentUsers.add(new User(content));
                 }
 
                 break;
             case MessageContract.Message.TABLE_NAME:
 
                 if (this.isConnected()) {
-                    tableRef.child(String.valueOf(newId)).setValue(new Message(newId, content));
+                    tableRef.child(String.valueOf(key)).setValue(new Message(content));
                 } else {
-                    notSentMessages.add(new Message(newId, content));
+                    notSentMessages.add(new Message(content));
                 }
 
                 break;
             case InventoryContract.Inventory.TABLE_NAME:
 
                 if (this.isConnected()) {
-                    tableRef.child(String.valueOf(newId)).setValue(new Inventory(newId, content));
+                    tableRef.child(String.valueOf(key)).setValue(new Inventory(content));
                 } else {
-                    notSentInventories.add(new Inventory(newId, content));
+                    notSentInventories.add(new Inventory(content));
                 }
 
                 break;
             case ItemContract.Item.TABLE_NAME:
 
                 if (this.isConnected()) {
-                    tableRef.child(String.valueOf(newId)).setValue(new Item(newId, content));
+                    tableRef.child(String.valueOf(key)).setValue(new Item(content));
                 } else {
-                    notSentItems.add(new Item(newId, content));
+                    notSentItems.add(new Item(content));
                 }
 
                 break;
         }
-
-        return newId;
     }
 
     // TODO : save changes and deletions
-    public void syncDatabase(SQLiteDatabase db) {
+    public void syncDatabaseToCloud(SQLiteDatabase db) {
         // empty each of the not sent arrays
 
         while (notSentMessages.size() > 0 ) {
@@ -129,6 +125,7 @@ public class DBUtility extends AppCompatActivity {
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         if (cursor.getCount() == 0) {
             //Incorrect phone number
+            cursor.close();
             return -1;
         }
 
@@ -139,12 +136,13 @@ public class DBUtility extends AppCompatActivity {
 
         if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
             //Incorrect password
+            cursor.close();
             return -2;
         }
 
-        User x = new User(cursor.getLong(cursor.getColumnIndex(UserContract.User._ID)),
+        User x = new User(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),
                 cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)),
-                cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
+                cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
                 salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
@@ -155,6 +153,7 @@ public class DBUtility extends AppCompatActivity {
         prefsEditor.putString(DBUtility.USER_KEY, json);
         prefsEditor.commit();
 
+        cursor.close();
         return 1;
     }
 

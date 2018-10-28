@@ -11,14 +11,17 @@ import java.util.Set;
 
 public class Inventory implements Serializable {
 
-    public long id;
+    public String id;
     public long userId;
     public String item;
     public int count;
 
-    public Inventory(long id, ContentValues values){
-        this.id = id;
+    // get from database
+    public Inventory(String id) {
+        // TODO
+    }
 
+    public Inventory(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 
@@ -37,6 +40,10 @@ public class Inventory implements Serializable {
                     break;
                 case InventoryContract.Inventory.COLUMN_NAME_USER_ID:
                     this.userId = (long) value;
+                    break;
+                case InventoryContract.Inventory._ID:
+                    this.id = value.toString();
+                    break;
             }
         }
     }
