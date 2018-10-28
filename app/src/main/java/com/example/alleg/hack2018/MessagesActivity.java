@@ -37,6 +37,7 @@ import com.example.alleg.hack2018.utility.MessageListAdapter;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
@@ -73,8 +74,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     @Override
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
-                        //TODO update database here using received message
-
+                        HashMap hmap = message.getContent();
+                        dbUtility.updateLocal(hmap);
                     }
                 };
                 StateListener stateListener = new StateListener() {
