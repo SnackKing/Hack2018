@@ -38,6 +38,8 @@ import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.Passwords;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -85,7 +87,6 @@ public class SignUpActivity extends AppCompatActivity  {
             }
         });
 
-
         Button signUp = findViewById(R.id.sign_up_button);
         signUp.setOnClickListener(new OnClickListener() {
             @Override
@@ -97,8 +98,8 @@ public class SignUpActivity extends AppCompatActivity  {
         goSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent goSignUpIntent = new Intent(SignUpActivity.this,LoginActivity.class);
-                startActivity(goSignUpIntent);
+                Intent goSignInIntent = new Intent(SignUpActivity.this,LoginActivity.class);
+                startActivity(goSignInIntent);
             }
         });
         mLoginFormView = findViewById(R.id.login_form);
@@ -121,36 +122,63 @@ public class SignUpActivity extends AppCompatActivity  {
         String confirmPassword = confirmPasswordField.getText().toString();
         boolean isValid = validate(name, phone, password, confirmPassword);
         if(isValid) {
-            signUp(name, phone, password);
+            int code = signUp(name, phone, password);
+
+            if (code == -1) {
+                phoneField.setError("Phone Already Taken");
+            } else {
+                // success
+                Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
     private boolean validate(String name,String phone, String password, String confirmPassword){
         boolean isValid = true;
+
         if(name.length() == 0){
             isValid = false;
             nameField.setError("Name can't be blank");
         }
-        if(phone.length() != 10){
+
+        if(phone.length() != 10 || !StringUtils.isNumeric(phone)){
             isValid = false;
             phoneField.setError("Invalid Phone");
         }
+
         if(password.length() == 0){
             isValid = false;
             passwordField.setError("Password can't be blank");
         }
+
         if(!password.equals(confirmPassword)){
             isValid = false;
             confirmPasswordField.setError("Passwords don't match");
         }
+
         return isValid;
     }
 
-    private void signUp(String name, String phone, String password){
+    private int signUp(String name, String phone, String password){
 
         DBUtility util = new DBUtility(getApplicationContext());
 
         SQLiteDatabase db = this.mDbHelp.getWritableDatabase();
+        SQLiteDatabase dbr = this.mDbHelp.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + User.TABLE_NAME + " WHERE "
+                + User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
+        Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
+
+        if (cursor.getCount() != 0) {
+            //phone number is a duplicate
+
+            db.close();
+            dbr.close();
+
+            return -1;
+        }
 
         ContentValues values = new ContentValues();
 
@@ -168,10 +196,11 @@ public class SignUpActivity extends AppCompatActivity  {
 
         util.insertToDb(db, User.TABLE_NAME, key,null, values);
 
+        db.close();
+        dbr.close();
+
         // log the newly created user in
-        int result = util.login(mDbHelp.getReadableDatabase(), phone, password);
-        Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
-        startActivity(intent);
+        return util.login(mDbHelp.getReadableDatabase(), phone, password);
     }
 }
 

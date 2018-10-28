@@ -91,7 +91,7 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // TODO : save changes and deletions
-    public void syncDatabase(SQLiteDatabase db) {
+    public void syncDatabaseToCloud(SQLiteDatabase db) {
         // empty each of the not sent arrays
 
         while (notSentMessages.size() > 0 ) {
@@ -142,7 +142,7 @@ public class DBUtility extends AppCompatActivity {
 
         User x = new User(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),
                 cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)),
-                cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
+                cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
                 salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs

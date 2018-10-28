@@ -14,7 +14,7 @@ class Queries {
             "CREATE TABLE " + User.TABLE_NAME + " (" +
             User._ID + " TEXT PRIMARY KEY," +
             User.COLUMN_NAME_NAME + " TEXT," +
-            User.COLUMN_NAME_PHONE_NUMBER + " INT NOT NULL UNIQUE," +
+            User.COLUMN_NAME_PHONE_NUMBER + " TEXT NOT NULL UNIQUE," +
             User.COLUMN_NAME_PASSWORD + " BLOB," +
             User.COLUMN_NAME_SALT + " BLOB," +
             User.COLUMN_NAME_RESIDENT + " INT);";
