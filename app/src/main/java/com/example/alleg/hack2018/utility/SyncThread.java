@@ -11,6 +11,9 @@ import com.example.alleg.hack2018.models.Item;
 import com.example.alleg.hack2018.models.Message;
 import com.example.alleg.hack2018.models.User;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SyncThread extends Thread {
 
     DBUtility parent;
@@ -50,7 +53,21 @@ public class SyncThread extends Thread {
     }
 
     private void fullSyncToCloud() {
+        String[] tableNames = { InventoryContract.Inventory.TABLE_NAME, ItemContract.Item.TABLE_NAME,
+                                MessageContract.Message.TABLE_NAME, UserContract.User.TABLE_NAME};
 
+        for (String table : tableNames) {
+            Set<String> cloud = DBUtility.getIDSetCloud(table);
+            Set<String> local = parent.getIDSet(table);
+
+            Set<String> notInCloud = new HashSet<>(local);
+            Set<String> notInLocal = new HashSet<>(cloud);
+
+            notInCloud.remove(cloud);
+            notInLocal.remove(local);
+
+
+        }
     }
 
     // TODO : save changes and deletions
@@ -81,5 +98,4 @@ public class SyncThread extends Thread {
             DBUtility.myRef.child(ItemContract.Item.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
         }
     }
-
 }
