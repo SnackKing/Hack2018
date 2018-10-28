@@ -14,17 +14,31 @@ import com.example.alleg.hack2018.models.User;
 public class SyncThread extends Thread {
 
     DBUtility parent;
+    SQLiteDatabase db;
 
-    public SyncThread(DBUtility par) {
+    public SyncThread(DBUtility par, SQLiteDatabase db) {
         parent = par;
+        this.db = db;
     }
 
     @Override
     public void run() {
+        // this is a constant.
+        // 5 * this = number of seconds till checking to sync entire db
+        int iterationsLimit = 60;
+
+        int iterations = 0;
+
         while (!parent.isConnected()) {
             // only check for internet every 5 seconds
             try {
+                iterations ++;
                 this.sleep(5000);
+
+                if (iterations % iterationsLimit == 0 ) {
+                    iterations = 0;
+                    this.fullSyncToCloud();
+                }
             } catch (java.lang.InterruptedException e) {
                 // good! we can process now
                 // do nothing
@@ -35,8 +49,12 @@ public class SyncThread extends Thread {
         syncToCloud();
     }
 
+    private void fullSyncToCloud() {
+
+    }
+
     // TODO : save changes and deletions
-    public void syncToCloud() {
+    private void syncToCloud() {
         // empty each of the not sent arrays
 
         while (DBUtility.notSentMessages.size() > 0 ) {
