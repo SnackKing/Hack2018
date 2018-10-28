@@ -46,7 +46,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         Gson gson = new Gson();
         String json = mPrefs.getString(DBUtility.USER_KEY, null);
         User user = gson.fromJson(json, User.class);
-        getSupportActionBar().setTitle("j");
+        getSupportActionBar().setTitle(user.name + "'s Messages");
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
