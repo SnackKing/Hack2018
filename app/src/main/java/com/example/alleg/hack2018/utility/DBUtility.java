@@ -22,21 +22,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DBUtility extends AppCompatActivity {
 
-    static ArrayList<User> notSentUsers = new ArrayList<>();
-    static ArrayList<Message> notSentMessages = new ArrayList<>();
-    static ArrayList<Item> notSentItems = new ArrayList<>();
-    static ArrayList<Inventory> notSentInventories = new ArrayList<>();
-
     static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
 
     public static final String USER_KEY = "currUser";
+
+    // how long the thread syncs
+    public static final int MS_WAIT_THREAD_CHECK = 60000;
 
     private Context context;
     private SyncThread sync;
@@ -46,6 +44,7 @@ public class DBUtility extends AppCompatActivity {
         this.context = con;
         this.db = new DBHelper(this.context).getWritableDatabase();
         this.sync = new SyncThread(this, db);
+        this.sync.start();
     }
 
     public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
@@ -61,9 +60,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new User(content));
-                } else {
-                    notSentUsers.add(new User(content));
-                    sync.start();
                 }
 
                 break;
@@ -71,9 +67,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new Message(content));
-                } else {
-                    notSentMessages.add(new Message(content));
-                    sync.start();
                 }
 
                 break;
@@ -81,9 +74,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new Inventory(content));
-                } else {
-                    notSentInventories.add(new Inventory(content));
-                    sync.start();
                 }
 
                 break;
@@ -91,9 +81,6 @@ public class DBUtility extends AppCompatActivity {
 
                 if (this.isConnected()) {
                     tableRef.child(String.valueOf(key)).setValue(new Item(content));
-                } else {
-                    notSentItems.add(new Item(content));
-                    sync.start();
                 }
 
                 break;
@@ -111,7 +98,7 @@ public class DBUtility extends AppCompatActivity {
         }
 
         cursor.moveToFirst();
-        byte[] salt = cursor.getBlob(cursor.getColumnIndex("Salt"));
+        byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
         byte[] saltedPsd =
                 cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
 
@@ -202,5 +189,9 @@ public class DBUtility extends AppCompatActivity {
         // TODO
 
         return toReturn;
+    }
+
+    public static Serializable getRecord(String table, String id) {
+        return null;
     }
 }

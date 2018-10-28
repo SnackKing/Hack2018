@@ -80,6 +80,7 @@ public class Message implements Serializable {
 
         for(int i = 0; i < cursor.getCount(); i++) {
             Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            cursor.moveToNext();
             arr.add(temp);
         }
 

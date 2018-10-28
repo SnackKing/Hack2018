@@ -1,5 +1,6 @@
 package com.example.alleg.hack2018.utility;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
@@ -26,76 +27,48 @@ public class SyncThread extends Thread {
 
     @Override
     public void run() {
-        // this is a constant.
-        // 5 * this = number of seconds till checking to sync entire db
-        int iterationsLimit = 60;
+        int nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
 
-        int iterations = 0;
-
-        while (!parent.isConnected()) {
-            // only check for internet every 5 seconds
+        while (true) {
+            // only check for internet every minute
             try {
-                iterations ++;
-                this.sleep(5000);
+                this.sleep(nextSleep);
 
-                if (iterations % iterationsLimit == 0 ) {
-                    iterations = 0;
+                if (parent.isConnected()) {
+                    nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
                     this.fullSyncToCloud();
+                } else {
+                    // not connected - look for internet desperately
+                    nextSleep = DBUtility.MS_WAIT_THREAD_CHECK / 4;
                 }
             } catch (java.lang.InterruptedException e) {
-                // good! we can process now
-                // do nothing
+                e.printStackTrace();
             }
         }
-
-        // empty buffers
-        syncToCloud();
     }
 
     private void fullSyncToCloud() {
-        String[] tableNames = { InventoryContract.Inventory.TABLE_NAME, ItemContract.Item.TABLE_NAME,
-                                MessageContract.Message.TABLE_NAME, UserContract.User.TABLE_NAME};
 
-        for (String table : tableNames) {
-            Set<String> cloud = DBUtility.getIDSetCloud(table);
-            Set<String> local = parent.getIDSet(table);
+        Set<String> cloud = DBUtility.getIDSetCloud(InventoryContract.Inventory.TABLE_NAME);
+        Set<String> local = parent.getIDSet(InventoryContract.Inventory.TABLE_NAME);
 
-            Set<String> notInCloud = new HashSet<>(local);
-            Set<String> notInLocal = new HashSet<>(cloud);
+        Set<String> notInCloud = new HashSet<>(local);
+        Set<String> notInLocal = new HashSet<>(cloud);
 
-            notInCloud.remove(cloud);
-            notInLocal.remove(local);
+        notInCloud.remove(cloud);
+        notInLocal.remove(local);
 
+        for (String id : notInLocal) {
+            Inventory temp = (Inventory) DBUtility.getRecord(InventoryContract.Inventory.TABLE_NAME, id);
 
-        }
-    }
+            ContentValues values = new ContentValues();
 
-    // TODO : save changes and deletions
-    private void syncToCloud() {
-        // empty each of the not sent arrays
+            values.put(InventoryContract.Inventory._ID, temp.id);
+            values.put(InventoryContract.Inventory.COLUMN_NAME_COUNT, temp.count);
+            values.put(InventoryContract.Inventory.COLUMN_NAME_ITEM, temp.item);
+            values.put(InventoryContract.Inventory.COLUMN_NAME_USER_ID, temp.userId);
 
-        while (DBUtility.notSentMessages.size() > 0 ) {
-            Message msg = DBUtility.notSentMessages.remove(DBUtility.notSentMessages.size() - 1);
-
-            DBUtility.myRef.child(MessageContract.Message.TABLE_NAME).child(String.valueOf(msg.id)).setValue(msg);
-        }
-
-        while (DBUtility.notSentUsers.size() > 0) {
-            User usr = DBUtility.notSentUsers.remove(DBUtility.notSentUsers.size() - 1);
-
-            DBUtility.myRef.child(UserContract.User.TABLE_NAME).child(String.valueOf(usr.id)).setValue(usr);
-        }
-
-        while (DBUtility.notSentInventories.size() > 0) {
-            Inventory i = DBUtility.notSentInventories.remove(DBUtility.notSentInventories.size() - 1);
-
-            DBUtility.myRef.child(InventoryContract.Inventory.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
-        }
-
-        while (DBUtility.notSentItems.size() > 0) {
-            Item i = DBUtility.notSentItems.remove(DBUtility.notSentItems.size() - 1);
-
-            DBUtility.myRef.child(ItemContract.Item.TABLE_NAME).child(String.valueOf(i.id)).setValue(i);
+            this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME, temp.id, null, values);
         }
     }
 }

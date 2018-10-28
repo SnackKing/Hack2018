@@ -1,8 +1,10 @@
 package com.example.alleg.hack2018;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,8 +16,11 @@ import android.support.v4.view.ViewPager;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.models.Message;
+import com.example.alleg.hack2018.models.User;
 import com.example.alleg.hack2018.utility.DBHelper;
+import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.MessageListAdapter;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -38,7 +43,12 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-
+        SharedPreferences mPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = mPrefs.getString(DBUtility.USER_KEY, null);
+        User user = gson.fromJson(json, User.class);
+        getSupportActionBar().setTitle(user.name + "'s Messages");
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
