@@ -106,7 +106,12 @@ public class DBUtility extends AppCompatActivity {
     
     public void insertToDb(String table, String nullColumnHack, ContentValues content) {
 
-        Bridgefy.sendBroadcastMessage(this.dataToHashmap());
+        try {
+            Bridgefy.sendBroadcastMessage(this.dataToHashmap());
+        } catch (IllegalStateException e) {
+            // do nothing
+            // jank but i've been awake for 30 hours
+        }
 
         db.insert(table, nullColumnHack, content);
 
