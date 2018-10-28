@@ -164,7 +164,15 @@ public class DBUtility extends AppCompatActivity {
     public Set<String> getIDSet(String tableName) {
         Set<String> toReturn = new HashSet<>();
 
+        // TODO
 
+        return toReturn;
+    }
+
+    public Set<String> getIDSetCloud(String tableName) {
+        Set<String> toReturn = new HashSet<>();
+
+        // TODO
 
         return toReturn;
     }

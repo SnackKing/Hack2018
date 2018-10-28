@@ -37,7 +37,7 @@ public class SyncThread extends Thread {
 
                 if (iterations % iterationsLimit == 0 ) {
                     iterations = 0;
-                    this.fullSync();
+                    this.fullSyncToCloud();
                 }
             } catch (java.lang.InterruptedException e) {
                 // good! we can process now
@@ -49,7 +49,7 @@ public class SyncThread extends Thread {
         syncToCloud();
     }
 
-    private void fullSync() {
+    private void fullSyncToCloud() {
 
     }
 
