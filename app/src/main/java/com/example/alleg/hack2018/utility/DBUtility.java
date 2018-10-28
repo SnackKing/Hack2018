@@ -72,14 +72,14 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public HashMap dataToHashmap(){
-        HashMap<String, HashMap> hmap = new HashMap<String, HashMap>();
+        HashMap<String, Map> hmap = new HashMap<String, Map>();
 
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME;
         Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
-        HashMap<String, HashMap> usermap = new HashMap<String, HashMap>();
+        Map<String, Map> usermap = new HashMap<>();
         while(cursor.moveToNext()) {
-            HashMap<String, Object> usercurrent = new HashMap<String, Object>();
+            Map<String, Object> usercurrent = new HashMap<String, Object>();
             usercurrent.put(UserContract.User._ID,cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
             usercurrent.put(UserContract.User.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
 
@@ -94,9 +94,9 @@ public class DBUtility extends AppCompatActivity {
         }
         hmap.put(UserContract.User.TABLE_NAME,usermap);
 
-        HashMap<String, HashMap> messagemap = new HashMap<String, HashMap>();
+        Map<String, Map> messagemap = new HashMap<String, Map>();
         while(cursor.moveToNext()) {
-            HashMap<String, Object> messagecurrent = new HashMap<String, Object>();
+            Map<String, Object> messagecurrent = new HashMap<String, Object>();
             messagecurrent.put(MessageContract.Message._ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)));
             messagecurrent.put(MessageContract.Message.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE)));
             messagecurrent.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID)));
