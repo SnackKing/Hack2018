@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -69,7 +70,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
                         HashMap hmap = message.getContent();
-                        dbUtility.updateLocal(hmap);
+                        //dbUtility.updateLocal(hmap);
+                        Log.d("Bridgefy","Message Received");
                     }
                 };
                 StateListener stateListener = new StateListener() {
@@ -78,6 +80,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                         super.onDeviceConnected(device, session);
                         com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(dbUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
                         Bridgefy.sendMessage(message);
+                        Log.d("Bridgefy","Message Sent to New Connection");
+
                     }
 
                 };
