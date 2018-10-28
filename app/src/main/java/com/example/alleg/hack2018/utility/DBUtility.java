@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,43 +55,34 @@ public class DBUtility extends AppCompatActivity {
         this.sync.start();
     }
 
+    @Deprecated
     public void insertToDb(String table, String key, String nullColumnHack, ContentValues content) {
+        insertToDb(table, nullColumnHack, content);
+    }
+
+    public void insertToDb(String table, String nullColumnHack, ContentValues content) {
 
         db.insert(table, nullColumnHack, content);
 
-        // now for firebase
-        DatabaseReference tableRef = myRef.child(table);
+        Serializable obj = null;
 
         switch (table) {
             case UserContract.User.TABLE_NAME:
-                // now to insert this value to the database
-
-                if (this.isConnected()) {
-                    tableRef.child(String.valueOf(key)).setValue(new User(content));
-                }
-
+                obj = new User(content);
                 break;
             case MessageContract.Message.TABLE_NAME:
-
-                if (this.isConnected()) {
-                    tableRef.child(String.valueOf(key)).setValue(new Message(content));
-                }
-
+                obj = new Message(content);
                 break;
             case InventoryContract.Inventory.TABLE_NAME:
-
-                if (this.isConnected()) {
-                    tableRef.child(String.valueOf(key)).setValue(new Inventory(content));
-                }
-
+                obj = new Inventory(content);
                 break;
             case ItemContract.Item.TABLE_NAME:
-
-                if (this.isConnected()) {
-                    tableRef.child(String.valueOf(key)).setValue(new Item(content));
-                }
-
+                obj = new Item(content);
                 break;
+        }
+
+        if (this.isConnected()) {
+            DBUtility.addToFirebase(table, obj);
         }
     }
 
@@ -266,6 +258,30 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public static void addToFirebase(String tableName, Serializable obj) {
-        
+        DatabaseReference tableRef = myRef.child(tableName);
+
+        switch (tableName) {
+            case UserContract.User.TABLE_NAME:
+                // now to insert this value to the database
+                User x = (User) obj;
+                tableRef.child(x.id).setValue(x);
+
+                break;
+            case MessageContract.Message.TABLE_NAME:
+                Message y = (Message) obj;
+                tableRef.child(y.id).setValue(y);
+
+                break;
+            case InventoryContract.Inventory.TABLE_NAME:
+                Item z = (Item) obj;
+                tableRef.child(z.id).setValue(z);
+
+                break;
+            case ItemContract.Item.TABLE_NAME:
+                Inventory d = (Inventory) obj;
+                tableRef.child(d.id).setValue(d);
+
+                break;
+        }
     }
 }
