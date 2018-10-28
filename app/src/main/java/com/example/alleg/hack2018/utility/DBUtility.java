@@ -106,6 +106,8 @@ public class DBUtility extends AppCompatActivity {
     
     public void insertToDb(String table, String nullColumnHack, ContentValues content) {
 
+        Bridgefy.sendBroadcastMessage(this.dataToHashmap());
+
         db.insert(table, nullColumnHack, content);
 
         Serializable obj = null;
