@@ -72,14 +72,14 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public HashMap dataToHashmap(){
-        HashMap<String, Map> hmap = new HashMap<String, Map>();
+        HashMap<String, HashMap<String, HashMap<String, Object>>> hmap = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
 
         String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME;
         Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
-        Map<String, Map> usermap = new HashMap<>();
+        HashMap<String, HashMap<String, Object>> usermap = new HashMap<>();
         while(cursor.moveToNext()) {
-            Map<String, Object> usercurrent = new HashMap<String, Object>();
+            HashMap<String, Object> usercurrent = new HashMap<String, Object>();
             usercurrent.put(UserContract.User._ID,cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
             usercurrent.put(UserContract.User.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
 
@@ -94,9 +94,9 @@ public class DBUtility extends AppCompatActivity {
         }
         hmap.put(UserContract.User.TABLE_NAME,usermap);
 
-        Map<String, Map> messagemap = new HashMap<String, Map>();
+        HashMap<String, HashMap<String, Object>> messagemap = new HashMap<String, HashMap<String, Object>>();
         while(cursor.moveToNext()) {
-            Map<String, Object> messagecurrent = new HashMap<String, Object>();
+            HashMap<String, Object> messagecurrent = new HashMap<String, Object>();
             messagecurrent.put(MessageContract.Message._ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)));
             messagecurrent.put(MessageContract.Message.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE)));
             messagecurrent.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID)));
@@ -205,8 +205,8 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // return the full set of all UUID's present in tableName
-    public Set<String> getIDSet(String tableName) {
-        Set<String> toReturn = new HashSet<>();
+    public HashSet<String> getIDSet(String tableName) {
+        HashSet<String> toReturn = new HashSet<>();
 
         String colName = null;
 
@@ -237,8 +237,8 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public Map<String, Set<String>> getTableIdSets(Map<String, Map<String, Map<String, Object>>> input) {
-        Map<String, Set<String>> out = new HashMap<>();
+    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+        HashMap<String, HashSet<String>> out = new HashMap<>();
 
         // for all keys in  each table, return tablename to set of keys
         for (String t : input.keySet()) {
@@ -255,17 +255,17 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public Map<String, Set<String>> getIdsToAdd(Map<String, Map<String, Map<String, Object>>> input) {
+    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
 
-        Map<String, Set<String>> out = new HashMap<>();
+        HashMap<String, HashSet<String>> out = new HashMap<>();
 
-        Map<String, Set<String>> in = getTableIdSets(input);
+        HashMap<String, HashSet<String>> in = getTableIdSets(input);
 
         for (String key : in.keySet()) {
             // key is table
-            Set<String> existingKeys = this.getIDSet(key);
+            HashSet<String> existingKeys = this.getIDSet(key);
 
-            Set<String> newKeys = in.get(key);
+            HashSet<String> newKeys = in.get(key);
 
             newKeys.removeAll(existingKeys);
 
@@ -275,8 +275,8 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public void updateLocal(Map<String, Map<String, Map<String, Object>>> input) {
-        Map<String, Set<String>> keysToAdd = getIdsToAdd(input);
+    public void updateLocal(HashMap<String, HashMap<String, HashMap<String, Object>>> input) {
+        HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
 
         for (String table : keysToAdd.keySet()) {
             for (String id : keysToAdd.get(table)) {
@@ -286,11 +286,11 @@ public class DBUtility extends AppCompatActivity {
 
                 for (String label : dataToAdd.keySet()) {
                     if (label.equals(UserContract.User.COLUMN_NAME_SALT) || label.equals(UserContract.User.COLUMN_NAME_PASSWORD)) {
-                        byte[] val = DBUtility.toByteArray((int) (double) dataToAdd.get(label));
+                        byte[] val = DBUtility.toByteArray( (int) dataToAdd.get(label));
 
                         values.put(label, val);
                     } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
-                        values.put(label, (int)(double)dataToAdd.get(label));
+                        values.put(label, (int) dataToAdd.get(label));
                     } else {
                         values.put(label, dataToAdd.get(label).toString());
                     }
