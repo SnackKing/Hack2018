@@ -133,11 +133,14 @@ public class SyncThread extends Thread {
             values.put(UserContract.User.COLUMN_NAME_SALT, DBUtility.toByteArray(temp.salt));
 
             this.parent.insertToDb(UserContract.User.TABLE_NAME,null, values);
+
+            Log.d("saved in local user", temp.id);
         }
 
         for (String id : notInCloud) {
             User temp = new User(id, dbr);
             DBUtility.addToFirebase(UserContract.User.TABLE_NAME, temp);
+            Log.d("saved in cloud user", temp.id);
         }
 
         cloud = DBUtility.getIDSetCloud(MessageContract.Message.TABLE_NAME);
@@ -161,11 +164,14 @@ public class SyncThread extends Thread {
             values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
 
             this.parent.insertToDb(MessageContract.Message.TABLE_NAME,null, values);
+
+            Log.d("saved locally message ", temp.id);
         }
 
         for (String id : notInCloud) {
             Message temp = new Message(id, dbr);
             DBUtility.addToFirebase(MessageContract.Message.TABLE_NAME, temp);
+            Log.d("saved in cloud message ", temp.id);
         }
     }
 }
