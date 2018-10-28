@@ -23,7 +23,7 @@ public class Item implements Serializable {
     // get from db
     public Item(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + ItemContract.Item.TABLE_NAME
-                + " WHERE " + ItemContract.Item._ID + " = " + id;
+                + " WHERE " + ItemContract.Item._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 

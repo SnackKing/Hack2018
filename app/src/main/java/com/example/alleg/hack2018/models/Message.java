@@ -23,7 +23,7 @@ public class Message implements Serializable {
     // pull from db
     public Message(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
-                + " WHERE " + MessageContract.Message._ID + " = " + id;
+                + " WHERE " + MessageContract.Message._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
