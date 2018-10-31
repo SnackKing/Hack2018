@@ -139,7 +139,8 @@ public class User implements Serializable {
     ArrayList<Inventory> getItemsInInventory() {
         ArrayList<Inventory> arr = new ArrayList<>();
 
-        // TODO low priority
+        // TODO Sahil - low priority
+        // this will slightly more difficult than the others
 
         return arr;
     }

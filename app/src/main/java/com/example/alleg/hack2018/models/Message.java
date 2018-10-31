@@ -15,9 +15,28 @@ import java.util.Map;
 import java.util.Set;
 
 public class Message implements Serializable {
+
+    // one day, this will be private (probably)
     public String id; // id of this record
+
+    /*
+     * TODO Sahil
+     *
+     * Do this to-do last
+     *
+     * Once all others are completed, make these two id's private
+     * this will prevent people from accessing in the id's directly, and will
+     * encapsulate the id's
+     *
+     * Once these are private, there will be some errors. Go and find where these id's are accessed,
+     * and then switch them to your newly implemented methods. this should make sense.
+     *
+     * For example, if (we will) want to make a "getFromDBOr404" method, we can call that in these
+     * encapsulated methods, and the people using our calls will not need to know.
+     */
     public String senderId; // id of sender
     public String recipId; // id of intended recipient
+
     public String msg; // message
     public int time; //time of message
 
@@ -74,6 +93,22 @@ public class Message implements Serializable {
         }
     }
 
+    // this is like an attribute
+    public User sender() {
+        // TODO sahil
+        // return the sender of this message, but as a user object, not an id
+        // this is a one liner
+        return null;
+    }
+
+    // this is like an attribute
+    public User receiver() {
+        // TODO sahil
+        // return the sender of this message, but as a user object, not an id
+        // this is a one liner
+        return null;
+    }
+
     public static ArrayList<Message> getPublicMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
@@ -89,5 +124,4 @@ public class Message implements Serializable {
         cursor.close();
         return arr;
     }
-
 }
