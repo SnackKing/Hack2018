@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class Message implements Serializable {
+public class Message implements DatabaseModel {
 
     // one day, this will be private (probably)
     public String id; // id of this record
@@ -117,11 +117,28 @@ public class Message implements Serializable {
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
 
         while(cursor.moveToNext()) {
-            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract._ID)), db);
+            Message temp = (Message) ModelFactory.getExistingModel(cursor.getString(cursor.getColumnIndex(MessageContract._ID)), db, MessageContract.TABLE_NAME);
             arr.add(temp);
         }
 
         cursor.close();
         return arr;
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(MessageContract._ID, this.id);
+        values.put(MessageContract.COLUMN_NAME_TIME, this.time);
+        values.put(MessageContract.COLUMN_NAME_MESSAGE, this.msg);
+        values.put(MessageContract.COLUMN_NAME_USER_ID, this.senderId);
+        values.put(MessageContract.COLUMN_NAME_DESTINATION_ID, this.recipId);
+        values.put(MessageContract.COLUMN_NAME_TIME, this.time);
+
+        return values;
+    }
+
+    public String getID() {
+        return this.id;
     }
 }

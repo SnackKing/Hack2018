@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
+import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class Inventory implements Serializable {
+public class Inventory implements DatabaseModel {
 
     public String id;
     public String userId;
@@ -68,4 +69,18 @@ public class Inventory implements Serializable {
         }
     }
 
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(InventoryContract._ID, this.id);
+        values.put(InventoryContract.COLUMN_NAME_COUNT, this.count);
+        values.put(InventoryContract.COLUMN_NAME_ITEM, this.item);
+        values.put(InventoryContract.COLUMN_NAME_USER_ID, this.userId);
+
+        return values;
+    }
+
+    public String getID() {
+        return this.id;
+    }
 }

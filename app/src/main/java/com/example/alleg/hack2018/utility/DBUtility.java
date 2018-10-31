@@ -17,9 +17,11 @@ import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
+import com.example.alleg.hack2018.models.DatabaseModel;
 import com.example.alleg.hack2018.models.Inventory;
 import com.example.alleg.hack2018.models.Item;
 import com.example.alleg.hack2018.models.Message;
+import com.example.alleg.hack2018.models.ModelFactory;
 import com.example.alleg.hack2018.models.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,8 +38,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-
-import static java.lang.Thread.sleep;
 
 public class DBUtility extends AppCompatActivity {
     static DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
@@ -122,25 +122,10 @@ public class DBUtility extends AppCompatActivity {
 
         db.insert(table, nullColumnHack, content);
 
-        Serializable obj = null;
-
-        switch (table) {
-            case UserContract.TABLE_NAME:
-                obj = new User(content);
-                break;
-            case MessageContract.TABLE_NAME:
-                obj = new Message(content);
-                break;
-            case InventoryContract.TABLE_NAME:
-                obj = new Inventory(content);
-                break;
-            case ItemContract.TABLE_NAME:
-                obj = new Item(content);
-                break;
-        }
+        DatabaseModel mod = ModelFactory.getModel(content);
 
         if (this.isConnected()) {
-            DBUtility.addToFirebase(table, obj);
+            DBUtility.addToFirebase(table, mod);
         }
 
         //Bridgefy.sendBroadcastMessage(dataToHashmap());
@@ -158,8 +143,7 @@ public class DBUtility extends AppCompatActivity {
 
         cursor.moveToFirst();
         byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_SALT));
-        byte[] saltedPsd =
-                cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_PASSWORD));
+        byte[] saltedPsd = cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_PASSWORD));
 
         if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
             //Incorrect password
@@ -167,10 +151,7 @@ public class DBUtility extends AppCompatActivity {
             return -2;
         }
 
-        User x = new User(cursor.getString(cursor.getColumnIndex(UserContract._ID)),
-                cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_NAME)),
-                cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_PHONE_NUMBER)),
-                salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.COLUMN_NAME_RESIDENT)));
+        User x = (User) ModelFactory.getExistingModel(cursor.getString(cursor.getColumnIndex(UserContract._ID)), db, UserContract.TABLE_NAME);
 
         // attach user to prefs
         SharedPreferences mPrefs = PreferenceManager
@@ -247,9 +228,7 @@ public class DBUtility extends AppCompatActivity {
             // this is table
             HashSet<String> keys = new HashSet<>();
 
-            for (String id : input.get(t).keySet()) {
-                keys.add(id);
-            }
+            keys.addAll(input.get(t).keySet());
 
             out.put(t, keys);
         }
@@ -294,7 +273,7 @@ public class DBUtility extends AppCompatActivity {
                     } else if (label.equals(UserContract.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.COLUMN_NAME_TIME)) {
                         values.put(label, Integer.valueOf(dataToAdd.get(label)));
                     } else {
-                        values.put(label, dataToAdd.get(label).toString());
+                        values.put(label, dataToAdd.get(label));
                     }
                 }
 
@@ -336,7 +315,7 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public static Serializable getRecord(String table, String id) {
+    public static Serializable getRecordFromFirebase(String table, String id) {
         CountDownLatch done = new CountDownLatch(1);
 
         ArrayList<Serializable> hack = new ArrayList<>();
@@ -379,31 +358,9 @@ public class DBUtility extends AppCompatActivity {
         return hack.get(0);
     }
 
-    public static void addToFirebase(String tableName, Serializable obj) {
+    public static void addToFirebase(String tableName, DatabaseModel obj) {
         DatabaseReference tableRef = myRef.child(tableName);
 
-        switch (tableName) {
-            case UserContract.TABLE_NAME:
-                // now to insert this value to the database
-                User x = (User) obj;
-                tableRef.child(x.id).setValue(x);
-
-                break;
-            case MessageContract.TABLE_NAME:
-                Message y = (Message) obj;
-                tableRef.child(y.id).setValue(y);
-
-                break;
-            case InventoryContract.TABLE_NAME:
-                Item z = (Item) obj;
-                tableRef.child(z.id).setValue(z);
-
-                break;
-            case ItemContract.TABLE_NAME:
-                Inventory d = (Inventory) obj;
-                tableRef.child(d.id).setValue(d);
-
-                break;
-        }
+        tableRef.child(obj.getID()).setValue(obj);
     }
 }

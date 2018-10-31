@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class User implements Serializable {
+public class User implements DatabaseModel {
     public String name;
     public String phoneNumber;
     public int salt;
@@ -143,5 +143,27 @@ public class User implements Serializable {
         // this will slightly more difficult than the others
 
         return arr;
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+
+        int res = 0;
+        if (this.resident) {
+            res = 1;
+        }
+
+        values.put(UserContract._ID, this.id);
+        values.put(UserContract.COLUMN_NAME_NAME, this.name);
+        values.put(UserContract.COLUMN_NAME_PASSWORD, DBUtility.toByteArray(this.password));
+        values.put(UserContract.COLUMN_NAME_PHONE_NUMBER, this.phoneNumber);
+        values.put(UserContract.COLUMN_NAME_RESIDENT, res);
+        values.put(UserContract.COLUMN_NAME_SALT, DBUtility.toByteArray(this.salt));
+
+        return values;
+    }
+
+    public String getID() {
+        return this.id;
     }
 }

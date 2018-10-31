@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class Item implements Serializable {
+public class Item implements DatabaseModel {
 
     public String id;
     public String name;
@@ -70,4 +70,18 @@ public class Item implements Serializable {
         }
     }
 
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(ItemContract._ID, this.id);
+        values.put(ItemContract.COLUMN_NAME_IMPORTANCE, this.importance);
+        values.put(ItemContract.COLUMN_NAME_NAME, this.name);
+        values.put(ItemContract.COLUMN_NAME_PERISHABLE, this.perishable);
+
+        return values;
+    }
+
+    public String getID() {
+        return this.id;
+    }
 }
