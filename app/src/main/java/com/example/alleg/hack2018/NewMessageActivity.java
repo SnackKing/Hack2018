@@ -79,6 +79,8 @@ public class NewMessageActivity extends AppCompatActivity {
             } else {
                 newId = cursor.getString(cursor.getColumnIndex(UserContract._ID));
             }
+
+            cursor.close();
         }
 
         values.put(MessageContract.COLUMN_NAME_USER_ID, user.id);
