@@ -74,37 +74,37 @@ public class DBUtility extends AppCompatActivity {
     public HashMap dataToHashmap(){
         HashMap<String, HashMap<String, HashMap<String, String>>> hmap = new HashMap<String, HashMap<String, HashMap<String, String>>>();
 
-        String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME;
+        String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME;
         Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
         HashMap<String, HashMap<String, String>> usermap = new HashMap<>();
         while(cursor.moveToNext()) {
             HashMap<String, String> usercurrent = new HashMap<String, String>();
-            usercurrent.put(UserContract.User._ID,cursor.getString(cursor.getColumnIndex(UserContract.User._ID)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)));
+            usercurrent.put(UserContract._ID,cursor.getString(cursor.getColumnIndex(UserContract._ID)));
+            usercurrent.put(UserContract.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_NAME)));
 
-            int pword = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD)));
-            int salt = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_PASSWORD, Integer.toString(pword));
+            int pword = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_PASSWORD)));
+            int salt = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_SALT)));
+            usercurrent.put(UserContract.COLUMN_NAME_PASSWORD, Integer.toString(pword));
 
-            usercurrent.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER,cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)));
-            usercurrent.put(UserContract.User.COLUMN_NAME_RESIDENT,Integer.toString(cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT))));
-            usercurrent.put(UserContract.User.COLUMN_NAME_SALT,Integer.toString(salt));
-            usermap.put(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),usercurrent);
+            usercurrent.put(UserContract.COLUMN_NAME_PHONE_NUMBER,cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_PHONE_NUMBER)));
+            usercurrent.put(UserContract.COLUMN_NAME_RESIDENT,Integer.toString(cursor.getInt(cursor.getColumnIndex(UserContract.COLUMN_NAME_RESIDENT))));
+            usercurrent.put(UserContract.COLUMN_NAME_SALT,Integer.toString(salt));
+            usermap.put(cursor.getString(cursor.getColumnIndex(UserContract._ID)),usercurrent);
         }
-        hmap.put(UserContract.User.TABLE_NAME,usermap);
+        hmap.put(UserContract.TABLE_NAME,usermap);
 
         HashMap<String, HashMap<String, String>> messagemap = new HashMap<String, HashMap<String, String>>();
         while(cursor.moveToNext()) {
             HashMap<String, String> messagecurrent = new HashMap<String, String>();
-            messagecurrent.put(MessageContract.Message._ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)));
-            messagecurrent.put(MessageContract.Message.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE)));
-            messagecurrent.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID)));
-            messagecurrent.put(MessageContract.Message.COLUMN_NAME_USER_ID,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID)));
-            messagecurrent.put(MessageContract.Message.COLUMN_NAME_TIME,cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_TIME)));
-            messagemap.put(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),messagecurrent);
+            messagecurrent.put(MessageContract._ID,cursor.getString(cursor.getColumnIndex(MessageContract._ID)));
+            messagecurrent.put(MessageContract.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_MESSAGE)));
+            messagecurrent.put(MessageContract.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_DESTINATION_ID)));
+            messagecurrent.put(MessageContract.COLUMN_NAME_USER_ID,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_USER_ID)));
+            messagecurrent.put(MessageContract.COLUMN_NAME_TIME,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_TIME)));
+            messagemap.put(cursor.getString(cursor.getColumnIndex(UserContract._ID)),messagecurrent);
         }
-        hmap.put(MessageContract.Message.TABLE_NAME,messagemap);
+        hmap.put(MessageContract.TABLE_NAME,messagemap);
 
         return hmap;
     }
@@ -125,16 +125,16 @@ public class DBUtility extends AppCompatActivity {
         Serializable obj = null;
 
         switch (table) {
-            case UserContract.User.TABLE_NAME:
+            case UserContract.TABLE_NAME:
                 obj = new User(content);
                 break;
-            case MessageContract.Message.TABLE_NAME:
+            case MessageContract.TABLE_NAME:
                 obj = new Message(content);
                 break;
-            case InventoryContract.Inventory.TABLE_NAME:
+            case InventoryContract.TABLE_NAME:
                 obj = new Inventory(content);
                 break;
-            case ItemContract.Item.TABLE_NAME:
+            case ItemContract.TABLE_NAME:
                 obj = new Item(content);
                 break;
         }
@@ -147,8 +147,8 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public int login(SQLiteDatabase db, String phone, String password){
-        String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME + " WHERE "
-                + UserContract.User.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
+        String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME + " WHERE "
+                + UserContract.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         if (cursor.getCount() == 0) {
             //Incorrect phone number
@@ -157,9 +157,9 @@ public class DBUtility extends AppCompatActivity {
         }
 
         cursor.moveToFirst();
-        byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
+        byte[] salt = cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_SALT));
         byte[] saltedPsd =
-                cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
+                cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_PASSWORD));
 
         if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
             //Incorrect password
@@ -167,10 +167,10 @@ public class DBUtility extends AppCompatActivity {
             return -2;
         }
 
-        User x = new User(cursor.getString(cursor.getColumnIndex(UserContract.User._ID)),
-                cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME)),
-                cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER)),
-                salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT)));
+        User x = new User(cursor.getString(cursor.getColumnIndex(UserContract._ID)),
+                cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_NAME)),
+                cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_PHONE_NUMBER)),
+                salt, saltedPsd, cursor.getInt(cursor.getColumnIndex(UserContract.COLUMN_NAME_RESIDENT)));
 
         // attach user to prefs
         SharedPreferences mPrefs = PreferenceManager
@@ -213,17 +213,17 @@ public class DBUtility extends AppCompatActivity {
         String colName = null;
 
         switch(tableName) {
-            case InventoryContract.Inventory.TABLE_NAME:
-                colName = InventoryContract.Inventory._ID;
+            case InventoryContract.TABLE_NAME:
+                colName = InventoryContract._ID;
                 break;
-            case UserContract.User.TABLE_NAME:
-                colName = UserContract.User._ID;
+            case UserContract.TABLE_NAME:
+                colName = UserContract._ID;
                 break;
-            case ItemContract.Item.TABLE_NAME:
-                colName = ItemContract.Item._ID;
+            case ItemContract.TABLE_NAME:
+                colName = ItemContract._ID;
                 break;
-            case MessageContract.Message.TABLE_NAME:
-                colName = MessageContract.Message._ID;
+            case MessageContract.TABLE_NAME:
+                colName = MessageContract._ID;
                 break;
         }
 
@@ -287,11 +287,11 @@ public class DBUtility extends AppCompatActivity {
                 ContentValues values = new ContentValues();
 
                 for (String label : dataToAdd.keySet()) {
-                    if (label.equals(UserContract.User.COLUMN_NAME_SALT) || label.equals(UserContract.User.COLUMN_NAME_PASSWORD)) {
+                    if (label.equals(UserContract.COLUMN_NAME_SALT) || label.equals(UserContract.COLUMN_NAME_PASSWORD)) {
                         byte[] val = DBUtility.toByteArray( Integer.valueOf(dataToAdd.get(label)));
 
                         values.put(label, val);
-                    } else if (label.equals(UserContract.User.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.Message.COLUMN_NAME_TIME)) {
+                    } else if (label.equals(UserContract.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.COLUMN_NAME_TIME)) {
                         values.put(label, Integer.valueOf(dataToAdd.get(label)));
                     } else {
                         values.put(label, dataToAdd.get(label).toString());
@@ -346,17 +346,17 @@ public class DBUtility extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 switch(table) {
-                    case UserContract.User.TABLE_NAME:
+                    case UserContract.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(User.class));
                         Log.d("user", ((User) hack.get(0)).id);
                         break;
-                    case ItemContract.Item.TABLE_NAME:
+                    case ItemContract.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(Item.class));
                         break;
-                    case InventoryContract.Inventory.TABLE_NAME:
+                    case InventoryContract.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(Inventory.class));
                         break;
-                    case MessageContract.Message.TABLE_NAME:
+                    case MessageContract.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(Message.class));
                         break;
                 }
@@ -383,23 +383,23 @@ public class DBUtility extends AppCompatActivity {
         DatabaseReference tableRef = myRef.child(tableName);
 
         switch (tableName) {
-            case UserContract.User.TABLE_NAME:
+            case UserContract.TABLE_NAME:
                 // now to insert this value to the database
                 User x = (User) obj;
                 tableRef.child(x.id).setValue(x);
 
                 break;
-            case MessageContract.Message.TABLE_NAME:
+            case MessageContract.TABLE_NAME:
                 Message y = (Message) obj;
                 tableRef.child(y.id).setValue(y);
 
                 break;
-            case InventoryContract.Inventory.TABLE_NAME:
+            case InventoryContract.TABLE_NAME:
                 Item z = (Item) obj;
                 tableRef.child(z.id).setValue(z);
 
                 break;
-            case ItemContract.Item.TABLE_NAME:
+            case ItemContract.TABLE_NAME:
                 Inventory d = (Inventory) obj;
                 tableRef.child(d.id).setValue(d);
 

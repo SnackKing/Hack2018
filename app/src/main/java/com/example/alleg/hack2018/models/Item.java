@@ -25,8 +25,8 @@ public class Item implements Serializable {
 
     // get from db
     public Item(String id, SQLiteDatabase db) {
-        String selectQuery = "SELECT * FROM " + ItemContract.Item.TABLE_NAME
-                + " WHERE " + ItemContract.Item._ID + " = \"" + id + "\"";
+        String selectQuery = "SELECT * FROM " + ItemContract.TABLE_NAME
+                + " WHERE " + ItemContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
@@ -36,9 +36,9 @@ public class Item implements Serializable {
         }
 
         this.id = id;
-        this.name = cursor.getString(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_NAME));
-        this.importance = cursor.getInt(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_IMPORTANCE));
-        int perish = cursor.getInt(cursor.getColumnIndex(ItemContract.Item.COLUMN_NAME_PERISHABLE));
+        this.name = cursor.getString(cursor.getColumnIndex(ItemContract.COLUMN_NAME_NAME));
+        this.importance = cursor.getInt(cursor.getColumnIndex(ItemContract.COLUMN_NAME_IMPORTANCE));
+        int perish = cursor.getInt(cursor.getColumnIndex(ItemContract.COLUMN_NAME_PERISHABLE));
         this.perishable = perish == 1;
         cursor.close();
     }
@@ -54,16 +54,16 @@ public class Item implements Serializable {
             Object value =  me.getValue();
 
             switch (key) {
-                case ItemContract.Item.COLUMN_NAME_NAME:
+                case ItemContract.COLUMN_NAME_NAME:
                     this.name = value.toString();
                     break;
-                case ItemContract.Item.COLUMN_NAME_PERISHABLE:
+                case ItemContract.COLUMN_NAME_PERISHABLE:
                     this.perishable = (int) value == 1;
                     break;
-                case ItemContract.Item.COLUMN_NAME_IMPORTANCE:
+                case ItemContract.COLUMN_NAME_IMPORTANCE:
                     this.importance = (int) value;
                     break;
-                case ItemContract.Item._ID:
+                case ItemContract._ID:
                     this.id = value.toString();
                     break;
             }

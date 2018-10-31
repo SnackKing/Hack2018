@@ -35,7 +35,7 @@ public class SyncThread extends Thread {
         while (true) {
             // only check for internet every minute
             try {
-                this.sleep(nextSleep);
+                sleep(nextSleep);
 
                 if (parent.isConnected()) {
                     nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
@@ -52,8 +52,8 @@ public class SyncThread extends Thread {
 
     private void fullSyncToCloud() {
 
-        Set<String> cloud = DBUtility.getIDSetCloud(InventoryContract.Inventory.TABLE_NAME);
-        Set<String> local = parent.getIDSet(InventoryContract.Inventory.TABLE_NAME);
+        Set<String> cloud = DBUtility.getIDSetCloud(InventoryContract.TABLE_NAME);
+        Set<String> local = parent.getIDSet(InventoryContract.TABLE_NAME);
 
         Set<String> notInCloud = new HashSet<>(local);
         Set<String> notInLocal = new HashSet<>(cloud);
@@ -62,25 +62,25 @@ public class SyncThread extends Thread {
         notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
-            Inventory temp = (Inventory) DBUtility.getRecord(InventoryContract.Inventory.TABLE_NAME, id);
+            Inventory temp = (Inventory) DBUtility.getRecord(InventoryContract.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
 
-            values.put(InventoryContract.Inventory._ID, temp.id);
-            values.put(InventoryContract.Inventory.COLUMN_NAME_COUNT, temp.count);
-            values.put(InventoryContract.Inventory.COLUMN_NAME_ITEM, temp.item);
-            values.put(InventoryContract.Inventory.COLUMN_NAME_USER_ID, temp.userId);
+            values.put(InventoryContract._ID, temp.id);
+            values.put(InventoryContract.COLUMN_NAME_COUNT, temp.count);
+            values.put(InventoryContract.COLUMN_NAME_ITEM, temp.item);
+            values.put(InventoryContract.COLUMN_NAME_USER_ID, temp.userId);
 
-            this.parent.insertToDb(InventoryContract.Inventory.TABLE_NAME,null, values);
+            this.parent.insertToDb(InventoryContract.TABLE_NAME,null, values);
         }
 
         for (String id : notInCloud) {
             Inventory temp = new Inventory(id, dbr);
-            DBUtility.addToFirebase(InventoryContract.Inventory.TABLE_NAME, temp);
+            DBUtility.addToFirebase(InventoryContract.TABLE_NAME, temp);
         }
 
-        cloud = DBUtility.getIDSetCloud(ItemContract.Item.TABLE_NAME);
-        local = parent.getIDSet(ItemContract.Item.TABLE_NAME);
+        cloud = DBUtility.getIDSetCloud(ItemContract.TABLE_NAME);
+        local = parent.getIDSet(ItemContract.TABLE_NAME);
 
         notInCloud = new HashSet<>(local);
         notInLocal = new HashSet<>(cloud);
@@ -89,25 +89,25 @@ public class SyncThread extends Thread {
         notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
-            Item temp = (Item) DBUtility.getRecord(ItemContract.Item.TABLE_NAME, id);
+            Item temp = (Item) DBUtility.getRecord(ItemContract.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
 
-            values.put(ItemContract.Item._ID, temp.id);
-            values.put(ItemContract.Item.COLUMN_NAME_IMPORTANCE, temp.importance);
-            values.put(ItemContract.Item.COLUMN_NAME_NAME, temp.name);
-            values.put(ItemContract.Item.COLUMN_NAME_PERISHABLE, temp.perishable);
+            values.put(ItemContract._ID, temp.id);
+            values.put(ItemContract.COLUMN_NAME_IMPORTANCE, temp.importance);
+            values.put(ItemContract.COLUMN_NAME_NAME, temp.name);
+            values.put(ItemContract.COLUMN_NAME_PERISHABLE, temp.perishable);
 
-            this.parent.insertToDb(ItemContract.Item.TABLE_NAME,null, values);
+            this.parent.insertToDb(ItemContract.TABLE_NAME,null, values);
         }
 
         for (String id : notInCloud) {
             Item temp = new Item(id, dbr);
-            DBUtility.addToFirebase(ItemContract.Item.TABLE_NAME, temp);
+            DBUtility.addToFirebase(ItemContract.TABLE_NAME, temp);
         }
 
-        cloud = DBUtility.getIDSetCloud(UserContract.User.TABLE_NAME);
-        local = parent.getIDSet(UserContract.User.TABLE_NAME);
+        cloud = DBUtility.getIDSetCloud(UserContract.TABLE_NAME);
+        local = parent.getIDSet(UserContract.TABLE_NAME);
 
         notInCloud = new HashSet<>(local);
         notInLocal = new HashSet<>(cloud);
@@ -116,7 +116,7 @@ public class SyncThread extends Thread {
         notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
-            User temp = (User) DBUtility.getRecord(UserContract.User.TABLE_NAME, id);
+            User temp = (User) DBUtility.getRecord(UserContract.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
 
@@ -125,26 +125,26 @@ public class SyncThread extends Thread {
                 res = 1;
             }
 
-            values.put(UserContract.User._ID, temp.id);
-            values.put(UserContract.User.COLUMN_NAME_NAME, temp.name);
-            values.put(UserContract.User.COLUMN_NAME_PASSWORD, DBUtility.toByteArray(temp.password));
-            values.put(UserContract.User.COLUMN_NAME_PHONE_NUMBER, temp.phoneNumber);
-            values.put(UserContract.User.COLUMN_NAME_RESIDENT, res);
-            values.put(UserContract.User.COLUMN_NAME_SALT, DBUtility.toByteArray(temp.salt));
+            values.put(UserContract._ID, temp.id);
+            values.put(UserContract.COLUMN_NAME_NAME, temp.name);
+            values.put(UserContract.COLUMN_NAME_PASSWORD, DBUtility.toByteArray(temp.password));
+            values.put(UserContract.COLUMN_NAME_PHONE_NUMBER, temp.phoneNumber);
+            values.put(UserContract.COLUMN_NAME_RESIDENT, res);
+            values.put(UserContract.COLUMN_NAME_SALT, DBUtility.toByteArray(temp.salt));
 
-            this.parent.insertToDb(UserContract.User.TABLE_NAME,null, values);
+            this.parent.insertToDb(UserContract.TABLE_NAME,null, values);
 
             Log.d("saved in local user", temp.id);
         }
 
         for (String id : notInCloud) {
             User temp = new User(id, dbr);
-            DBUtility.addToFirebase(UserContract.User.TABLE_NAME, temp);
+            DBUtility.addToFirebase(UserContract.TABLE_NAME, temp);
             Log.d("saved in cloud user", temp.id);
         }
 
-        cloud = DBUtility.getIDSetCloud(MessageContract.Message.TABLE_NAME);
-        local = parent.getIDSet(MessageContract.Message.TABLE_NAME);
+        cloud = DBUtility.getIDSetCloud(MessageContract.TABLE_NAME);
+        local = parent.getIDSet(MessageContract.TABLE_NAME);
 
         notInCloud = new HashSet<>(local);
         notInLocal = new HashSet<>(cloud);
@@ -153,25 +153,25 @@ public class SyncThread extends Thread {
         notInLocal.removeAll(local);
 
         for (String id : notInLocal) {
-            Message temp = (Message) DBUtility.getRecord(MessageContract.Message.TABLE_NAME, id);
+            Message temp = (Message) DBUtility.getRecord(MessageContract.TABLE_NAME, id);
 
             ContentValues values = new ContentValues();
 
-            values.put(MessageContract.Message._ID, temp.id);
-            values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
-            values.put(MessageContract.Message.COLUMN_NAME_MESSAGE, temp.msg);
-            values.put(MessageContract.Message.COLUMN_NAME_USER_ID, temp.senderId);
-            values.put(MessageContract.Message.COLUMN_NAME_DESTINATION_ID, temp.recipId);
-            values.put(MessageContract.Message.COLUMN_NAME_TIME, temp.time);
+            values.put(MessageContract._ID, temp.id);
+            values.put(MessageContract.COLUMN_NAME_TIME, temp.time);
+            values.put(MessageContract.COLUMN_NAME_MESSAGE, temp.msg);
+            values.put(MessageContract.COLUMN_NAME_USER_ID, temp.senderId);
+            values.put(MessageContract.COLUMN_NAME_DESTINATION_ID, temp.recipId);
+            values.put(MessageContract.COLUMN_NAME_TIME, temp.time);
 
-            this.parent.insertToDb(MessageContract.Message.TABLE_NAME,null, values);
+            this.parent.insertToDb(MessageContract.TABLE_NAME,null, values);
 
             Log.d("saved locally message ", temp.id);
         }
 
         for (String id : notInCloud) {
             Message temp = new Message(id, dbr);
-            DBUtility.addToFirebase(MessageContract.Message.TABLE_NAME, temp);
+            DBUtility.addToFirebase(MessageContract.TABLE_NAME, temp);
             Log.d("saved in cloud message ", temp.id);
         }
     }

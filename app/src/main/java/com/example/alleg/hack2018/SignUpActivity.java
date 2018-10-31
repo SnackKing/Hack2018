@@ -1,50 +1,28 @@
 package com.example.alleg.hack2018;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.alleg.hack2018.contracts.MessageContract;
-import com.example.alleg.hack2018.contracts.UserContract.User;
+import com.example.alleg.hack2018.contracts.UserContract;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.Passwords;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -155,8 +133,8 @@ public class SignUpActivity extends AppCompatActivity  {
     private boolean checkIfPhoneExists(String phone) {
         SQLiteDatabase dbr = this.mDbHelp.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " + User.TABLE_NAME + " WHERE "
-                + User.COLUMN_NAME_PHONE_NUMBER + " = " + phone + ";";
+        String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME + " WHERE "
+                + UserContract.COLUMN_NAME_PHONE_NUMBER + " = " + phone + ";";
         Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
 
         // false if getCount is 0
@@ -181,14 +159,14 @@ public class SignUpActivity extends AppCompatActivity  {
         byte[] salt = Passwords.getNextSalt();
         byte[] salted = Passwords.hash(password.toCharArray(), salt);
 
-        values.put(User.COLUMN_NAME_NAME, name);
-        values.put(User.COLUMN_NAME_SALT, salt);
-        values.put(User.COLUMN_NAME_PASSWORD, salted);
-        values.put(User.COLUMN_NAME_PHONE_NUMBER, phone);
-        values.put(User.COLUMN_NAME_RESIDENT, 1);
-        values.put(User._ID, String.valueOf(UUID.randomUUID()));
+        values.put(UserContract.COLUMN_NAME_NAME, name);
+        values.put(UserContract.COLUMN_NAME_SALT, salt);
+        values.put(UserContract.COLUMN_NAME_PASSWORD, salted);
+        values.put(UserContract.COLUMN_NAME_PHONE_NUMBER, phone);
+        values.put(UserContract.COLUMN_NAME_RESIDENT, 1);
+        values.put(UserContract._ID, String.valueOf(UUID.randomUUID()));
 
-        util.insertToDb(User.TABLE_NAME,null, values);
+        util.insertToDb(UserContract.TABLE_NAME,null, values);
 
         // log the newly created user in
         return util.login(mDbHelp.getReadableDatabase(), phone, password);

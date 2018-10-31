@@ -24,8 +24,8 @@ public class Inventory implements Serializable {
 
     // get from database
     public Inventory(String id, SQLiteDatabase db) {
-        String selectQuery = "SELECT * FROM " + InventoryContract.Inventory.TABLE_NAME
-                + " WHERE " + InventoryContract.Inventory._ID + " = \"" + id + "\"";
+        String selectQuery = "SELECT * FROM " + InventoryContract.TABLE_NAME
+                + " WHERE " + InventoryContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
@@ -35,9 +35,9 @@ public class Inventory implements Serializable {
         }
 
         this.id = id;
-        this.userId = cursor.getString(cursor.getColumnIndex(InventoryContract.Inventory.COLUMN_NAME_USER_ID));
-        this.item = cursor.getString(cursor.getColumnIndex(InventoryContract.Inventory.COLUMN_NAME_ITEM));
-        this.count = cursor.getInt(cursor.getColumnIndex(InventoryContract.Inventory.COLUMN_NAME_COUNT));
+        this.userId = cursor.getString(cursor.getColumnIndex(InventoryContract.COLUMN_NAME_USER_ID));
+        this.item = cursor.getString(cursor.getColumnIndex(InventoryContract.COLUMN_NAME_ITEM));
+        this.count = cursor.getInt(cursor.getColumnIndex(InventoryContract.COLUMN_NAME_COUNT));
         cursor.close();
     }
 
@@ -52,16 +52,16 @@ public class Inventory implements Serializable {
             Object value =  me.getValue();
 
             switch (key) {
-                case InventoryContract.Inventory.COLUMN_NAME_ITEM:
+                case InventoryContract.COLUMN_NAME_ITEM:
                     this.item = value.toString();
                     break;
-                case InventoryContract.Inventory.COLUMN_NAME_COUNT:
+                case InventoryContract.COLUMN_NAME_COUNT:
                     this.count = (int) value;
                     break;
-                case InventoryContract.Inventory.COLUMN_NAME_USER_ID:
+                case InventoryContract.COLUMN_NAME_USER_ID:
                     this.userId = value.toString();
                     break;
-                case InventoryContract.Inventory._ID:
+                case InventoryContract._ID:
                     this.id = value.toString();
                     break;
             }

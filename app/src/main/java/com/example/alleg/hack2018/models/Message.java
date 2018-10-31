@@ -45,8 +45,8 @@ public class Message implements Serializable {
 
     // pull from db
     public Message(String id, SQLiteDatabase db) {
-        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
-                + " WHERE " + MessageContract.Message._ID + " = \"" + id + "\"";
+        String selectQuery = "SELECT * FROM " + MessageContract.TABLE_NAME
+                + " WHERE " + MessageContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
@@ -56,10 +56,10 @@ public class Message implements Serializable {
         }
 
         this.id = id;
-        this.senderId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_USER_ID));
-        this.recipId = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_DESTINATION_ID));
-        this.msg = cursor.getString(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_MESSAGE));
-        this.time = cursor.getInt(cursor.getColumnIndex(MessageContract.Message.COLUMN_NAME_TIME));
+        this.senderId = cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_USER_ID));
+        this.recipId = cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_DESTINATION_ID));
+        this.msg = cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_MESSAGE));
+        this.time = cursor.getInt(cursor.getColumnIndex(MessageContract.COLUMN_NAME_TIME));
         cursor.close();
     }
 
@@ -74,19 +74,19 @@ public class Message implements Serializable {
             Object value =  me.getValue();
 
             switch (key) {
-                case MessageContract.Message.COLUMN_NAME_MESSAGE:
+                case MessageContract.COLUMN_NAME_MESSAGE:
                     this.msg = value.toString();
                     break;
-                case MessageContract.Message.COLUMN_NAME_DESTINATION_ID:
+                case MessageContract.COLUMN_NAME_DESTINATION_ID:
                     this.recipId = value.toString();
                     break;
-                case MessageContract.Message.COLUMN_NAME_USER_ID:
+                case MessageContract.COLUMN_NAME_USER_ID:
                     this.senderId = value.toString();
                     break;
-                case MessageContract.Message._ID:
+                case MessageContract._ID:
                     this.id = value.toString();
                     break;
-                case MessageContract.Message.COLUMN_NAME_TIME:
+                case MessageContract.COLUMN_NAME_TIME:
                     this.time = (int) value;
                     break;
             }
@@ -112,12 +112,12 @@ public class Message implements Serializable {
     public static ArrayList<Message> getPublicMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
-                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = \"" + DBUtility.PUBLIC_MESSAGE_DEST + "\"";
+        String selectQuery = "SELECT * FROM " + MessageContract.TABLE_NAME
+                + " WHERE " + MessageContract.COLUMN_NAME_DESTINATION_ID + " = \"" + DBUtility.PUBLIC_MESSAGE_DEST + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
 
         while(cursor.moveToNext()) {
-            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract._ID)), db);
             arr.add(temp);
         }
 

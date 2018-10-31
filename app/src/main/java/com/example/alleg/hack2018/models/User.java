@@ -29,8 +29,8 @@ public class User implements Serializable {
 
     // get this from the database
     public User(String id, SQLiteDatabase db) {
-        String selectQuery = "SELECT * FROM " + UserContract.User.TABLE_NAME
-                + " WHERE " + UserContract.User._ID + " = \"" + id + "\"";
+        String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME
+                + " WHERE " + UserContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         cursor.moveToFirst();
 
@@ -42,15 +42,15 @@ public class User implements Serializable {
         }
 
         this.id = id;
-        this.name = cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_NAME));
-        this.phoneNumber = cursor.getString(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PHONE_NUMBER));
-        byte[] s = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_SALT));
-        byte[] p = cursor.getBlob(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_PASSWORD));
+        this.name = cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_NAME));
+        this.phoneNumber = cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_PHONE_NUMBER));
+        byte[] s = cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_SALT));
+        byte[] p = cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_PASSWORD));
 
         this.salt = DBUtility.fromByteArray(s);
         this.password = DBUtility.fromByteArray(p);
 
-        int res = cursor.getInt(cursor.getColumnIndex(UserContract.User.COLUMN_NAME_RESIDENT));
+        int res = cursor.getInt(cursor.getColumnIndex(UserContract.COLUMN_NAME_RESIDENT));
         this.resident = res == 1;
         cursor.close();
     }
@@ -76,22 +76,22 @@ public class User implements Serializable {
             Object value =  me.getValue();
 
             switch (key) {
-                case UserContract.User.COLUMN_NAME_PHONE_NUMBER:
+                case UserContract.COLUMN_NAME_PHONE_NUMBER:
                     this.phoneNumber = value.toString();
                     break;
-                case UserContract.User.COLUMN_NAME_SALT:
+                case UserContract.COLUMN_NAME_SALT:
                     this.salt = DBUtility.fromByteArray((byte[]) value);
                     break;
-                case UserContract.User.COLUMN_NAME_NAME:
+                case UserContract.COLUMN_NAME_NAME:
                     this.name = value.toString();
                     break;
-                case UserContract.User.COLUMN_NAME_PASSWORD:
+                case UserContract.COLUMN_NAME_PASSWORD:
                     this.password = DBUtility.fromByteArray((byte[]) value);
                     break;
-                case UserContract.User._ID:
+                case UserContract._ID:
                     this.id = value.toString();
                     break;
-                case UserContract.User.COLUMN_NAME_RESIDENT:
+                case UserContract.COLUMN_NAME_RESIDENT:
                     this.resident = (int) value == 1;
                     break;
             }
@@ -103,12 +103,12 @@ public class User implements Serializable {
     ArrayList<Message> getPrivateMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
-                + " WHERE " + MessageContract.Message.COLUMN_NAME_DESTINATION_ID + " = " + this.id;
+        String selectQuery = "SELECT * FROM " + MessageContract.TABLE_NAME
+                + " WHERE " + MessageContract.COLUMN_NAME_DESTINATION_ID + " = " + this.id;
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
 
         while(cursor.moveToNext()) {
-            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract._ID)), db);
             arr.add(temp);
         }
 
@@ -120,12 +120,12 @@ public class User implements Serializable {
     ArrayList<Message> getOutgoingMessages(SQLiteDatabase db) {
         ArrayList<Message> arr = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + MessageContract.Message.TABLE_NAME
-                + " WHERE " + MessageContract.Message.COLUMN_NAME_USER_ID + " = " + this.id;
+        String selectQuery = "SELECT * FROM " + MessageContract.TABLE_NAME
+                + " WHERE " + MessageContract.COLUMN_NAME_USER_ID + " = " + this.id;
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
 
         while(cursor.moveToNext()) {
-            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract.Message._ID)), db);
+            Message temp = new Message(cursor.getString(cursor.getColumnIndex(MessageContract._ID)), db);
             arr.add(temp);
         }
 
