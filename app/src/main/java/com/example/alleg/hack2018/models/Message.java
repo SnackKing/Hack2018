@@ -44,7 +44,7 @@ public class Message implements DatabaseModel {
     public Message() {}
 
     // pull from db
-    public Message(String id, SQLiteDatabase db) {
+    Message(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + MessageContract.TABLE_NAME
                 + " WHERE " + MessageContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
@@ -63,7 +63,7 @@ public class Message implements DatabaseModel {
         cursor.close();
     }
 
-    public Message(ContentValues values){
+    Message(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 

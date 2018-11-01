@@ -24,7 +24,7 @@ public class Item implements DatabaseModel {
     public Item() {}
 
     // get from db
-    public Item(String id, SQLiteDatabase db) {
+    Item(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + ItemContract.TABLE_NAME
                 + " WHERE " + ItemContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
@@ -43,7 +43,7 @@ public class Item implements DatabaseModel {
         cursor.close();
     }
 
-    public Item(ContentValues values){
+    Item(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 

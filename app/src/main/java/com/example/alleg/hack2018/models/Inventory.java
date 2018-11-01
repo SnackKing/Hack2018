@@ -24,7 +24,7 @@ public class Inventory implements DatabaseModel {
     public Inventory() {}
 
     // get from database
-    public Inventory(String id, SQLiteDatabase db) {
+    Inventory(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + InventoryContract.TABLE_NAME
                 + " WHERE " + InventoryContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
@@ -42,7 +42,7 @@ public class Inventory implements DatabaseModel {
         cursor.close();
     }
 
-    public Inventory(ContentValues values){
+    Inventory(ContentValues values){
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 

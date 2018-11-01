@@ -28,7 +28,7 @@ public class User implements DatabaseModel {
     public User() {}
 
     // get this from the database
-    public User(String id, SQLiteDatabase db) {
+    User(String id, SQLiteDatabase db) {
         String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME
                 + " WHERE " + UserContract._ID + " = \"" + id + "\"";
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
@@ -55,17 +55,8 @@ public class User implements DatabaseModel {
         cursor.close();
     }
 
-    public User(String id, String name, String phone, byte[] salt, byte[] password, int resident) {
-        this.id = id;
-        this.name = name;
-        this.phoneNumber = phone;
-        this.salt = DBUtility.fromByteArray(salt);
-        this.password = DBUtility.fromByteArray(password);
-        this.resident = resident == 1;
-    }
-
     // from content values
-    public User(ContentValues values) {
+    User(ContentValues values) {
         Set<Map.Entry<String, Object>> s=values.valueSet();
         Iterator itr = s.iterator();
 

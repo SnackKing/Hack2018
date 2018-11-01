@@ -315,10 +315,10 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public static Serializable getRecordFromFirebase(String table, String id) {
+    public static DatabaseModel getRecordFromFirebase(String table, String id) {
         CountDownLatch done = new CountDownLatch(1);
 
-        ArrayList<Serializable> hack = new ArrayList<>();
+        ArrayList<DatabaseModel> hack = new ArrayList<>();
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -327,7 +327,6 @@ public class DBUtility extends AppCompatActivity {
                 switch(table) {
                     case UserContract.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(User.class));
-                        Log.d("user", ((User) hack.get(0)).id);
                         break;
                     case ItemContract.TABLE_NAME:
                         hack.add(dataSnapshot.child(table).child(id).getValue(Item.class));

@@ -68,7 +68,7 @@ public class SyncThread extends Thread {
             notInLocal.removeAll(local);
 
             for (String id : notInLocal) {
-                DatabaseModel temp = (DatabaseModel) DBUtility.getRecordFromFirebase(table, id);
+                DatabaseModel temp = DBUtility.getRecordFromFirebase(table, id);
 
                 ContentValues cv = temp.getContentValues();
 
