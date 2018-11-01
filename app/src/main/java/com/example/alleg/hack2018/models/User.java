@@ -22,7 +22,7 @@ public class User implements DatabaseModel {
     public int salt;
     public int password;
     public boolean resident;
-    public String id;
+    private String id;
 
     // for firebase
     public User() {}

@@ -16,8 +16,7 @@ import java.util.Set;
 
 public class Message implements DatabaseModel {
 
-    // one day, this will be private (probably)
-    public String id; // id of this record
+    private String id; // id of this record
 
     /*
      * TODO Sahil

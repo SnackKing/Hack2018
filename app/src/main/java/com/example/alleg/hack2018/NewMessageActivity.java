@@ -83,7 +83,7 @@ public class NewMessageActivity extends AppCompatActivity {
             cursor.close();
         }
 
-        values.put(MessageContract.COLUMN_NAME_USER_ID, user.id);
+        values.put(MessageContract.COLUMN_NAME_USER_ID, user.getID());
         values.put(MessageContract.COLUMN_NAME_DESTINATION_ID, newId);
         values.put(MessageContract.COLUMN_NAME_MESSAGE, message);
         values.put(MessageContract._ID, String.valueOf(UUID.randomUUID()));

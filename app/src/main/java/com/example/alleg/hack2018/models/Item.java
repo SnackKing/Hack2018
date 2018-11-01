@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class Item implements DatabaseModel {
 
-    public String id;
+    private String id;
     public String name;
     public boolean perishable;
     public int importance;

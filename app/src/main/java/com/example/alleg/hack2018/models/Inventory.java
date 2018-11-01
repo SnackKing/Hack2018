@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class Inventory implements DatabaseModel {
 
-    public String id;
+    private String id;
     public String userId;
     public String item;
     public int count;
