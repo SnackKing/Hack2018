@@ -19,8 +19,8 @@ public class MessageHolder extends RecyclerView.ViewHolder {
 
     MessageHolder(View itemView) {
         super(itemView);
-        messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-        nameText = (TextView) itemView.findViewById(R.id.text_message_name);
+        messageText = itemView.findViewById(R.id.text_message_body);
+        nameText = itemView.findViewById(R.id.text_message_name);
     }
 
     void bind(Message message, Context context) {
@@ -34,13 +34,12 @@ public class MessageHolder extends RecyclerView.ViewHolder {
 
         messageText.setText(message.msg);
         nameText.setText(sender.name);
+
         if(sender.getID().equals(user.getID())){
             messageText.setBackgroundResource(R.color.colorAccent);
             nameText.setText("You");
         }
 
         // Format the stored timestamp into a readable String using method.
-
-
     }
 }

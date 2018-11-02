@@ -57,6 +57,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
 
         dbUtility = new DBUtility(this);
 
+        /*
+
         //Always use the Application context to avoid leaks
         Bridgefy.initialize(getApplicationContext(), API_KEY, new RegistrationListener() {
             @Override
@@ -83,7 +85,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                             }
                         }
 
-                        dbUtility.updateLocal(hmap);*/
+                        dbUtility.updateLocal(hmap);
                         Log.d("Bridgefy","Message Received");
                     }
                 };
@@ -108,7 +110,9 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                 Log.d("bridge FAIL", message);
             }});
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        */
+
+        final ViewPager viewPager = findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -130,7 +134,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,7 +165,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar tb = findViewById(R.id.toolbar);
         tb.inflateMenu(R.menu.refresh_toolbar);
         tb.setOnMenuItemClickListener(
                 new Toolbar.OnMenuItemClickListener() {
