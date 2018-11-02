@@ -177,7 +177,13 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 PublicTab pubFragment = (PublicTab) getSupportFragmentManager().findFragmentById(R.id.publicFrag);
-                pubFragment.updateAdapter();
+                try {
+                    pubFragment.updateAdapter();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
                 return true;
 
         }

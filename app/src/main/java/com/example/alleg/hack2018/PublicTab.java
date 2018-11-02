@@ -140,11 +140,11 @@ public class PublicTab extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public void updateAdapter(){
-        messageList = Message.getPublicMessages(mDbHelp.getReadableDatabase());
-        mMessageAdapter = new MessageListAdapter(getContext(), messageList);
-        mMessageAdapter.notifyDataSetChanged();
+    public void updateAdapter() throws IllegalAccessException, java.lang.InstantiationException {
         Toast.makeText(getContext(), "Refreshing", Toast.LENGTH_SHORT).show();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.publicFrag, PublicTab.class.newInstance()).commit();
+
     }
 
 }
