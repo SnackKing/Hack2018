@@ -25,6 +25,7 @@ import com.bridgefy.sdk.client.StateListener;
 
 import com.example.alleg.hack2018.models.User;
 import com.example.alleg.hack2018.utility.DBUtility;
+import com.example.alleg.hack2018.utility.Secrets;
 import com.google.gson.Gson;
 
 import java.util.Collections;
@@ -34,7 +35,6 @@ import java.util.Map;
 public class MessagesActivity extends AppCompatActivity implements PublicTab.OnFragmentInteractionListener, InboxTab.OnFragmentInteractionListener{
 
      private DBUtility dbUtility;
-     private final String API_KEY = "b1109f22-fb9e-4e07-a2d2-6197ca1ee2eb";
      private MessageListener messageListener;
      private StateListener stateListener;
 
@@ -42,10 +42,10 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         SharedPreferences mPrefs = PreferenceManager
@@ -60,7 +60,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
         /*
 
         //Always use the Application context to avoid leaks
-        Bridgefy.initialize(getApplicationContext(), API_KEY, new RegistrationListener() {
+        Bridgefy.initialize(getApplicationContext(), Secrets.API_KEY, new RegistrationListener() {
             @Override
             public void onRegistrationSuccessful(BridgefyClient bridgefyClient) {
                 Log.d("Bridgefy","onRegistrationSuccessful: device evaluation "+bridgefyClient.getDeviceProfile().getDeviceEvaluation());
