@@ -5,9 +5,19 @@
 <item
     android:id="@+id/action_refresh"
     android:icon="@drawable/ic_action_name"
+    android:iconTint="@android:color/white"
     android:title="Refresh"
     app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_sign_out"
+        android:title="Log out"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/about"
+        android:title="About this App"
+        app:showAsAction="never"/>
 
 
 
-    </menu>
+
+</menu>
