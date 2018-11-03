@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:text="This message will be public"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="20dp"/>
 
             <!--<android.support.design.widget.TextInputLayout-->
                 <!--android:layout_width="match_parent"-->
@@ -47,10 +47,12 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/message"
+                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_message"
