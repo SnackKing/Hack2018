@@ -179,9 +179,25 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_sign_out:
+                //clear shared preferences
+                SharedPreferences mPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(this);
+                SharedPreferences.Editor prefsEditor = mPrefs.edit();
+                prefsEditor.clear();
+                prefsEditor.commit();
+                Intent intent = new Intent(MessagesActivity.this, LoginActivity.class);
+                startActivity(intent);
+                break;
             case R.id.action_refresh:
                 PublicTab pubFragment = (PublicTab) getSupportFragmentManager().findFragmentById(R.id.publicFrag);
-                pubFragment.updateAdapter();
+                try {
+                    pubFragment.updateAdapter();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
                 return true;
 
         }
