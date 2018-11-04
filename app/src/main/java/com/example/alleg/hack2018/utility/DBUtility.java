@@ -29,6 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -95,8 +99,25 @@ public class DBUtility extends AppCompatActivity {
         }
 
         HashMap<String, String> newHash = new HashMap<>();
-
-        String json = "";// TODO
+        Gson gson = new Gson();
+        JSONObject tree = new JSONObject();
+        try {
+            for (String tableName : hmap.keySet()) {
+                HashMap<String, DatabaseModel> currentTable = hmap.get(tableName);
+                JSONObject current = new JSONObject();
+                for (String id : currentTable.keySet()) {
+                    DatabaseModel tableEntry = currentTable.get(id);
+                    String tableEntryString = gson.toJson(tableEntry);
+                    JSONObject objectData = new JSONObject(tableEntryString);
+                    current.put(id, objectData);
+                }
+                tree.put(tableName, current);
+            }
+        }
+        catch(JSONException e){
+            e.printStackTrace();
+        }
+        String json = tree.toString();// TODO
 
         newHash.put(MSG_CONTEXT_ACCESSOR, json);
 
