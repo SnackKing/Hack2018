@@ -69,22 +69,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     @Override
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
-                        HashMap hmap = message.getContent();
 
-                        HashMap<String,Map<String, Map<String, String>>> temp = hmap;
-
-                        for (String top : temp.keySet()) {
-                            for (String next : temp.get(top).keySet()) {
-                                Map<String, String> x = temp.get(top).get(next);
-
-                                Map<String, String> new1 = Collections.checkedMap(x, String.class, String.class);
-
-                                temp.get(top).remove(next);
-                                temp.get(top).put(next, new1);
-                            }
-                        }
-
-                        dbUtility.updateLocal(hmap);
+                        dbUtility.updateLocal(DBUtility.getMessageContent(message));
                         Log.d("Bridgefy","Message Received");
                     }
                 };

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -53,7 +54,10 @@ public class DBUtility extends AppCompatActivity {
 
     public static final int SYNC_THREAD_LIMIT = 1;
 
+    // pseudo singleton
     private static int syncThreads = 0;
+
+    private static final String MSG_CONTEXT_ACCESSOR = "text";
 
     private Context context;
     private SyncThread sync;
@@ -85,7 +89,7 @@ public class DBUtility extends AppCompatActivity {
             Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
             while(cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(UserContract._ID));
+                String id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
                 DatabaseModel toAdd = ModelFactory.getExistingModel(id, dbr, table);
 
                 modelMap.put(id, toAdd);
@@ -115,7 +119,7 @@ public class DBUtility extends AppCompatActivity {
         }
         String json = tree.toString();// TODO
 
-        newHash.put("text", json);
+        newHash.put(MSG_CONTEXT_ACCESSOR, json);
 
         return newHash;
     }
@@ -195,25 +199,10 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // return the full set of all UUID's present in tableName
-    public HashSet<String> getIDSet(String tableName) {
-        HashSet<String> toReturn = new HashSet<>();
+    public Set<String> getIDSet(String tableName) {
+        Set<String> toReturn = new HashSet<>();
 
-        String colName = null;
-
-        switch(tableName) {
-            case InventoryContract.TABLE_NAME:
-                colName = InventoryContract._ID;
-                break;
-            case UserContract.TABLE_NAME:
-                colName = UserContract._ID;
-                break;
-            case ItemContract.TABLE_NAME:
-                colName = ItemContract._ID;
-                break;
-            case MessageContract.TABLE_NAME:
-                colName = MessageContract._ID;
-                break;
-        }
+        String colName = BaseColumns._ID;
 
         String selectQuery = "SELECT * FROM " + tableName;
         Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
@@ -227,8 +216,8 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, Map<String, Map<String, String>>> input) {
-        HashMap<String, HashSet<String>> out = new HashMap<>();
+    public Map<String, Set<String>> getTableIdSets(Map<String, Map<String, DatabaseModel>> input) {
+        Map<String, Set<String>> out = new HashMap<>();
 
         // for all keys in  each table, return tablename to set of keys
         for (String t : input.keySet()) {
@@ -243,17 +232,17 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, Map<String, Map<String, String>>> input) {
+    public Map<String, Set<String>> getIdsToAdd(Map<String, Map<String, DatabaseModel>> input) {
 
-        HashMap<String, HashSet<String>> out = new HashMap<>();
+        Map<String, Set<String>> out = new HashMap<>();
 
-        HashMap<String, HashSet<String>> in = getTableIdSets(input);
+        Map<String, Set<String>> in = getTableIdSets(input);
 
         for (String key : in.keySet()) {
             // key is table
-            HashSet<String> existingKeys = this.getIDSet(key);
+            Set<String> existingKeys = this.getIDSet(key);
 
-            HashSet<String> newKeys = in.get(key);
+            Set<String> newKeys = in.get(key);
 
             newKeys.removeAll(existingKeys);
 
@@ -263,26 +252,14 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public void updateLocal(HashMap<String, Map<String, Map<String, String>>> input) {
-        HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
+    public void updateLocal(Map<String, Map<String, DatabaseModel>> input) {
+        Map<String, Set<String>> keysToAdd = getIdsToAdd(input);
 
         for (String table : keysToAdd.keySet()) {
             for (String id : keysToAdd.get(table)) {
-                Map<String, String> dataToAdd = input.get(table).get(id);
+                DatabaseModel toAdd = input.get(table).get(id);
 
-                ContentValues values = new ContentValues();
-
-                for (String label : dataToAdd.keySet()) {
-                    if (label.equals(UserContract.COLUMN_NAME_SALT) || label.equals(UserContract.COLUMN_NAME_PASSWORD)) {
-                        byte[] val = DBUtility.toByteArray( Integer.valueOf(dataToAdd.get(label)));
-
-                        values.put(label, val);
-                    } else if (label.equals(UserContract.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.COLUMN_NAME_TIME)) {
-                        values.put(label, Integer.valueOf(dataToAdd.get(label)));
-                    } else {
-                        values.put(label, dataToAdd.get(label));
-                    }
-                }
+                ContentValues values = toAdd.getContentValues();
 
                 this.insertToDb(table, null, values);
             }
@@ -368,5 +345,15 @@ public class DBUtility extends AppCompatActivity {
         DatabaseReference tableRef = myRef.child(tableName);
 
         tableRef.child(obj.getID()).setValue(obj);
+    }
+
+    public static Map<String, Map<String, DatabaseModel>> getMessageContent(com.bridgefy.sdk.client.Message message) {
+        Map<String, Map<String, DatabaseModel>> toReturn = new HashMap<>();
+
+        String json = (String) message.getContent().get(MSG_CONTEXT_ACCESSOR);
+
+        // TODO de-serialize
+
+        return toReturn;
     }
 }
