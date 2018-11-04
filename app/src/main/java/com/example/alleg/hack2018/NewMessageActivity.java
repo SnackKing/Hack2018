@@ -30,14 +30,14 @@ public class NewMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_message);
         final TextView message = findViewById(R.id.message);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               addToDatabase("-1", message.getText().toString());
+               addNewMessageToDatabase("-1", message.getText().toString());
                Log.d("FLOAT", "starting Activity");
                 Intent intent = new Intent(NewMessageActivity.this, MessagesActivity.class);
                 startActivity(intent);
@@ -53,7 +53,7 @@ public class NewMessageActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void addToDatabase(String phone, String message){
+    private void addNewMessageToDatabase(String phone, String message){
         SharedPreferences mPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         Gson gson = new Gson();
