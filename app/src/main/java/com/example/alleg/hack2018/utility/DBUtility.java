@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -38,6 +39,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -349,10 +351,30 @@ public class DBUtility extends AppCompatActivity {
 
     public static Map<String, Map<String, DatabaseModel>> getMessageContent(com.bridgefy.sdk.client.Message message) {
         Map<String, Map<String, DatabaseModel>> toReturn = new HashMap<>();
-
         String json = (String) message.getContent().get(MSG_CONTEXT_ACCESSOR);
+        try {
+            JSONObject tree = new JSONObject(json);
 
-        // TODO de-serialize
+            for (Iterator<String> it = tree.keys(); it.hasNext(); ) {
+                String key = it.next();
+
+                // assemble the data for this table
+                JSONObject objects = (JSONObject) tree.get(key);
+
+                Map<String, DatabaseModel> inner = new HashMap<>();
+
+                for (Iterator<String> it1 = objects.keys(); it1.hasNext(); ) {
+                    String id = it1.next();
+
+                    inner.put(id, (DatabaseModel) objects.get(id));
+                }
+
+                toReturn.put(key, inner);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return toReturn;
     }
