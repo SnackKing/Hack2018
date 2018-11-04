@@ -111,7 +111,7 @@ public class DBUtility extends AppCompatActivity {
                     JSONObject objectData = new JSONObject(tableEntryString);
                     current.put(id, objectData);
                 }
-                tree.put(tableName, currentTable);
+                tree.put(tableName, current);
             }
         }
         catch(JSONException e){

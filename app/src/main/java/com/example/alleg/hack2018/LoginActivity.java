@@ -36,6 +36,7 @@ import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -58,7 +59,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mPhoneView = (AutoCompleteTextView) findViewById(R.id.phone);
-
+        DBUtility util = new DBUtility(this);
+        HashMap<String, String> jsonMap = util.dataToHashmap();
+        String json = jsonMap.get("text");
+        System.out.print(json);
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
