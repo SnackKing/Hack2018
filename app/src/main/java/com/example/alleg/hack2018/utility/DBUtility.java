@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -49,7 +50,10 @@ public class DBUtility extends AppCompatActivity {
 
     public static final int SYNC_THREAD_LIMIT = 1;
 
+    // pseudo singleton
     private static int syncThreads = 0;
+
+    public static final String MSG_CONTEXT_ACCESSOR = "text";
 
     private Context context;
     private SyncThread sync;
@@ -81,7 +85,7 @@ public class DBUtility extends AppCompatActivity {
             Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
             while(cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(UserContract._ID));
+                String id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
                 DatabaseModel toAdd = ModelFactory.getExistingModel(id, dbr, table);
 
                 modelMap.put(id, toAdd);
@@ -94,7 +98,7 @@ public class DBUtility extends AppCompatActivity {
 
         String json = "";// TODO
 
-        newHash.put("text", json);
+        newHash.put(MSG_CONTEXT_ACCESSOR, json);
 
         return newHash;
     }
@@ -177,22 +181,7 @@ public class DBUtility extends AppCompatActivity {
     public HashSet<String> getIDSet(String tableName) {
         HashSet<String> toReturn = new HashSet<>();
 
-        String colName = null;
-
-        switch(tableName) {
-            case InventoryContract.TABLE_NAME:
-                colName = InventoryContract._ID;
-                break;
-            case UserContract.TABLE_NAME:
-                colName = UserContract._ID;
-                break;
-            case ItemContract.TABLE_NAME:
-                colName = ItemContract._ID;
-                break;
-            case MessageContract.TABLE_NAME:
-                colName = MessageContract._ID;
-                break;
-        }
+        String colName = BaseColumns._ID;
 
         String selectQuery = "SELECT * FROM " + tableName;
         Cursor cursor = dbr.rawQuery(selectQuery, new String[] {});
