@@ -178,8 +178,8 @@ public class DBUtility extends AppCompatActivity {
     }
 
     // return the full set of all UUID's present in tableName
-    public HashSet<String> getIDSet(String tableName) {
-        HashSet<String> toReturn = new HashSet<>();
+    public Set<String> getIDSet(String tableName) {
+        Set<String> toReturn = new HashSet<>();
 
         String colName = BaseColumns._ID;
 
@@ -195,8 +195,8 @@ public class DBUtility extends AppCompatActivity {
         return toReturn;
     }
 
-    public HashMap<String, HashSet<String>> getTableIdSets(HashMap<String, Map<String, Map<String, String>>> input) {
-        HashMap<String, HashSet<String>> out = new HashMap<>();
+    public Map<String, Set<String>> getTableIdSets(Map<String, Map<String, DatabaseModel>> input) {
+        Map<String, Set<String>> out = new HashMap<>();
 
         // for all keys in  each table, return tablename to set of keys
         for (String t : input.keySet()) {
@@ -211,17 +211,17 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public HashMap<String, HashSet<String>> getIdsToAdd(HashMap<String, Map<String, Map<String, String>>> input) {
+    public Map<String, Set<String>> getIdsToAdd(Map<String, Map<String, DatabaseModel>> input) {
 
-        HashMap<String, HashSet<String>> out = new HashMap<>();
+        Map<String, Set<String>> out = new HashMap<>();
 
-        HashMap<String, HashSet<String>> in = getTableIdSets(input);
+        Map<String, Set<String>> in = getTableIdSets(input);
 
         for (String key : in.keySet()) {
             // key is table
-            HashSet<String> existingKeys = this.getIDSet(key);
+            Set<String> existingKeys = this.getIDSet(key);
 
-            HashSet<String> newKeys = in.get(key);
+            Set<String> newKeys = in.get(key);
 
             newKeys.removeAll(existingKeys);
 
@@ -231,26 +231,14 @@ public class DBUtility extends AppCompatActivity {
         return out;
     }
 
-    public void updateLocal(HashMap<String, Map<String, Map<String, String>>> input) {
-        HashMap<String, HashSet<String>> keysToAdd = getIdsToAdd(input);
+    public void updateLocal(Map<String, Map<String, DatabaseModel>> input) {
+        Map<String, Set<String>> keysToAdd = getIdsToAdd(input);
 
         for (String table : keysToAdd.keySet()) {
             for (String id : keysToAdd.get(table)) {
-                Map<String, String> dataToAdd = input.get(table).get(id);
+                DatabaseModel toAdd = input.get(table).get(id);
 
-                ContentValues values = new ContentValues();
-
-                for (String label : dataToAdd.keySet()) {
-                    if (label.equals(UserContract.COLUMN_NAME_SALT) || label.equals(UserContract.COLUMN_NAME_PASSWORD)) {
-                        byte[] val = DBUtility.toByteArray( Integer.valueOf(dataToAdd.get(label)));
-
-                        values.put(label, val);
-                    } else if (label.equals(UserContract.COLUMN_NAME_RESIDENT) || label.equals(MessageContract.COLUMN_NAME_TIME)) {
-                        values.put(label, Integer.valueOf(dataToAdd.get(label)));
-                    } else {
-                        values.put(label, dataToAdd.get(label));
-                    }
-                }
+                ContentValues values = toAdd.getContentValues();
 
                 this.insertToDb(table, null, values);
             }
@@ -338,8 +326,8 @@ public class DBUtility extends AppCompatActivity {
         tableRef.child(obj.getID()).setValue(obj);
     }
 
-    public static HashMap<String, HashMap<String, DatabaseModel>> getMessageContent(com.bridgefy.sdk.client.Message message) {
-        HashMap<String, HashMap<String, DatabaseModel>> toReturn = new HashMap<>();
+    public static Map<String, Map<String, DatabaseModel>> getMessageContent(com.bridgefy.sdk.client.Message message) {
+        Map<String, Map<String, DatabaseModel>> toReturn = new HashMap<>();
 
         String json = (String) message.getContent().get(MSG_CONTEXT_ACCESSOR);
 
