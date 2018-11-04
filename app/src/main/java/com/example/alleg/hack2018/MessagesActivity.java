@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import com.bridgefy.sdk.client.Bridgefy;
 import com.bridgefy.sdk.client.BridgefyClient;
@@ -190,14 +191,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                 startActivity(intent);
                 break;
             case R.id.action_refresh:
-                PublicTab pubFragment = (PublicTab) getSupportFragmentManager().findFragmentById(R.id.publicFrag);
-                try {
-                    pubFragment.updateAdapter();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
+                Toast.makeText(this,"Refreshing", Toast.LENGTH_SHORT).show();
+                this.recreate();
                 return true;
 
         }
