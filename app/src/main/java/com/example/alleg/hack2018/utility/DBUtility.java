@@ -70,45 +70,36 @@ public class DBUtility extends AppCompatActivity {
     }
 
     public HashMap dataToHashmap(){
-        HashMap<String, HashMap<String, HashMap<String, String>>> hmap = new HashMap<String, HashMap<String, HashMap<String, String>>>();
+        HashMap<String, HashMap<String, DatabaseModel>> hmap = new HashMap<>();
 
-        String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME;
-        Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
+        String[] tables = new String[] {UserContract.TABLE_NAME, MessageContract.TABLE_NAME, ItemContract.TABLE_NAME, InventoryContract.TABLE_NAME };
 
-        HashMap<String, HashMap<String, String>> usermap = new HashMap<>();
-        while(cursor.moveToNext()) {
-            HashMap<String, String> usercurrent = new HashMap<String, String>();
-            usercurrent.put(UserContract._ID,cursor.getString(cursor.getColumnIndex(UserContract._ID)));
-            usercurrent.put(UserContract.COLUMN_NAME_NAME,cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_NAME)));
+        for (String table : tables) {
+            HashMap<String, DatabaseModel> modelMap = new HashMap<>();
 
-            int pword = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_PASSWORD)));
-            int salt = DBUtility.fromByteArray(cursor.getBlob(cursor.getColumnIndex(UserContract.COLUMN_NAME_SALT)));
-            usercurrent.put(UserContract.COLUMN_NAME_PASSWORD, Integer.toString(pword));
+            String selectQuery = "SELECT * FROM " + table;
+            Cursor cursor = this.dbr.rawQuery(selectQuery,new String[]{});
 
-            usercurrent.put(UserContract.COLUMN_NAME_PHONE_NUMBER,cursor.getString(cursor.getColumnIndex(UserContract.COLUMN_NAME_PHONE_NUMBER)));
-            usercurrent.put(UserContract.COLUMN_NAME_RESIDENT,Integer.toString(cursor.getInt(cursor.getColumnIndex(UserContract.COLUMN_NAME_RESIDENT))));
-            usercurrent.put(UserContract.COLUMN_NAME_SALT,Integer.toString(salt));
-            usermap.put(cursor.getString(cursor.getColumnIndex(UserContract._ID)),usercurrent);
+            while(cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(UserContract._ID));
+                DatabaseModel toAdd = ModelFactory.getExistingModel(id, dbr, table);
+
+                modelMap.put(id, toAdd);
+            }
+
+            hmap.put(table, modelMap);
         }
-        hmap.put(UserContract.TABLE_NAME,usermap);
 
-        HashMap<String, HashMap<String, String>> messagemap = new HashMap<String, HashMap<String, String>>();
-        while(cursor.moveToNext()) {
-            HashMap<String, String> messagecurrent = new HashMap<String, String>();
-            messagecurrent.put(MessageContract._ID,cursor.getString(cursor.getColumnIndex(MessageContract._ID)));
-            messagecurrent.put(MessageContract.COLUMN_NAME_MESSAGE,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_MESSAGE)));
-            messagecurrent.put(MessageContract.COLUMN_NAME_DESTINATION_ID,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_DESTINATION_ID)));
-            messagecurrent.put(MessageContract.COLUMN_NAME_USER_ID,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_USER_ID)));
-            messagecurrent.put(MessageContract.COLUMN_NAME_TIME,cursor.getString(cursor.getColumnIndex(MessageContract.COLUMN_NAME_TIME)));
-            messagemap.put(cursor.getString(cursor.getColumnIndex(UserContract._ID)),messagecurrent);
-        }
-        hmap.put(MessageContract.TABLE_NAME,messagemap);
+        HashMap<String, String> newHash = new HashMap<>();
 
-        return hmap;
+        String json = "";// TODO
+
+        newHash.put("text", json);
+
+        return newHash;
     }
     
     public void insertToDb(String table, String nullColumnHack, ContentValues content) {
-
 
         try {
             Bridgefy.sendBroadcastMessage(this.dataToHashmap());
@@ -117,7 +108,6 @@ public class DBUtility extends AppCompatActivity {
             // jank but i've been awake for 30 hours
         }
 
-
         db.insert(table, nullColumnHack, content);
 
         DatabaseModel mod = ModelFactory.getModel(content);
@@ -125,8 +115,6 @@ public class DBUtility extends AppCompatActivity {
         if (this.isConnected()) {
             DBUtility.addToFirebase(table, mod);
         }
-
-       // Bridgefy.sendBroadcastMessage(dataToHashmap());
     }
 
     public int login(SQLiteDatabase db, String phone, String password){

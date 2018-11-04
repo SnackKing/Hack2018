@@ -57,8 +57,6 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
 
         dbUtility = new DBUtility(this);
 
-        /*
-
         //Always use the Application context to avoid leaks
         Bridgefy.initialize(getApplicationContext(), Secrets.API_KEY, new RegistrationListener() {
             @Override
@@ -70,7 +68,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     @Override
                     public void onMessageReceived(com.bridgefy.sdk.client.Message message) {
                         super.onMessageReceived(message);
-                        /*HashMap hmap = message.getContent();
+                        HashMap hmap = message.getContent();
 
                         HashMap<String,Map<String, Map<String, String>>> temp = hmap;
 
@@ -89,6 +87,7 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                         Log.d("Bridgefy","Message Received");
                     }
                 };
+
                 stateListener = new StateListener() {
                     @Override
                     public void onDeviceConnected(Device device, Session session) {
@@ -103,14 +102,11 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                 Bridgefy.start(messageListener, stateListener);
             }
 
-
             @Override
             public void onRegistrationFailed(int errorCode, String message) {
                 // Something went wrong: handle error code, maybe print the message
                 Log.d("bridge FAIL", message);
             }});
-
-        */
 
         final ViewPager viewPager = findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
