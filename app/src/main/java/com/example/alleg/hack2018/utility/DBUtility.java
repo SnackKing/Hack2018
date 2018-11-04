@@ -121,14 +121,14 @@ public class DBUtility extends AppCompatActivity {
         }
     }
 
-    public int login(SQLiteDatabase db, String phone, String password){
+    public Codes login(SQLiteDatabase db, String phone, String password){
         String selectQuery = "SELECT * FROM " + UserContract.TABLE_NAME + " WHERE "
                 + UserContract.COLUMN_NAME_PHONE_NUMBER + " = " + phone;
         Cursor cursor = db.rawQuery(selectQuery, new String[] {});
         if (cursor.getCount() == 0) {
             //Incorrect phone number
             cursor.close();
-            return -1;
+            return Codes.LoginBadPhone;
         }
 
         cursor.moveToFirst();
@@ -138,14 +138,13 @@ public class DBUtility extends AppCompatActivity {
         if (!Passwords.isExpectedPassword(password.toCharArray(), salt, saltedPsd)) {
             //Incorrect password
             cursor.close();
-            return -2;
+            return Codes.LoginBadPassword;
         }
 
         User x = (User) ModelFactory.getExistingModel(cursor.getString(cursor.getColumnIndex(UserContract._ID)), db, UserContract.TABLE_NAME);
 
         // attach user to prefs
-        SharedPreferences mPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this.context);
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(this.context);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(x); // myObject - instance of MyObject
@@ -154,7 +153,7 @@ public class DBUtility extends AppCompatActivity {
         prefsEditor.commit();
 
         cursor.close();
-        return 1;
+        return Codes.LoginSuccess;
     }
 
     public static byte[] toByteArray(int value) {

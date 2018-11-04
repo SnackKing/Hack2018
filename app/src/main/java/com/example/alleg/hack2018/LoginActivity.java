@@ -1,44 +1,23 @@
 package com.example.alleg.hack2018;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.alleg.hack2018.utility.Codes;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -57,9 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mPhoneView = (AutoCompleteTextView) findViewById(R.id.phone);
+        mPhoneView = findViewById(R.id.phone);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -71,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button phoneSignInButton = (Button) findViewById(R.id.phone_sign_in_button);
+        Button phoneSignInButton = findViewById(R.id.phone_sign_in_button);
         phoneSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,15 +60,15 @@ public class LoginActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                     return;
                 }else{// Write you code here if permission already given.
-                int result = util.login(mDbHelp.getReadableDatabase(), mPhoneView.getText().toString(),mPasswordView.getText().toString());
-                if(result == -1){
+                Codes result = util.login(mDbHelp.getReadableDatabase(), mPhoneView.getText().toString(),mPasswordView.getText().toString());
+                if(result == Codes.LoginBadPhone){
                     mPhoneView.setError("There are no accounts with that number");
 
                 }
-                else if(result == -2){
+                else if(result == Codes.LoginBadPassword){
                     mPasswordView.setError("Incorrect Password");
                 }
-                else if(result == 1){
+                else if(result == Codes.LoginSuccess){
                     Intent intent = new Intent(LoginActivity.this,MessagesActivity.class);
                     startActivity(intent);
                 }
