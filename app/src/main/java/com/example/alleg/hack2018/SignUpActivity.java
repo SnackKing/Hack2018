@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.alleg.hack2018.contracts.UserContract;
+import com.example.alleg.hack2018.utility.Codes;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.Passwords;
@@ -150,7 +151,7 @@ public class SignUpActivity extends AppCompatActivity  {
         return toReturn;
     }
 
-    private int signUp(String name, String phone, String password){
+    private Codes signUp(String name, String phone, String password){
 
         DBUtility util = new DBUtility(getApplicationContext());
 
