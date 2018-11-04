@@ -53,7 +53,7 @@ public class DBUtility extends AppCompatActivity {
     // pseudo singleton
     private static int syncThreads = 0;
 
-    public static final String MSG_CONTEXT_ACCESSOR = "text";
+    private static final String MSG_CONTEXT_ACCESSOR = "text";
 
     private Context context;
     private SyncThread sync;
@@ -336,5 +336,15 @@ public class DBUtility extends AppCompatActivity {
         DatabaseReference tableRef = myRef.child(tableName);
 
         tableRef.child(obj.getID()).setValue(obj);
+    }
+
+    public static HashMap<String, HashMap<String, DatabaseModel>> getMessageContent(com.bridgefy.sdk.client.Message message) {
+        HashMap<String, HashMap<String, DatabaseModel>> toReturn = new HashMap<>();
+
+        String json = (String) message.getContent().get(MSG_CONTEXT_ACCESSOR);
+
+        // TODO de-serialize
+
+        return toReturn;
     }
 }
