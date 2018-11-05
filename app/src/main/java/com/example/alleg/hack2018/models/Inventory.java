@@ -5,10 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
-import com.example.alleg.hack2018.contracts.ItemContract;
-import com.example.alleg.hack2018.contracts.MessageContract;
+import com.example.alleg.hack2018.utility.Queries;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -82,5 +80,13 @@ public class Inventory implements DatabaseModel {
 
     public String getID() {
         return this.id;
+    }
+
+    public String getTableName() {
+        return InventoryContract.TABLE_NAME;
+    }
+
+    public String getCreateTable() {
+        return Queries.getCreateTableStatement(this.getTableName(), InventoryContract.getTableFields());
     }
 }

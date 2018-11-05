@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.alleg.hack2018.models.DatabaseModel;
+import com.example.alleg.hack2018.models.ModelFactory;
+
 public class DBHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 108;
@@ -14,19 +17,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(Queries.SQL_CREATE_USER);
-        db.execSQL(Queries.SQL_CREATE_INVENTORY);
-        db.execSQL(Queries.SQL_CREATE_ITEM);
-        db.execSQL(Queries.SQL_CREATE_MESSAGE);
+        for (DatabaseModel model : ModelFactory.DEFAULTS) {
+            db.execSQL(model.getCreateTable());
+        }
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(Queries.SQL_DELETE_USER);
-        db.execSQL(Queries.SQL_DELETE_INVENTORY);
-        db.execSQL(Queries.SQL_DELETE_ITEM);
-        db.execSQL(Queries.SQL_DELETE_MESSAGE);
+        for (DatabaseModel model : ModelFactory.DEFAULTS) {
+            db.execSQL(model.getDropTable());
+        }
+
         onCreate(db);
     }
 }
