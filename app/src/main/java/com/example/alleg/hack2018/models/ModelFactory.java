@@ -14,6 +14,13 @@ public class ModelFactory {
     public static final String MESSAGE_DESCRIPTOR = MessageContract.TABLE_NAME;
     public static final String USER_DESCRIPTOR = UserContract.TABLE_NAME;
 
+    private static final User DEFAULT_USER = new User();
+    private static final Message DEFAULT_MESSAGE = new Message();
+    private static final Item DEFAULT_ITEM = new Item();
+    private static final Inventory DEFAULT_INVENTORY = new Inventory();
+
+    public static final DatabaseModel[] DEFAULTS = new DatabaseModel[] { DEFAULT_MESSAGE, DEFAULT_ITEM, DEFAULT_INVENTORY, DEFAULT_USER };
+
     public static DatabaseModel getModel(ContentValues cv) {
         DatabaseModel toReturn;
 

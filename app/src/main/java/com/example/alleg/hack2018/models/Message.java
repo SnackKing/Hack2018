@@ -4,11 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.utility.DBUtility;
+import com.example.alleg.hack2018.utility.Queries;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -139,5 +138,13 @@ public class Message implements DatabaseModel {
 
     public String getID() {
         return this.id;
+    }
+
+    public String getTableName() {
+        return MessageContract.TABLE_NAME;
+    }
+
+    public String getCreateTable() {
+        return Queries.getCreateTableStatement(this.getTableName(), MessageContract.getTableFields());
     }
 }

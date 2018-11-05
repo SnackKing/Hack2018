@@ -5,10 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.ItemContract;
-import com.example.alleg.hack2018.contracts.UserContract;
+import com.example.alleg.hack2018.utility.Queries;
 
-import java.io.SequenceInputStream;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -83,5 +81,13 @@ public class Item implements DatabaseModel {
 
     public String getID() {
         return this.id;
+    }
+
+    public String getTableName() {
+        return ItemContract.TABLE_NAME;
+    }
+
+    public String getCreateTable() {
+        return Queries.getCreateTableStatement(this.getTableName(), ItemContract.getTableFields());
     }
 }

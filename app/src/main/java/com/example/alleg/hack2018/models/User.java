@@ -7,10 +7,9 @@ import android.util.Log;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
-import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
+import com.example.alleg.hack2018.utility.Queries;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -156,5 +155,13 @@ public class User implements DatabaseModel {
 
     public String getID() {
         return this.id;
+    }
+
+    public String getTableName() {
+        return UserContract.TABLE_NAME;
+    }
+
+    public String getCreateTable() {
+        return Queries.getCreateTableStatement(this.getTableName(), UserContract.getTableFields());
     }
 }
