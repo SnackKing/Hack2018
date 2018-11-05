@@ -39,10 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mPhoneView = findViewById(R.id.phone);
-        DBUtility util = new DBUtility(this);
-        HashMap<String, String> jsonMap = util.dataToHashmap();
-        String json = jsonMap.get("text");
-        System.out.print(json);
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

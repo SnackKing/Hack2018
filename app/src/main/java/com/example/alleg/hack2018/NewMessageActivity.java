@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
@@ -41,6 +42,13 @@ public class NewMessageActivity extends AppCompatActivity {
                Log.d("FLOAT", "starting Activity");
                 Intent intent = new Intent(NewMessageActivity.this, MessagesActivity.class);
                 startActivity(intent);
+            }
+        });
+        Button locButton = findViewById(R.id.getLocation);
+        locButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         this.mDbHelp = new DBHelper(this);
