@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.bridgefy.sdk.client.Bridgefy;
 import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.contracts.MessageContract;
@@ -33,6 +34,7 @@ public class SyncThread extends Thread {
     @Override
     public void run() {
         int nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
+        int shortestSleep = DBUtility.MS_WAIT_THREAD_CHECK / 20;
 
         while (true) {
             // only check for internet every minute
@@ -42,9 +44,16 @@ public class SyncThread extends Thread {
                 if (parent.isConnected()) {
                     nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
                     this.fullSyncToCloud();
+
+                    // sync to any others around
+                    Bridgefy.sendBroadcastMessage(parent.dataToHashmap());
                 } else {
                     // not connected - look for internet desperately
-                    nextSleep = DBUtility.MS_WAIT_THREAD_CHECK / 4;
+                    if (nextSleep > shortestSleep) {
+                        nextSleep = DBUtility.MS_WAIT_THREAD_CHECK / 2;
+                    }
+
+                    // else do nothing -- keep going fast
                 }
             } catch (java.lang.InterruptedException e) {
                 e.printStackTrace();

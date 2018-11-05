@@ -131,6 +131,7 @@ public class DBUtility extends AppCompatActivity {
         try {
             Bridgefy.sendBroadcastMessage(this.dataToHashmap());
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             // do nothing
             // jank but i've been awake for 30 hours
         }
