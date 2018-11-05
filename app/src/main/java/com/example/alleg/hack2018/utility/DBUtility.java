@@ -309,20 +309,10 @@ public class DBUtility extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                switch(table) {
-                    case UserContract.TABLE_NAME:
-                        hack.add(dataSnapshot.child(table).child(id).getValue(User.class));
-                        break;
-                    case ItemContract.TABLE_NAME:
-                        hack.add(dataSnapshot.child(table).child(id).getValue(Item.class));
-                        break;
-                    case InventoryContract.TABLE_NAME:
-                        hack.add(dataSnapshot.child(table).child(id).getValue(Inventory.class));
-                        break;
-                    case MessageContract.TABLE_NAME:
-                        hack.add(dataSnapshot.child(table).child(id).getValue(Message.class));
-                        break;
-                }
+
+                java.lang.Class cls = DatabaseModel.getClass(table);
+
+                hack.add((DatabaseModel) dataSnapshot.child(table).child(id).getValue(cls));
 
                 done.countDown();
             }
@@ -365,7 +355,12 @@ public class DBUtility extends AppCompatActivity {
                 for (Iterator<String> it1 = objects.keys(); it1.hasNext(); ) {
                     String id = it1.next();
 
-                    inner.put(id, (DatabaseModel) objects.get(id));
+                    // will be overwritten
+                    java.lang.Class cls = DatabaseModel.getClass(key);
+
+                    Gson gson = new Gson();
+
+                    inner.put(id, (DatabaseModel) gson.fromJson(objects.getJSONObject(id).toString(), cls));
                 }
 
                 toReturn.put(key, inner);
