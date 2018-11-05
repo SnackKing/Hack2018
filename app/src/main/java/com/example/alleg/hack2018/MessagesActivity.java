@@ -79,8 +79,8 @@ public class MessagesActivity extends AppCompatActivity implements PublicTab.OnF
                     @Override
                     public void onDeviceConnected(Device device, Session session) {
                         super.onDeviceConnected(device, session);
-                        com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(dbUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
-                        Bridgefy.sendMessage(message);
+                       // com.bridgefy.sdk.client.Message message =new com.bridgefy.sdk.client.Message.Builder().setContent(dbUtility.dataToHashmap()).setReceiverId(device.getUserId()).build();
+                      //  Bridgefy.sendMessage(message);
                         Log.d("Bridgefy","Message Sent to New Connection");
 
                     }
