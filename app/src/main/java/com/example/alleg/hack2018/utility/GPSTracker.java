@@ -57,8 +57,6 @@ public class GPSTracker extends Service {
 
     public Location getLocation() {
         try {
-
-
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // Getting GPS status
@@ -133,15 +131,12 @@ public class GPSTracker extends Service {
         return location;
     }
 
-
     /**
      * Stop using GPS listener
      * Calling this function will stop using GPS in your app.
      * */
     public void stopUsingGPS() {
-
     }
-
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -202,7 +197,6 @@ public class GPSTracker extends Service {
         return this.canGetLocation;
     }
 
-
     /**
      * Function to show settings alert dialog.
      * On pressing the Settings button it will launch Settings Options.
@@ -234,7 +228,6 @@ public class GPSTracker extends Service {
         // Showing Alert Message
         alertDialog.show();
     }
-
 
     @Override
     public IBinder onBind(Intent arg0) {
