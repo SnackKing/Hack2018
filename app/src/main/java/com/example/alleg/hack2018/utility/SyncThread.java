@@ -21,20 +21,23 @@ import java.util.Set;
 
 public class SyncThread extends Thread {
 
-    DBUtility parent;
-    SQLiteDatabase db;
-    SQLiteDatabase dbr;
+    private DBUtility parent;
+    private SQLiteDatabase dbr;
+    private SQLiteDatabase db;
 
-    public SyncThread(DBUtility par, SQLiteDatabase db, SQLiteDatabase dbr) {
+    // how long the thread syncs
+    private static final int MS_WAIT_THREAD_CHECK = 8000;
+
+    public SyncThread(DBUtility par, SQLiteDatabase w, SQLiteDatabase r) {
         parent = par;
-        this.db = db;
-        this.dbr = dbr;
+        dbr = r;
+        db = w;
     }
 
     @Override
     public void run() {
-        int nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
-        int shortestSleep = DBUtility.MS_WAIT_THREAD_CHECK / 20;
+        int nextSleep = MS_WAIT_THREAD_CHECK;
+        int shortestSleep = MS_WAIT_THREAD_CHECK / 20;
 
         while (true) {
             // only check for internet every minute
@@ -42,7 +45,7 @@ public class SyncThread extends Thread {
                 sleep(nextSleep);
 
                 if (parent.isConnected()) {
-                    nextSleep = DBUtility.MS_WAIT_THREAD_CHECK;
+                    nextSleep = MS_WAIT_THREAD_CHECK;
                     this.fullSyncToCloud();
 
                     // sync to any others around
@@ -50,7 +53,7 @@ public class SyncThread extends Thread {
                 } else {
                     // not connected - look for internet desperately
                     if (nextSleep > shortestSleep) {
-                        nextSleep = DBUtility.MS_WAIT_THREAD_CHECK / 2;
+                        nextSleep = MS_WAIT_THREAD_CHECK / 2;
                     }
 
                     // else do nothing -- keep going fast
