@@ -9,6 +9,7 @@ import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.Queries;
+import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -135,6 +136,7 @@ public class User implements DatabaseModel {
         return arr;
     }
 
+    @Exclude
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
 
@@ -153,15 +155,24 @@ public class User implements DatabaseModel {
         return values;
     }
 
+    @Exclude
     public String getID() {
         return this.id;
     }
 
+    @Exclude
     public String getTableName() {
         return UserContract.TABLE_NAME;
     }
 
+    @Exclude
     public String getCreateTable() {
         return Queries.getCreateTableStatement(this.getTableName(), UserContract.getTableFields());
+    }
+
+    @Exclude
+    @Override
+    public String getDropTable() {
+        return DatabaseModel.super.getDropTable();
     }
 }

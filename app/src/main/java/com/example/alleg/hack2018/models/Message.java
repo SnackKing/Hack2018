@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.utility.DBUtility;
 import com.example.alleg.hack2018.utility.Queries;
+import com.google.firebase.database.Exclude;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -136,15 +137,24 @@ public class Message implements DatabaseModel {
         return values;
     }
 
+    @Exclude
     public String getID() {
         return this.id;
     }
 
+    @Exclude
     public String getTableName() {
         return MessageContract.TABLE_NAME;
     }
 
+    @Exclude
     public String getCreateTable() {
         return Queries.getCreateTableStatement(this.getTableName(), MessageContract.getTableFields());
+    }
+
+    @Exclude
+    @Override
+    public String getDropTable() {
+        return DatabaseModel.super.getDropTable();
     }
 }

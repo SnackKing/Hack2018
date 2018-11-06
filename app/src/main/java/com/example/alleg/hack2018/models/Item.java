@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.ItemContract;
 import com.example.alleg.hack2018.utility.Queries;
+import com.google.firebase.database.Exclude;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -79,15 +80,24 @@ public class Item implements DatabaseModel {
         return values;
     }
 
+    @Exclude
     public String getID() {
         return this.id;
     }
 
+    @Exclude
     public String getTableName() {
         return ItemContract.TABLE_NAME;
     }
 
+    @Exclude
     public String getCreateTable() {
         return Queries.getCreateTableStatement(this.getTableName(), ItemContract.getTableFields());
+    }
+
+    @Exclude
+    @Override
+    public String getDropTable() {
+        return DatabaseModel.super.getDropTable();
     }
 }

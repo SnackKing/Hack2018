@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.alleg.hack2018.contracts.InventoryContract;
 import com.example.alleg.hack2018.utility.Queries;
+import com.google.firebase.database.Exclude;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -67,6 +68,7 @@ public class Inventory implements DatabaseModel {
         }
     }
 
+    @Exclude
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
 
@@ -78,15 +80,24 @@ public class Inventory implements DatabaseModel {
         return values;
     }
 
+    @Exclude
     public String getID() {
         return this.id;
     }
 
+    @Exclude
     public String getTableName() {
         return InventoryContract.TABLE_NAME;
     }
 
+    @Exclude
     public String getCreateTable() {
         return Queries.getCreateTableStatement(this.getTableName(), InventoryContract.getTableFields());
+    }
+
+    @Exclude
+    @Override
+    public String getDropTable() {
+        return DatabaseModel.super.getDropTable();
     }
 }
