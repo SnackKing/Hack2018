@@ -1,6 +1,7 @@
 package com.example.alleg.hack2018.utility;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -14,11 +15,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-public class GPSTracker extends Service implements LocationListener {
+public class GPSTracker extends Service {
 
-    private final Context mContext;
+    private Context mContext;
 
     // Flag for GPS status
     boolean isGPSEnabled = false;
@@ -34,7 +36,7 @@ public class GPSTracker extends Service implements LocationListener {
     double longitude; // Longitude
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1000; // 10 meters
 
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
@@ -42,15 +44,22 @@ public class GPSTracker extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSTracker(Context context) {
+    Activity activity;
+
+    public GPSTracker() {
+    }
+
+    public GPSTracker(Context context, Activity activity) {
         this.mContext = context;
+        this.activity = activity;
         getLocation();
     }
 
     public Location getLocation() {
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
+
+
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // Getting GPS status
             isGPSEnabled = locationManager
@@ -65,7 +74,9 @@ public class GPSTracker extends Service implements LocationListener {
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    int requestPermissionsCode = 50;
+
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
                         // here to request the missing permissions, and then overriding
@@ -78,7 +89,7 @@ public class GPSTracker extends Service implements LocationListener {
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, mLocationListener);
                     Log.d("Network", "Network");
                     if (locationManager != null) {
                         location = locationManager
@@ -89,15 +100,21 @@ public class GPSTracker extends Service implements LocationListener {
                         }
                     }
                 }
-                // If GPS enabled, get latitude/longitude using GPS Services
-                if (isGPSEnabled) {
-                    if (location == null) {
+            }
+            // If GPS enabled, get latitude/longitude using GPS Services
+            if (isGPSEnabled) {
+                if (location == null) {
+                    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 50);
+
+                    } else {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, mLocationListener);
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
+
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             if (location != null) {
@@ -107,9 +124,9 @@ public class GPSTracker extends Service implements LocationListener {
                         }
                     }
                 }
+
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -121,12 +138,36 @@ public class GPSTracker extends Service implements LocationListener {
      * Stop using GPS listener
      * Calling this function will stop using GPS in your app.
      * */
-    public void stopUsingGPS(){
-        if(locationManager != null){
-            locationManager.removeUpdates(GPSTracker.this);
-        }
+    public void stopUsingGPS() {
+
     }
 
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     /**
      * Function to get latitude
@@ -166,7 +207,7 @@ public class GPSTracker extends Service implements LocationListener {
      * Function to show settings alert dialog.
      * On pressing the Settings button it will launch Settings Options.
      * */
-    public void showSettingsAlert(){
+    public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
@@ -177,7 +218,7 @@ public class GPSTracker extends Service implements LocationListener {
 
         // On pressing the Settings button.
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
+            public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
@@ -192,26 +233,6 @@ public class GPSTracker extends Service implements LocationListener {
 
         // Showing Alert Message
         alertDialog.show();
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
 

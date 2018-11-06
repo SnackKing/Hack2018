@@ -30,6 +30,7 @@ import java.util.UUID;
 
 public class NewMessageActivity extends AppCompatActivity {
     private DBHelper mDbHelp;
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class NewMessageActivity extends AppCompatActivity {
         locButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GPSTracker gps = new GPSTracker(NewMessageActivity.this);
+                GPSTracker gps = new GPSTracker(context,NewMessageActivity.this);
 
                 // Check if GPS enabled
                 if(gps.canGetLocation()) {
