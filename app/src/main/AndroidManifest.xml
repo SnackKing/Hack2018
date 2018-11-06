@@ -19,6 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name="com.example.alleg.hack2018.utility.GPSTracker"/>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

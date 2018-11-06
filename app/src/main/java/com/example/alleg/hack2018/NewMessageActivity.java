@@ -1,9 +1,12 @@
 package com.example.alleg.hack2018;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -13,18 +16,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alleg.hack2018.contracts.MessageContract;
 import com.example.alleg.hack2018.contracts.UserContract;
 import com.example.alleg.hack2018.models.User;
 import com.example.alleg.hack2018.utility.DBHelper;
 import com.example.alleg.hack2018.utility.DBUtility;
+import com.example.alleg.hack2018.utility.GPSTracker;
 import com.google.gson.Gson;
 
 import java.util.UUID;
 
 public class NewMessageActivity extends AppCompatActivity {
     private DBHelper mDbHelp;
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +54,20 @@ public class NewMessageActivity extends AppCompatActivity {
         locButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GPSTracker gps = new GPSTracker(context,NewMessageActivity.this);
 
+                // Check if GPS enabled
+                if(gps.canGetLocation()) {
+
+                    double latitude = gps.getLatitude();
+                    double longitude = gps.getLongitude();
+                    message.setText("Lat: " + latitude + " \nLong: " + longitude );
+                } else {
+                    // Can't get location.
+                    // GPS or network is not enabled.
+                    // Ask user to enable GPS/network in settings.
+                    gps.showSettingsAlert();
+                }
             }
         });
         this.mDbHelp = new DBHelper(this);
@@ -99,5 +118,9 @@ public class NewMessageActivity extends AppCompatActivity {
 
         util.insertToDb(MessageContract.TABLE_NAME, null, values);
     }
+//    private boolean isLocationEnabled() {
+//        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+//                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//    }
 
 }
