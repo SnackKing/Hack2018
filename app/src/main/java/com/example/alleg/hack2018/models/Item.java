@@ -69,6 +69,7 @@ public class Item implements DatabaseModel {
         }
     }
 
+    @Exclude
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
 

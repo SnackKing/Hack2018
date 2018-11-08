@@ -124,6 +124,7 @@ public class Message implements DatabaseModel {
         return arr;
     }
 
+    @Exclude
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
 
